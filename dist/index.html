@@ -1957,6 +1957,30 @@ window.WEEKS = [
 
 </script>
 <script>
+/* 內建的 KKBOX 正式連結（跨裝置共用）
+ *
+ * 這裡的連結是網站的一部分，會隨 git 一起部署，所以「電腦、手機、平板都看得到」。
+ * 相對地，在網站上用「🔗 貼上分享連結」釘選的連結只存在該台裝置的瀏覽器裡。
+ *
+ * 解析順序：本機釘選 → 這個檔案 → 搜尋連結
+ * （本機釘選會蓋過這裡的值，方便個別裝置臨時覆寫。）
+ *
+ * 怎麼把本機釘選變成內建：
+ *   1. 在任一裝置上釘選好連結
+ *   2. ⚙ 設定 → 已釘選的 App 連結 → 「複製全部（JSON）」
+ *   3. 把內容貼進下面的物件，commit + push
+ *
+ * key   = 該版本的 KKBOX 搜尋字串（見 data-works-*.js 的 q 欄位）
+ * value = 從 KKBOX App「分享 → 複製連結」得到的正式網址
+ *
+ * 範例：
+ *   "Beethoven Symphony 5 Kleiber": "https://www.kkbox.com/tw/tc/album/XXXXXXXXXXXXXXXX",
+ */
+window.PINNED = {
+};
+
+</script>
+<script>
 (function () {
   "use strict";
   var CORE = window.CORE, WORKS = window.WORKS, WEEKS = window.WEEKS;
@@ -2001,9 +2025,13 @@ window.WEEKS = [
     ["/search?word=", "搜尋頁有開但關鍵字是空的"]
   ];
   var TESTQ = "Beethoven Symphony 5 Kleiber";
-  // 已釘選的正式連結優先於搜尋連結
-  function kk(q) { return S.links[q] || (SCHEMES[S.scheme] || SCHEMES.q).build(q, S.region, S.lang); }
-  function pinned(q) { return !!S.links[q]; }
+  /* 連結解析順序：本機釘選 → 內建（data-links.js，隨網站部署，跨裝置共用）→ 搜尋連結。
+     localStorage 綁定單一裝置＋單一瀏覽器，所以電腦上釘的連結手機看不到；
+     要跨裝置共用必須放進 data-links.js。 */
+  var REPO = window.PINNED || {};
+  function pinnedUrl(q) { return S.links[q] || REPO[q] || null; }
+  function pinned(q) { return S.links[q] ? "local" : (REPO[q] ? "repo" : false); }
+  function kk(q) { return pinnedUrl(q) || (SCHEMES[S.scheme] || SCHEMES.q).build(q, S.region, S.lang); }
 
   // 只接受看起來像 KKBOX 曲目／專輯／歌單的網址，避免把搜尋頁本身存進來
   function parseKKLink(raw) {
@@ -2072,9 +2100,13 @@ window.WEEKS = [
     var q = CORE.quality[v.qa];
     var tags = (v.t || []).map(function (t) { return '<span class="tag">' + esc(TAGNAME[t] || t) + "</span>"; }).join("");
     var pin = pinned(v.q);
+    var pinLabel = pin === "local"
+      ? '<span class="tag pinTag" title="本機釘選——只存在這台裝置的瀏覽器，其他裝置看不到">🔗 本機</span>'
+      : pin === "repo"
+        ? '<span class="tag pinTag repo" title="內建連結——隨網站部署，所有裝置都有">🔗 內建</span>' : "";
     return '<li class="v ' + v.qa + (pin ? " pinned" : "") + '">' +
       "<div>" +
-        '<div class="p">' + esc(v.p) + (pin ? ' <span class="tag pinTag" title="已釘選正式連結，手機上會直接開啟 KKBOX App">🔗 已釘選</span>' : "") + "</div>" +
+        '<div class="p">' + esc(v.p) + " " + pinLabel + "</div>" +
         '<div class="sub"><span class="qbadge ' + v.qa + '" title="' + esc(q.desc) + '">' + esc(q.label) + "</span>" +
           esc(v.l) + (v.y ? " · " + v.y : "") + " " + tags + "</div>" +
         (v.w ? '<div class="why">' + esc(v.w) + "</div>" : "") +
@@ -2083,7 +2115,7 @@ window.WEEKS = [
         '<a class="play" data-q="' + esc(v.q) + '" href="' + esc(kk(v.q)) + '" target="_blank" rel="noopener">' +
           (pin ? "▶ 開啟 App" : "在 KKBOX 開啟") + "</a>" +
         '<button class="copy" data-copy="' + esc(v.q) + '">複製搜尋字串</button>' +
-        '<button class="copy" data-pin="' + esc(v.q) + '">' + (pin ? "換／清除連結" : "🔗 貼上分享連結") + "</button>" +
+        '<button class="copy" data-pin="' + esc(v.q) + '">' + (pin === "local" ? "換／清除連結" : "🔗 貼上分享連結") + "</button>" +
       "</div></li>";
   }
 
@@ -2465,12 +2497,22 @@ window.WEEKS = [
       '<div class="fld"><label>主題</label><select id="setTheme">' +
         opt("auto", S.theme, "跟隨系統") + opt("light", S.theme, "淺色") + opt("dark", S.theme, "深色") + "</select></div>" +
       "<h3>已釘選的 App 連結</h3>" +
-      '<div class="hint">目前 <b>' + Object.keys(S.links).length + "</b> / " + Object.keys(WORKS).reduce(function (a, k) { return a + WORKS[k].versions.length; }, 0) + " 個版本已釘選正式連結。" +
-        "釘選過的版本在手機上點「開啟 App」會由 Universal Link 直接跳進 KKBOX App，不再經過搜尋。<br>" +
+      '<div class="tw"><table><tbody>' +
+        '<tr><th>🔗 本機</th><td><b>' + Object.keys(S.links).length + "</b> 個<br>" +
+          '<span class="hint">存在<b>這台裝置的這個瀏覽器</b>裡。換手機、換瀏覽器、清除瀏覽資料都會不見，' +
+          "而且<b>電腦上釘的手機看不到</b>。</span></td></tr>" +
+        '<tr><th>🔗 內建</th><td><b>' + Object.keys(REPO).length + "</b> 個<br>" +
+          '<span class="hint">寫在網站原始碼的 <code>assets/data-links.js</code> 裡，隨網站一起部署，' +
+          "<b>所有裝置都有</b>。</span></td></tr>" +
+      "</tbody></table></div>" +
+      '<div class="hint">釘選過的版本在手機上點「開啟 App」會由 Universal Link 直接跳進 KKBOX App，不再經過搜尋。<br>' +
         "做法：KKBOX App 找到專輯 → 分享 → 複製連結 → 回到這裡按該版本的「🔗 貼上分享連結」。</div>" +
-      '<div class="rowbtns"><button class="iconbtn" id="linkExport">匯出連結</button>' +
-      '<button class="iconbtn" id="linkImport">匯入連結</button>' +
-      (Object.keys(S.links).length ? '<button class="iconbtn" id="linkClear">全部清除</button>' : "") + "</div>" +
+      '<div class="hint" style="margin-top:8px"><b>要讓所有裝置都吃到，用「複製全部（JSON）」</b>把內容交給我或自己貼進 ' +
+        "<code>assets/data-links.js</code> 後 push，下次部署起全部裝置生效。</div>" +
+      '<div class="rowbtns"><button class="iconbtn" id="linkCopy">複製全部（JSON）</button>' +
+      '<button class="iconbtn" id="linkExport">下載 .json</button>' +
+      '<button class="iconbtn" id="linkImport">貼上匯入</button>' +
+      (Object.keys(S.links).length ? '<button class="iconbtn" id="linkClear">清除本機釘選</button>' : "") + "</div>" +
       "<h3>資料</h3>" +
       '<div class="rowbtns"><button class="iconbtn" id="setExport">匯出進度</button>' +
       '<button class="iconbtn" id="setImport">匯入進度</button>' +
@@ -2593,8 +2635,15 @@ window.WEEKS = [
       $("#favBtn").textContent = "★ 重聽區 (0)"; } return; }
     if (t.id === "setExport") { download(S, "classical-course-progress.json"); return; }
     if (t.id === "linkExport") {
-      if (!Object.keys(S.links).length) { toast("還沒有釘選任何連結"); return; }
+      if (!Object.keys(S.links).length) { toast("還沒有本機釘選"); return; }
       download(S.links, "kkbox-links.json"); return;
+    }
+    if (t.id === "linkCopy") {
+      var all = Object.assign({}, REPO, S.links);
+      if (!Object.keys(all).length) { toast("還沒有任何釘選連結"); return; }
+      copyText(JSON.stringify(all, null, 2));
+      toast("已複製 " + Object.keys(all).length + " 個連結（本機＋內建）");
+      return;
     }
     if (t.id === "linkImport" || t.id === "setImport") {
       var isLinks = t.id === "linkImport";

@@ -9,6 +9,26 @@ const read = (p) => fs.readFileSync(path.join(root, p), "utf8");
 
 let html = read("index.html");
 
+// 驗證 data-links.js 的 key 都對得上實際版本的搜尋字串，
+// 打錯字的 key 會靜默失效，這裡先擋下來。
+{
+  const sandbox = { window: {} };
+  for (const f of ["data-works-a.js", "data-works-b.js", "data-links.js"]) {
+    new Function("window", read("assets/" + f))(sandbox.window);
+  }
+  const valid = new Set();
+  for (const w of Object.values(sandbox.window.WORKS)) {
+    valid.add(w.q);
+    for (const v of w.versions) valid.add(v.q);
+  }
+  const bad = Object.keys(sandbox.window.PINNED || {}).filter((k) => !valid.has(k));
+  if (bad.length) {
+    console.error("data-links.js 有對不上任何搜尋字串的 key：");
+    bad.forEach((k) => console.error("  " + JSON.stringify(k)));
+    process.exit(1);
+  }
+}
+
 html = html.replace(
   /<link rel="stylesheet" href="(assets\/[^"]+)">/g,
   (_, p) => "<style>\n" + read(p) + "\n</style>"

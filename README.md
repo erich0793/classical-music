@@ -75,7 +75,15 @@ https://kkbox.fm/{id}                       ← 短網址，同樣可用
 
 在 App 找到專輯 → 分享 → 複製連結 → 回網站按該版本的 **🔗 貼上分享連結**。釘選後該版本會顯示「🔗 已釘選」，按鈕變成 **▶ 開啟 App**，直接跳轉不再經過搜尋。
 
-釘選資料存在 localStorage，可在設定中匯出成 `kkbox-links.json` 備份或跨裝置匯入。格式是 `{"搜尋字串": "網址"}`，也可以直接手寫。
+釘選連結有兩層，解析順序為 **本機 → 內建 → 搜尋連結**：
+
+| 層 | 存放位置 | 範圍 |
+|---|---|---|
+| 🔗 本機 | 瀏覽器 localStorage | **只有那台裝置的那個瀏覽器**。電腦上釘的手機看不到 |
+| 🔗 內建 | `assets/data-links.js`（隨 git 部署） | **所有裝置** |
+
+把本機釘選變成跨裝置共用：⚙ 設定 →「複製全部（JSON）」→ 貼進 `assets/data-links.js` → push。
+`build.js` 會在打包時檢查每個 key 都對得上實際的搜尋字串，打錯字會直接讓建置失敗，不會靜默失效。
 
 **3. 點擊即複製** — 未釘選的版本，點「在 KKBOX 開啟」時會同時把關鍵字寫進剪貼簿。即使連結落在空的搜尋頁，直接在 KKBOX 搜尋框貼上即可。
 
@@ -92,6 +100,7 @@ assets/data-core.js     模組、時期概覽、名詞表、分類宣告
 assets/data-works-a.js  曲目資料庫（第 1–11 週）
 assets/data-works-b.js  曲目資料庫（第 12–24 週）
 assets/data-weeks.js    24 週單元內容
+assets/data-links.js    內建的 KKBOX 正式連結（跨裝置共用）
 assets/app.js           渲染與互動邏輯
 build.js                產生單檔版本
 ```
