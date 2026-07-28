@@ -40,13 +40,23 @@ python3 -m http.server 8000   # 然後開 http://localhost:8000
 
 ## KKBOX 連結格式
 
-KKBOX 對機器人請求回傳 403，因此**無法在開發時驗證搜尋網址格式**。網站提供三種格式可在「⚙ 設定」中切換：
+KKBOX 對機器人請求回傳 403，因此**無法在開發時驗證搜尋網址格式**。網站不押寶單一格式，改用三層防護：
 
-1. `www.kkbox.com/{region}/{lang}/search?word=…`（預設）
-2. `www.kkbox.com/{region}/{lang}/search/all/…/1`（舊格式）
-3. `play.kkbox.com/search/…`（網頁播放器）
+**1. 內建格式測試器** — 「⚙ 設定 → 搜尋連結格式」列出五種候選，全部用同一組關鍵字產生測試連結。逐一點開，哪一個真的跑出結果就按「設為預設」，之後全站連結都改用它。只需做一次，選擇存在 localStorage。
 
-**若連結點下去找不到結果，換一個格式試試。** 每個版本旁的「複製搜尋字串」按鈕不受此影響——貼進 KKBOX App 的搜尋列永遠可用。
+| # | 格式 | 預設 |
+|---|---|---|
+| 1 | `www.kkbox.com/{region}/{lang}/search/all/{q}/1` | ✅ |
+| 2 | `www.kkbox.com/{region}/{lang}/search?q={q}` | |
+| 3 | `www.kkbox.com/{region}/{lang}/search?keyword={q}` | |
+| 4 | `www.kkbox.com/{region}/{lang}/search?word={q}` | |
+| 5 | `play.kkbox.com/search/{q}` | |
+
+**2. 點擊即複製** — 每次點「在 KKBOX 開啟」都會同時把關鍵字寫進剪貼簿。即使連結落在空的搜尋頁，直接在 KKBOX 搜尋框貼上即可。
+
+**3. 複製搜尋字串按鈕** — 每個版本旁都有，完全不依賴網址格式。
+
+判讀方式：KKBOX 顯示「請輸入一些關鍵字來搜尋」＝ 搜尋頁路徑正確但關鍵字沒傳進去，換下一個格式。
 
 地區（tw / hk / sg / my / jp）與語言（tc / sc / en / ja）也可在設定中調整。
 

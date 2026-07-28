@@ -1871,7 +1871,7 @@ window.WEEKS = [
   /* ---------------- 設定與狀態（localStorage） ---------------- */
   var LS = "cmc.v1";
   var DEFAULTS = {
-    region: "tw", lang: "tc", scheme: "word",
+    region: "tw", lang: "tc", scheme: "path",
     hiresFirst: true, hideHistoric: false, theme: "auto",
     done: {}, tasks: {}, checks: {}, fav: {}
   };
@@ -1886,11 +1886,15 @@ window.WEEKS = [
   // KKBOX 的搜尋網址格式可能隨網站改版變動，故做成可切換。
   // 若某一格式失效，使用者可在「設定」中改用另一種，或直接用「複製」把字串貼進 App。
   var SCHEMES = {
-    word: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search?word=" + encodeURIComponent(q); },
-    path: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search/all/" + encodeURIComponent(q) + "/1"; },
-    play: function (q) { return "https://play.kkbox.com/search/" + encodeURIComponent(q); }
+    path:    { label: "網址路徑 /search/all/…/1", build: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search/all/" + encodeURIComponent(q) + "/1"; } },
+    q:       { label: "查詢參數 ?q=",        build: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search?q=" + encodeURIComponent(q); } },
+    keyword: { label: "查詢參數 ?keyword=",  build: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search?keyword=" + encodeURIComponent(q); } },
+    word:    { label: "查詢參數 ?word=",     build: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search?word=" + encodeURIComponent(q); } },
+    play:    { label: "網頁播放器 play.kkbox.com", build: function (q) { return "https://play.kkbox.com/search/" + encodeURIComponent(q); } }
   };
-  function kk(q) { return SCHEMES[S.scheme in SCHEMES ? S.scheme : "word"](q, S.region, S.lang); }
+  var SCHEME_ORDER = ["path", "q", "keyword", "word", "play"];
+  var TESTQ = "Beethoven Symphony 5 Kleiber";
+  function kk(q) { return (SCHEMES[S.scheme] || SCHEMES.path).build(q, S.region, S.lang); }
 
   /* ---------------- 小工具 ---------------- */
   var toastT;
@@ -1902,7 +1906,6 @@ window.WEEKS = [
     var done = function () {
       if (btn) { var o = btn.textContent; btn.textContent = "已複製"; btn.classList.add("ok");
         setTimeout(function () { btn.textContent = o; btn.classList.remove("ok"); }, 1400); }
-      else toast("已複製");
     };
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(txt).then(done, function () { fallback(txt, done); });
@@ -1949,7 +1952,7 @@ window.WEEKS = [
         (v.w ? '<div class="why">' + esc(v.w) + "</div>" : "") +
       "</div>" +
       '<div class="acts">' +
-        '<a class="play" href="' + esc(kk(v.q)) + '" target="_blank" rel="noopener">在 KKBOX 開啟</a>' +
+        '<a class="play" data-q="' + esc(v.q) + '" href="' + esc(kk(v.q)) + '" target="_blank" rel="noopener">在 KKBOX 開啟</a>' +
         '<button class="copy" data-copy="' + esc(v.q) + '">複製搜尋字串</button>' +
       "</div></li>";
   }
@@ -2028,7 +2031,7 @@ window.WEEKS = [
       h += wk.compare.picks.map(function (p) {
         return '<li class="v ' + p.qa + '"><div><div class="p">' + esc(p.label) + "</div>" +
           '<div class="sub"><span class="qbadge ' + p.qa + '">' + esc(CORE.quality[p.qa].label) + "</span><code>" + esc(p.q) + "</code></div></div>" +
-          '<div class="acts"><a class="play" href="' + esc(kk(p.q)) + '" target="_blank" rel="noopener">在 KKBOX 開啟</a>' +
+          '<div class="acts"><a class="play" data-q="' + esc(p.q) + '" href="' + esc(kk(p.q)) + '" target="_blank" rel="noopener">在 KKBOX 開啟</a>' +
           '<button class="copy" data-copy="' + esc(p.q) + '">複製</button></div></li>';
       }).join("") + "</ul>";
     }
@@ -2096,9 +2099,14 @@ window.WEEKS = [
       '<div class="grid2" style="margin:16px 0">' +
         stat("24", "週單元") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本推薦") + stat(String(hires), "個 Hi-Res 優先版本") +
       "</div>" +
+      '<div class="banner"><b>第一次使用請先做這件事：</b>點下面任一個「在 KKBOX 開啟」。' +
+        '如果 KKBOX 跳出的搜尋頁是空的（顯示「請輸入一些關鍵字」），表示連結格式要調整——' +
+        '到 <b>⚙ 設定 → 搜尋連結格式</b>，那裡有五個格式可以逐一測試，找到會出結果的按「設為預設」即可，只需做一次。<br>' +
+        '（保險起見，每次點「在 KKBOX 開啟」都會同時把關鍵字複製到剪貼簿，' +
+        '所以就算搜尋頁是空的，直接在 KKBOX 的搜尋框貼上就好。）</div>' +
       '<div class="rowbtns"><button class="iconbtn on" data-go="week-1">從第 1 週開始</button>' +
       '<button class="iconbtn" data-go="p-hires">先看 Hi-Res 設定說明</button>' +
-      '<button class="iconbtn" data-open="settings">連結／排序設定</button></div></div>';
+      '<button class="iconbtn" data-open="settings">測試連結格式</button></div></div>';
 
     h += '<div class="card" id="p-hires"><h2>Hi-Res / Hi-Fi 版本怎麼挑</h2>' +
       '<div class="enttl">本站所有版本清單都預設把高解析排在最前面</div>' +
@@ -2241,7 +2249,7 @@ window.WEEKS = [
       return '<li class="v ' + (L.top ? L.top.qa : "hifi") + '"><div>' +
         '<div class="p">' + esc(L.w.title) + "</div>" +
         '<div class="sub">' + esc(L.w.composer) + (L.top ? " ｜ 推薦：" + esc(L.top.p) : "") + "</div></div>" +
-        '<div class="acts"><a class="play" href="' + esc(kk(L.top ? L.top.q : L.w.q)) + '" target="_blank" rel="noopener">開啟</a>' +
+        '<div class="acts"><a class="play" data-q="' + esc(L.top ? L.top.q : L.w.q) + '" href="' + esc(kk(L.top ? L.top.q : L.w.q)) + '" target="_blank" rel="noopener">開啟</a>' +
         '<button class="copy" data-unfav="' + esc(L.id) + '">移除</button></div></li>';
     }).join("") + "</ul>";
     return h;
@@ -2262,11 +2270,16 @@ window.WEEKS = [
         opt("my", S.region, "馬來西亞 my") + opt("jp", S.region, "日本 jp") + "</select></div>" +
       '<div class="fld"><label>介面語言</label><select id="setLang">' +
         opt("tc", S.lang, "繁體中文 tc") + opt("sc", S.lang, "簡體中文 sc") + opt("en", S.lang, "English en") + opt("ja", S.lang, "日本語 ja") + "</select></div>" +
-      '<div class="fld"><label>搜尋連結格式</label><select id="setScheme">' +
-        opt("word", S.scheme, "www.kkbox.com/…/search?word=（預設）") +
-        opt("path", S.scheme, "www.kkbox.com/…/search/all/…/1（舊格式）") +
-        opt("play", S.scheme, "play.kkbox.com/search/…（網頁播放器）") + "</select>" +
-        '<div class="hint">KKBOX 的搜尋網址格式可能隨網站改版變動。<b>若點擊連結後找不到結果，換一個格式試試。</b>另外，每個版本旁的「複製搜尋字串」按鈕永遠可用——貼進 KKBOX App 的搜尋列即可。</div></div>' +
+      '<div class="fld"><label>搜尋連結格式（目前：' + esc(SCHEMES[S.scheme].label) + "）</label>" +
+        '<div class="hint" style="margin-bottom:8px">下面每一個都用同一組關鍵字 <code>' + esc(TESTQ) + '</code> 測試。<b>逐一點開，哪一個真的跑出搜尋結果，就按它旁邊的「設為預設」</b>，之後全站連結都會改用那個格式。這只需要做一次。</div>' +
+        '<ul class="vlist">' + SCHEME_ORDER.map(function (k) {
+          var cur = k === S.scheme;
+          return '<li class="v ' + (cur ? "hires" : "hifi") + '"><div><div class="p">' + esc(SCHEMES[k].label) + (cur ? "　← 目前使用" : "") + "</div>" +
+            '<div class="sub" style="word-break:break-all">' + esc(SCHEMES[k].build(TESTQ, S.region, S.lang)) + "</div></div>" +
+            '<div class="acts"><a class="play" href="' + esc(SCHEMES[k].build(TESTQ, S.region, S.lang)) + '" target="_blank" rel="noopener">測試</a>' +
+            '<button class="copy" data-setscheme="' + k + '"' + (cur ? " disabled style=\"opacity:.45\"" : "") + ">設為預設</button></div></li>";
+        }).join("") + "</ul>" +
+        '<div class="hint">看到「請輸入一些關鍵字」= 這個格式沒把關鍵字傳進去，換下一個。<br>不管哪個格式，每個版本旁的「複製搜尋字串」按鈕永遠可用——貼進 KKBOX App 的搜尋列即可。</div></div>' +
       "<h3>版本排序</h3>" +
       '<div class="fld"><label><input type="checkbox" id="setHires"' + (S.hiresFirst ? " checked" : "") + '> 高解析優先排序（Hi-Res → Hi-Fi → 歷史錄音）</label>' +
         '<div class="hint">關閉後改以編者推薦順序排列。</div></div>' +
@@ -2304,6 +2317,19 @@ window.WEEKS = [
     var t = e.target;
     if (!t || typeof t.closest !== "function") return;
     var find = function (a) { return t.closest("[" + a + "]"); };
+
+    // 開啟 KKBOX 時順手把關鍵字放進剪貼簿：萬一搜尋頁是空的，直接貼上即可
+    var pl = t.closest("a.play");
+    if (pl && pl.getAttribute("data-q")) {
+      copyText(pl.getAttribute("data-q"));
+      toast("已複製關鍵字——若 KKBOX 搜尋頁是空的，直接貼上");
+      // 不 return，讓連結照常開啟
+    }
+    var st = find("data-setscheme");
+    if (st) {
+      S.scheme = st.getAttribute("data-setscheme"); save(); render(); openDrawer("settings");
+      toast("已設為預設：" + SCHEMES[S.scheme].label); return;
+    }
 
     var go = find("data-go");
     if (go) {
@@ -2396,7 +2422,7 @@ window.WEEKS = [
       S.checks[k2] = t.checked; if (!t.checked) delete S.checks[k2]; save();
       t.closest("li").classList.toggle("dn", t.checked); return;
     }
-    var map = { setRegion: "region", setLang: "lang", setScheme: "scheme", setTheme: "theme" };
+    var map = { setRegion: "region", setLang: "lang", setTheme: "theme" };
     if (map[t.id]) { S[map[t.id]] = t.value; save(); if (t.id === "setTheme") applyTheme(); else render(); return; }
     if (t.id === "setHires") { S.hiresFirst = t.checked; save(); render(); return; }
     if (t.id === "setHideH") { S.hideHistoric = t.checked; save(); render(); return; }
