@@ -127,6 +127,9 @@
         '<div class="sub"><span class="qbadge ' + v.qa + '" title="' + esc(q.desc) + '">' + esc(q.label) + "</span>" +
           esc(v.l) + (v.y ? " · " + v.y : "") + " " + tags + "</div>" +
         (v.w ? '<div class="why">' + esc(v.w) + "</div>" : "") +
+        '<div class="qline' + (pin ? " muted" : "") + '">' +
+          (pin ? "🔗 直接開啟已釘選連結，不經過搜尋　｜　搜尋字串：" : "🔍 ") +
+          "<code>" + esc(v.q) + "</code></div>" +
       "</div>" +
       '<div class="acts">' +
         '<a class="play" data-q="' + esc(v.q) + '" href="' + esc(kk(v.q)) + '" target="_blank" rel="noopener">' +

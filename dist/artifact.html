@@ -145,6 +145,9 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 }
 .wlink:hover{background:var(--acc);color:#fff}
 .pinTag{background:var(--hiresBg);color:var(--hires);font-weight:700}
+.qline{font-size:11.5px;color:var(--mut);margin-top:6px;line-height:1.6;word-break:break-word}
+.qline code{font-size:11.5px;background:var(--sel);padding:1px 5px}
+.qline.muted{opacity:.6}
 .v .p{font-weight:600;font-size:14px}
 .v .sub{font-size:12px;color:var(--mut);margin-top:1px}
 .v .why{font-size:12.5px;color:var(--mut);margin-top:5px;line-height:1.6}
@@ -441,7 +444,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     versions: [
       { p: "Simon Rattle / City of Birmingham SO", l: "EMI／Warner", y: 1990, qa: "hires", t: ["ref"], q: "Britten Young Person's Guide Rattle", w: "數位錄音、聲部分離清晰，最適合本週的「聽出樂器」任務。" },
       { p: "Marin Alsop / Bournemouth SO", l: "Naxos", y: 2004, qa: "hires", t: ["entry"], q: "Britten Young Person's Guide Alsop", w: "近年錄音，動態自然，Naxos 曲庫在 KKBOX 上通常齊全。" },
-      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1961, qa: "hifi", t: ["narrated"], q: "Bernstein Young Person's Guide to the Orchestra", w: "伯恩斯坦親自解說的旁白版，教學性最強。" },
+      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1961, qa: "hifi", t: ["narrated"], q: "Britten Young Person's Guide Bernstein", w: "伯恩斯坦親自解說的旁白版，教學性最強。" },
       { p: "André Previn / London SO", l: "EMI", y: 1972, qa: "hifi", t: [], q: "Britten Young Person's Guide Previn", w: "類比時代名盤，音色溫暖。" }
     ]
   },
@@ -455,8 +458,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     life: "長年作為全世界兒童音樂教育的標準教材——很多人第一次認識管弦樂團的樂器就是靠這首。",
     versions: [
       { p: "Claudio Abbado / Chamber Orch of Europe（旁白：Sting）", l: "DG", y: 1990, qa: "hires", t: ["ref", "narrated"], q: "Prokofiev Peter and the Wolf Abbado Sting", w: "DG 數位錄音 + Sting 旁白，錄音與演奏皆為現行首選。" },
-      { p: "Eugene Ormandy / Philadelphia（旁白：David Bowie）", l: "RCA", y: 1978, qa: "hifi", t: ["narrated"], q: "Peter and the Wolf David Bowie Ormandy", w: "最著名的旁白版之一，Bowie 的敘事節奏極佳。" },
-      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1960, qa: "hifi", t: ["narrated"], q: "Bernstein Peter and the Wolf", w: "伯恩斯坦旁白版，語速較慢，適合初次接觸。" }
+      { p: "Eugene Ormandy / Philadelphia（旁白：David Bowie）", l: "RCA", y: 1978, qa: "hifi", t: ["narrated"], q: "Prokofiev Peter and the Wolf David Bowie", w: "最著名的旁白版之一，Bowie 的敘事節奏極佳。" },
+      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1960, qa: "hifi", t: ["narrated"], q: "Prokofiev Peter and the Wolf Bernstein", w: "伯恩斯坦旁白版，語速較慢，適合初次接觸。" }
     ]
   },
 
@@ -470,7 +473,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     versions: [
       { p: "Charles Dutoit / London Sinfonietta（Rogé & Ortiz 雙鋼琴）", l: "Decca", y: 1980, qa: "hifi", t: ["ref"], q: "Saint-Saens Carnival of the Animals Dutoit Roge", w: "Decca 錄音平衡，樂器線條乾淨。" },
       { p: "André Previn / Vienna Phil", l: "Philips／Decca", y: 1987, qa: "hires", t: [], q: "Saint-Saens Carnival of the Animals Previn Vienna", w: "數位錄音，維也納愛樂音色厚實。" },
-      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1962, qa: "hifi", t: ["narrated"], q: "Bernstein Carnival of the Animals", w: "含解說版本，可與《彼得與狼》連聽。" }
+      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1962, qa: "hifi", t: ["narrated"], q: "Saint-Saens Carnival of the Animals Bernstein", w: "含解說版本，可與《彼得與狼》連聽。" }
     ]
   },
 
@@ -2100,6 +2103,9 @@ window.PINNED = {
         '<div class="sub"><span class="qbadge ' + v.qa + '" title="' + esc(q.desc) + '">' + esc(q.label) + "</span>" +
           esc(v.l) + (v.y ? " · " + v.y : "") + " " + tags + "</div>" +
         (v.w ? '<div class="why">' + esc(v.w) + "</div>" : "") +
+        '<div class="qline' + (pin ? " muted" : "") + '">' +
+          (pin ? "🔗 直接開啟已釘選連結，不經過搜尋　｜　搜尋字串：" : "🔍 ") +
+          "<code>" + esc(v.q) + "</code></div>" +
       "</div>" +
       '<div class="acts">' +
         '<a class="play" data-q="' + esc(v.q) + '" href="' + esc(kk(v.q)) + '" target="_blank" rel="noopener">' +

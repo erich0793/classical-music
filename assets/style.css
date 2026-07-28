@@ -143,6 +143,9 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 }
 .wlink:hover{background:var(--acc);color:#fff}
 .pinTag{background:var(--hiresBg);color:var(--hires);font-weight:700}
+.qline{font-size:11.5px;color:var(--mut);margin-top:6px;line-height:1.6;word-break:break-word}
+.qline code{font-size:11.5px;background:var(--sel);padding:1px 5px}
+.qline.muted{opacity:.6}
 .v .p{font-weight:600;font-size:14px}
 .v .sub{font-size:12px;color:var(--mut);margin-top:1px}
 .v .why{font-size:12.5px;color:var(--mut);margin-top:5px;line-height:1.6}

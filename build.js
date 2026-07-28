@@ -27,6 +27,30 @@ let html = read("index.html");
     bad.forEach((k) => console.error("  " + JSON.stringify(k)));
     process.exit(1);
   }
+
+  // 課程 §2.1 的搜尋原則是「作曲家 + 作品 + 演奏者」三段式。
+  // 缺作曲家會讓搜尋落到同名作品上，缺演奏者則每個版本會搜到同一批結果。
+  const fold = (s) =>
+    (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const surname = (c) =>
+    (c || "").replace(/（.*?）/g, "").replace(/\(.*?\)/g, "").trim()
+      .split(/\s+/).filter((x) => !/^[A-Z]\.$/.test(x)).pop() || "";
+  const problems = [];
+  for (const [id, w] of Object.entries(sandbox.window.WORKS)) {
+    const sn = fold(surname(w.composer));
+    const seen = new Map();
+    for (const v of w.versions) {
+      const q = fold(v.q);
+      if (sn && !q.includes(sn)) problems.push(`${id} / ${v.p}：搜尋字串缺作曲家「${surname(w.composer)}」→ "${v.q}"`);
+      if (seen.has(q)) problems.push(`${id}：兩個版本的搜尋字串相同 → "${v.q}"（${seen.get(q)} / ${v.p}）`);
+      seen.set(q, v.p);
+    }
+  }
+  if (problems.length) {
+    console.error("搜尋字串檢查未通過：");
+    problems.forEach((x) => console.error("  " + x));
+    process.exit(1);
+  }
 }
 
 html = html.replace(
