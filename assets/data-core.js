@@ -88,6 +88,36 @@ window.CORE = {
     ]
   },
 
+  /* 海牛（許崴）／音樂家的無聊人生 Musecow
+     直接影片連結取自公開網路搜尋結果，可能被改名或下架；
+     頻道內搜尋連結為官方網址格式，不會失效，故每週皆以它為主要入口。 */
+  musecow: {
+    name: "音樂家的無聊人生 Musecow",
+    host: "海牛（許崴）",
+    channel: "https://www.youtube.com/@musecow",
+    searchBase: "https://www.youtube.com/@musecow/search?query=",
+    note: "台灣的古典音樂 YouTube 頻道，以拆解樂曲結構與作曲家故事見長。本課程偏結構分析，海牛偏敘事與情境，兩者互補：<b>建議先看影片建立興趣與脈絡，再回來做本週的聆聽任務。</b>"
+  },
+
+  /* 地理軸：借鏡焦元溥《37 堂古典音樂課》以「時期／地理／樂器」三軸切入的作法。
+     本課程原本只有時期一軸，此表補上地理維度。 */
+  geography: {
+    title: "音樂地圖：作品寫在哪裡",
+    intro: "古典音樂史不只是時間軸，也是幾座城市的故事。同一個時期，維也納與巴黎在做的事可以完全不同。下表把本課程的曲目重新按<b>城市</b>排列一次——這是理解同一段音樂史的另一種切法。",
+    rows: [
+      { city: "威尼斯 Venezia", period: "巴洛克", who: "Vivaldi", what: "在孤女院任教並為院內樂團寫下大量協奏曲，《四季》即出自此脈絡", weeks: [5, 23] },
+      { city: "萊比錫 Leipzig", period: "巴洛克", who: "J.S. Bach", what: "任 St. Thomas 教堂樂長 27 年，受難曲與大量教會音樂在此完成", weeks: [6, 7] },
+      { city: "倫敦 London", period: "巴洛克→古典", who: "Handel、Haydn", what: "當時歐洲最大的音樂消費市場。Handel 定居於此；Haydn 晚年兩度受邀來訪，寫下 12 首「倫敦交響曲」", weeks: [7, 9] },
+      { city: "維也納 Wien", period: "古典→浪漫→20 世紀", who: "Haydn、Mozart、Beethoven、Schubert、Brahms、第二維也納樂派", what: "本課程份量最重的一座城市。從奏鳴曲式的成熟到調性的解體，橫跨 150 年都發生在這裡", weeks: [8, 9, 10, 11, 13, 15, 20] },
+      { city: "巴黎 Paris", period: "浪漫→20 世紀", who: "Berlioz、Chopin、Debussy、Ravel、Stravinsky", what: "十九世紀的音樂首都。Chopin 後半生、標題音樂的誕生、印象派、《春之祭》首演騷動都在此", weeks: [12, 14, 18, 19] },
+      { city: "米蘭 Milano", period: "浪漫", who: "Verdi", what: "史卡拉歌劇院是義大利歌劇的中心舞台", weeks: [16] },
+      { city: "拜魯特 Bayreuth", period: "浪漫", who: "Wagner", what: "Wagner 為自己的樂劇蓋了一座專屬劇院——作曲家反過來重新定義了建築與觀演方式", weeks: [16] },
+      { city: "布拉格 Praha", period: "浪漫（國民樂派）", who: "Smetana、Dvořák", what: "民族認同透過音樂表述的代表案例，〈莫爾道河〉即為捷克的音樂地標", weeks: [17] },
+      { city: "赫爾辛基 Helsinki", period: "浪漫（國民樂派）", who: "Sibelius", what: "《芬蘭頌》在俄國統治下寫成，一度被禁演", weeks: [17] },
+      { city: "聖彼得堡／列寧格勒", period: "浪漫→20 世紀", who: "Rimsky-Korsakov、Tchaikovsky、Shostakovich", what: "從《天方夜譚》的東方想像，到 Shostakovich 在政治壓力下的雙重語言", weeks: [15, 17, 21] }
+    ]
+  },
+
   glossary: [
     ["織體", "Texture", "同時進行之聲部間的關係"],
     ["複音", "Polyphony", "多條地位平等的旋律線並行"],

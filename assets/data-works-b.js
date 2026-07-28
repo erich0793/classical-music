@@ -136,6 +136,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Modest Mussorgsky（Ravel 管弦樂版）",
     q: "Mussorgsky Pictures at an Exhibition Ravel",
     pick: "各曲之間穿插的〈漫步 Promenade〉代表參觀者在畫作之間行走。任務：數出〈漫步〉出現幾次。",
+    life: "1971 年英國前衛搖滾樂團 Emerson, Lake &amp; Palmer 把全曲改編成搖滾版本並發行專輯，是古典作品進入流行樂界最著名的案例之一。",
     versions: [
       { p: "Fritz Reiner / Chicago SO", l: "RCA", y: 1957, qa: "hifi", t: ["ref"], q: "Mussorgsky Pictures at an Exhibition Reiner", w: "Living Stereo 名盤，配器細節極清楚，有 24bit 重製。" },
       { p: "Valery Gergiev / Vienna Phil", l: "Philips", y: 2000, qa: "hires", t: [], q: "Mussorgsky Pictures at an Exhibition Gergiev", w: "近年數位錄音，高解析機率高。" },
@@ -237,6 +238,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Giacomo Puccini",
     q: "Puccini Turandot",
     pick: "〈Nessun dorma〉。",
+    life: "〈Nessun dorma〉因帕華洛帝的演唱、以及 1990 年義大利世界盃採用為主題曲，成為當代最廣為人知的詠嘆調。",
     versions: [
       { p: "Zubin Mehta / London Phil", l: "Decca", y: 1972, qa: "hires", t: ["ref"], q: "Puccini Turandot Mehta Pavarotti Sutherland", w: "Pavarotti 的〈Nessun dorma〉即出自此版，也是公認的錄音室首選。Decca 有 24bit 重製。" },
       { p: "Herbert von Karajan / Vienna Phil", l: "DG", y: 1981, qa: "hifi", t: [], q: "Puccini Turandot Karajan", w: "Ricciarelli／Domingo，音響最華麗。" },
@@ -250,6 +252,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Die Walküre – Ride of the Valkyries",
     composer: "Richard Wagner",
     q: "Wagner Die Walkure Ride of the Valkyries",
+    life: "〈女武神的騎行〉因電影《現代啟示錄》(1979) 的直升機空襲場景而深植大眾記憶。",
     versions: [
       { p: "Georg Solti / Vienna Phil", l: "Decca", y: 1965, qa: "hires", t: ["ref"], q: "Wagner Die Walkure Solti", w: "Decca《指環》全集，錄音史上的里程碑，有 24bit 重製。" },
       { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1967, qa: "hifi", t: ["ref"], q: "Wagner Die Walkure Karajan", w: "音色最統一的版本。" },
@@ -294,6 +297,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Dvorak Symphony No 9 New World",
     country: "捷克（作於美國時期）",
     pick: "第二樂章（Largo）的主要旋律極為著名。",
+    life: "第二樂章的旋律後來被填詞成歌曲〈Goin' Home〉，在台灣以〈念故鄉〉之名廣為傳唱——很多人是先會唱這首歌，多年後才知道它出自一首交響曲。",
     versions: [
       { p: "Jiří Bělohlávek / Czech Phil", l: "Decca", y: 2014, qa: "hires", t: ["ref"], q: "Dvorak Symphony 9 Belohlavek", w: "近年錄音，捷克愛樂的木管音色最道地。高解析首選。" },
       { p: "Rafael Kubelík / Berlin Phil", l: "DG", y: 1972, qa: "hifi", t: ["ref"], q: "Dvorak Symphony 9 Kubelik", w: "長年公認的第一參考之一。" },
@@ -338,6 +342,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Edvard Grieg",
     q: "Grieg Peer Gynt Suite",
     country: "挪威",
+    life: "〈山魔王的宮殿〉與〈清晨〉是廣告、卡通與電玩配樂的常客，辨識度極高。",
     versions: [
       { p: "Paavo Järvi / Estonian National SO", l: "Virgin／Erato", y: 2005, qa: "hires", t: [], q: "Grieg Peer Gynt Paavo Jarvi", w: "近年錄音，規格佳。" },
       { p: "Neeme Järvi / Gothenburg SO", l: "DG", y: 1987, qa: "hifi", t: ["ref"], q: "Grieg Peer Gynt Neeme Jarvi", w: "北歐樂團的代表錄音，含聲樂段落。" },
@@ -395,6 +400,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Maurice Ravel",
     q: "Ravel Bolero",
     pick: "全曲旋律與和聲幾乎不變，只有配器與音量持續累積。任務：記錄每一次旋律重複時新加入的樂器。這是最好的配器法教材。",
+    life: "1984 年冬季奧運，英國冰舞選手 Torvill &amp; Dean 以此曲的節目拿下滿分金牌，使它再次成為全球流行話題。",
     versions: [
       { p: "Charles Dutoit / Montréal SO", l: "Decca", y: 1981, qa: "hifi", t: ["ref"], q: "Ravel Bolero Dutoit", w: "公認的第一參考，每件樂器的進入都聽得一清二楚——正好是本週任務所需。" },
       { p: "Yannick Nézet-Séguin / Orchestre Métropolitain", l: "ATMA", y: 2011, qa: "hires", t: [], q: "Ravel Bolero Nezet-Seguin", w: "近年錄音，高解析機率高。" },
@@ -422,6 +428,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Stravinsky Rite of Spring",
     fact: "1913 年於巴黎香榭麗舍劇院首演，首演當晚觀眾席發生嚴重騷動。",
     pick: "聽第一部分〈春之預兆〉時試著跟著打拍子——你會失敗。此段使用不規則的重音配置，刻意破壞穩定的節拍預期。",
+    life: "迪士尼 1940 年的《幻想曲 Fantasia》用這首曲子配上地球生命演化與恐龍滅絕的動畫段落。",
     versions: [
       { p: "François-Xavier Roth / Les Siècles", l: "Harmonia Mundi", y: 2013, qa: "hires", t: ["period", "ref"], q: "Stravinsky Rite of Spring Les Siecles Roth", w: "使用 1913 年首演時期的樂器，音色粗糲，近年高解析錄音。極受好評。" },
       { p: "Simon Rattle / Berlin Phil", l: "EMI／Warner", y: 2013, qa: "hires", t: [], q: "Stravinsky Rite of Spring Rattle Berlin", w: "現場錄音，動態極大，高解析規格佳。" },
@@ -566,6 +573,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     line: "神聖極簡主義 Holy Minimalism",
     q: "Gorecki Symphony No 3",
     fact: "作於 1976 年；1992 年由 Dawn Upshaw 與 David Zinman 指揮之錄音發行後，取得極不尋常的商業成功。",
+    life: "1992 年的錄音登上英國流行音樂排行榜並賣出百萬張以上——古典錄音出現這種銷量極為罕見。",
     versions: [
       { p: "Dawn Upshaw / David Zinman / London Sinfonietta", l: "Nonesuch", y: 1992, qa: "hifi", t: ["ref"], q: "Gorecki Symphony No 3 Upshaw Zinman", w: "課程指定版，也是使此曲聞名全球的錄音。" },
       { p: "Beth Gibbons / Krzysztof Penderecki / NOSPR", l: "Domino", y: 2019, qa: "hires", t: [], q: "Gorecki Symphony 3 Beth Gibbons", w: "近年錄音，由 Portishead 主唱擔綱，高解析發行。詮釋取向截然不同。" },

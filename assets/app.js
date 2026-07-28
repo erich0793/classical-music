@@ -146,6 +146,7 @@
       '<div class="workbd">' +
         (metas.length ? '<div class="meta">' + metas.join(" ｜ ") + "</div>" : "") +
         (w.fact ? '<div class="meta">' + tierTags("史") + esc(w.fact) + "</div>" : "") +
+        (w.life ? '<div class="life"><b>你可能在哪裡聽過</b>' + w.life + "</div>" : "") +
         (w.pick ? '<div class="meta">' + tierTags("選") + esc(w.pick) + "</div>" : "") +
         (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
         '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">複製通用搜尋字串：' + esc(w.q) + "</button></div>" +
@@ -201,6 +202,7 @@
     if (wk.extraWorks && wk.extraWorks.length) {
       h += "<h3>延伸（深化）</h3>" + wk.extraWorks.map(function (id) { return workHTML(id, wk); }).join("");
     }
+    if (wk.yt) h += musecowHTML(wk.yt);
     if (wk.tasks && wk.tasks.length) {
       h += "<h3>聆聽任務</h3><ul class=\"chk\">";
       h += wk.tasks.map(function (t, i) {
@@ -237,6 +239,40 @@
         '<button class="iconbtn" data-copyweek="' + wk.n + '">複製本週全部搜尋字串（建 W' + (wk.n < 10 ? "0" : "") + wk.n + " 播放清單用）</button>" : "") +
       "</div>";
     h += "</div>";
+    return h;
+  }
+
+  function musecowHTML(yt) {
+    var M = CORE.musecow;
+    var h = "<h3>延伸影片｜" + esc(M.name) + " " + tierTags("選") + "</h3>";
+    h += '<ul class="vlist">';
+    h += '<li class="v yt"><div><div class="p">在頻道內搜尋本週主題</div>' +
+      '<div class="sub">關鍵字：<code>' + esc(yt.q) + "</code></div>" +
+      '<div class="why">頻道內搜尋，永遠不會失效。海牛的影片偏敘事與情境，正好補本課程偏結構分析的不足。</div></div>' +
+      '<div class="acts"><a class="play yt" href="' + esc(M.searchBase + encodeURIComponent(yt.q)) +
+      '" target="_blank" rel="noopener">▶ 搜尋影片</a></div></li>';
+    (yt.v || []).forEach(function (v) {
+      h += '<li class="v yt"><div><div class="p">' + esc(v.t) + "</div>" +
+        '<div class="sub"><span class="tag">直接連結</span>youtube.com/watch?v=' + esc(v.id) + "</div></div>" +
+        '<div class="acts"><a class="play yt" href="https://www.youtube.com/watch?v=' + esc(v.id) +
+        '" target="_blank" rel="noopener">▶ 觀看</a></div></li>';
+    });
+    h += "</ul>";
+    if (yt.v) h += '<div class="hint">直接影片連結取自公開搜尋結果，可能被改名或下架。失效的話用上面的頻道搜尋即可。</div>';
+    return h;
+  }
+
+  function geographyHTML() {
+    var G = CORE.geography;
+    var h = '<div class="card" id="p-geo"><h2>' + esc(G.title) + "</h2>" +
+      '<div class="enttl">地理軸 — 同一段音樂史的另一種切法</div>' +
+      "<p>" + G.intro + "</p>";
+    h += '<div class="tw"><table><thead><tr><th>城市</th><th>時期</th><th>誰在這裡</th><th>發生了什麼</th><th>對應週次</th></tr></thead><tbody>';
+    h += G.rows.map(function (r) {
+      return "<tr><td><b>" + esc(r.city) + "</b></td><td>" + esc(r.period) + "</td><td>" + esc(r.who) + "</td><td>" + esc(r.what) + "</td><td>" +
+        r.weeks.map(function (n) { return '<button class="wlink" data-go="week-' + n + '">W' + n + "</button>"; }).join(" ") + "</td></tr>";
+    }).join("") + "</tbody></table></div>";
+    h += '<div class="note">此頁借鏡焦元溥《37 堂古典音樂課》以「時期／地理／樂器」三軸切入的作法。本課程主幹為時期軸，此表補上地理維度——當你發現維也納一座城市橫跨了本課程七個週次，而巴黎則同時是蕭邦、德布西與《春之祭》的舞台，音樂史的形狀會變得比一條時間線更立體。' + tierTags("選") + "</div></div>";
     return h;
   }
 
@@ -339,6 +375,7 @@
     h += '<button class="navitem" data-go="p-hires"><span class="wn"><span>HR</span></span><span class="tx">Hi-Res 挑選指南</span></button>';
     h += '<button class="navitem" data-go="p-method"><span class="wn"><span>法</span></span><span class="tx">課程設計原則</span></button>';
     h += '<button class="navitem" data-go="p-kkbox"><span class="wn"><span>K</span></span><span class="tx">KKBOX 操作實務</span></button>';
+    h += '<button class="navitem" data-go="p-geo"><span class="wn"><span>圖</span></span><span class="tx">音樂地圖（地理軸）</span></button>';
     CORE.modules.forEach(function (m) {
       h += '<div class="navmod"><span>' + esc(m.label) + "</span> " + esc(m.title) + "</div>";
       m.weeks.forEach(function (n) {
@@ -366,7 +403,7 @@
   /* ---------------- 主渲染 ---------------- */
   function render() {
     $("#nav").innerHTML = navHTML();
-    $("#content").innerHTML = homeHTML() + WEEKS.map(weekHTML).join("") +
+    $("#content").innerHTML = homeHTML() + geographyHTML() + WEEKS.map(weekHTML).join("") +
       '<div class="foot">古典音樂系統聆聽課程 · ' + esc(CORE.meta.version) +
       "<br>版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。</div>";
     updateProgress();

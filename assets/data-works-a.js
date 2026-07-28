@@ -24,6 +24,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Sergei Prokofiev",
     q: "Prokofiev Peter and the Wolf",
     pick: "任意版本皆可；此曲刻意將「角色—樂器」一對一綁定，是最有效的記憶錨點。",
+    life: "長年作為全世界兒童音樂教育的標準教材——很多人第一次認識管弦樂團的樂器就是靠這首。",
     versions: [
       { p: "Claudio Abbado / Chamber Orch of Europe（旁白：Sting）", l: "DG", y: 1990, qa: "hires", t: ["ref", "narrated"], q: "Prokofiev Peter and the Wolf Abbado Sting", w: "DG 數位錄音 + Sting 旁白，錄音與演奏皆為現行首選。" },
       { p: "Eugene Ormandy / Philadelphia（旁白：David Bowie）", l: "RCA", y: 1978, qa: "hifi", t: ["narrated"], q: "Peter and the Wolf David Bowie Ormandy", w: "最著名的旁白版之一，Bowie 的敘事節奏極佳。" },
@@ -37,6 +38,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Camille Saint-Saëns",
     q: "Saint-Saens Carnival of the Animals",
     pick: "任意版本。每段各以不同樂器組合描繪一種動物，是樂器辨識的絕佳補充教材。",
+    life: "其中的〈天鵝〉是芭蕾獨舞《垂死的天鵝》所用的音樂，也是大提琴最常被單獨演奏的小品之一。",
     versions: [
       { p: "Charles Dutoit / London Sinfonietta（Rogé & Ortiz 雙鋼琴）", l: "Decca", y: 1980, qa: "hifi", t: ["ref"], q: "Saint-Saens Carnival of the Animals Dutoit Roge", w: "Decca 錄音平衡，樂器線條乾淨。" },
       { p: "André Previn / Vienna Phil", l: "Philips／Decca", y: 1987, qa: "hires", t: [], q: "Saint-Saens Carnival of the Animals Previn Vienna", w: "數位錄音，維也納愛樂音色厚實。" },
@@ -119,6 +121,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Ludwig van Beethoven",
     q: "Beethoven Fur Elise",
     form: "迴旋曲式 Rondo（主題回歸三次）",
+    life: "<b>台灣垃圾車的旋律之一</b>（另一首是巴達捷芙斯卡的《少女的祈禱》）。你大概已經聽過它幾千次了——這週請把它當一首曲子聽，而不是當作要倒垃圾的信號。",
     versions: [
       { p: "Wilhelm Kempff", l: "DG", y: 1965, qa: "hifi", t: ["ref"], q: "Beethoven Fur Elise Kempff", w: "句法質樸，主題每次回歸都很好辨認。" },
       { p: "Alfred Brendel", l: "Philips", y: 1985, qa: "hifi", t: [], q: "Beethoven Bagatelles Brendel", w: "結構感清楚，收錄於小品集中。" },
@@ -160,6 +163,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "J.S. Bach",
     q: "Bach Well-Tempered Clavier Book 1 Prelude C major",
     key: "無旋律，只有分解和弦——純粹的和聲流動",
+    life: "古諾（Gounod）把這首前奏曲原封不動當成伴奏，在上面加了一條新旋律，就成了家喻戶曉的《聖母頌 Ave Maria》。這是「和聲本身就足以撐起一首曲子」最直接的證明。",
     versions: [
       { p: "Sviatoslav Richter", l: "RCA／Melodiya", y: 1973, qa: "hifi", t: ["ref"], q: "Bach Well-Tempered Clavier Richter", w: "課程指定版之一。速度沉穩、觸鍵中性，最適合觀察和聲的穩定與推進。" },
       { p: "Angela Hewitt", l: "Hyperion", y: 2008, qa: "hires", t: ["ref"], q: "Bach Well-Tempered Clavier Hewitt", w: "重錄版本，錄音規格最好，高解析首選。" },
@@ -280,6 +284,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Handel Messiah",
     fact: "作於 1741 年，1742 年於都柏林首演。",
     pick: "任一完整版本，先聽〈Hallelujah〉與〈I know that my Redeemer liveth〉。",
+    life: "〈Hallelujah〉是西方聖誕與復活節季節的固定曲目，也是百貨公司與購物中心每年 12 月的背景音樂。",
     versions: [
       { p: "Harry Christophers / The Sixteen", l: "Coro", y: 2008, qa: "hires", t: ["period", "ref"], q: "Handel Messiah The Sixteen Christophers", w: "近年錄音規格最好的完整版之一，合唱咬字清楚。" },
       { p: "John Eliot Gardiner / English Baroque Soloists", l: "Philips", y: 1982, qa: "hifi", t: ["period", "ref"], q: "Handel Messiah Gardiner", w: "古樂器演奏的長年基準，速度輕快。" },
@@ -325,6 +330,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Beethoven Symphony No 5",
     pick: "課程指定 Carlos Kleiber / Wiener Philharmoniker。第 22 週會用此曲做三版本比較。",
     note: "第三樂章至第四樂章不間斷，以一段極長的漸強由 c 小調轉入 C 大調。",
+    life: "開頭的「三短一長」在摩斯電碼中是字母 V（Victory）。二戰期間 BBC 對歐洲廣播即以此節奏作為開場呼號。",
     versions: [
       { p: "Carlos Kleiber / Vienna Phil", l: "DG", y: 1974, qa: "hires", t: ["ref", "modern"], q: "Beethoven Symphony 5 Kleiber", w: "課程指定版，也是公認的第一參考。DG 已發行 24bit 重製，優先找標有 Hi-Res 的版本。" },
       { p: "Riccardo Chailly / Gewandhausorchester", l: "Decca", y: 2011, qa: "hires", t: ["modern"], q: "Beethoven Symphony 5 Chailly", w: "近年數位錄音，速度依貝多芬節拍器指示偏快，動態極大。高解析首選。" },
@@ -369,6 +375,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "W.A. Mozart",
     q: "Mozart Piano Concerto No 21 K 467",
     pick: "第二樂章極為著名。",
+    life: "第二樂章因 1967 年瑞典電影《Elvira Madigan》廣為流傳，這首協奏曲因此常被直接稱為「Elvira Madigan 協奏曲」。",
     versions: [
       { p: "Mitsuko Uchida / Cleveland Orchestra", l: "Decca", y: 2010, qa: "hires", t: ["ref"], q: "Mozart Piano Concerto 21 Uchida Cleveland", w: "與 K. 466 同一套錄音，便於對比。高解析首選。" },
       { p: "Murray Perahia / English Chamber Orchestra", l: "Sony", y: 1980, qa: "hifi", t: ["ref"], q: "Mozart Piano Concerto 21 Perahia", w: "第二樂章的句法極自然。" },

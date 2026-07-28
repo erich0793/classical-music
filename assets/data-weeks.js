@@ -2,6 +2,7 @@
 window.WEEKS = [
 {
   n: 1, m: "m1", title: "音色與樂器辨識", en: "Timbre & Instrumentation",
+  yt: { q: "管弦樂團 樂器" },
   concept: [
     { tier: "析", t: "管弦樂團依發聲原理分為四大家族：<b>弦樂（strings）、木管（woodwinds）、銅管（brass）、打擊（percussion）</b>。辨識樂器是所有後續聆聽的基礎——你無法描述你聽不出來的東西。" }
   ],
@@ -18,6 +19,7 @@ window.WEEKS = [
 },
 {
   n: 2, m: "m1", title: "織體", en: "Texture",
+  yt: { q: "複音 織體 對位" },
   concept: [
     { tier: "析", t: "織體指音樂中「同時進行的聲部之間的關係」。" }
   ],
@@ -40,6 +42,7 @@ window.WEEKS = [
 },
 {
   n: 3, m: "m1", title: "曲式", en: "Form",
+  yt: { q: "曲式 變奏" },
   concept: [
     { tier: "析", t: "曲式是音樂的時間結構。所有曲式都建立在三種基本操作上：<b>重複（repetition）、對比（contrast）、變化（variation）</b>。入門階段先掌握三種：<br>• <b>二段體 / 三段體（Binary / Ternary, AB / ABA）</b>：最基本的對比結構。ABA 的關鍵是「回來了」的辨識。<br>• <b>主題與變奏（Theme and Variations）</b>：同一主題經歷多次改裝。<br>• <b>迴旋曲式（Rondo, ABACA…）</b>：主題反覆回歸，中間穿插不同段落。" }
   ],
@@ -53,6 +56,7 @@ window.WEEKS = [
 },
 {
   n: 4, m: "m1", title: "調性與張力", en: "Tonality & Tension",
+  yt: { q: "大調 小調 調性" },
   concept: [
     { tier: "析", t: "調性系統是西方古典音樂約 1600–1900 年間的組織原則。入門階段需掌握三件事：<br>1. <b>大調 vs. 小調</b>：最粗糙但最有用的區分。大調聽感偏明亮、穩定；小調偏黯淡、緊張。<b>此為文化習得之聽感關聯，非物理必然</b>——但在西方古典曲目中高度一致。<br>2. <b>終止感（cadence）</b>：音樂「講完一句話」的感覺。完全終止給人「句號」感，半終止給人「逗號」感。<br>3. <b>轉調（modulation）</b>：音樂中途換了「家」。聽覺特徵是「本來很穩定的地方，突然變得不太一樣，但也還算穩定」。" }
   ],
@@ -67,6 +71,7 @@ window.WEEKS = [
 },
 {
   n: 5, m: "m2", title: "協奏曲與 Ritornello 形式", en: "Concerto & Ritornello",
+  yt: { q: "韋瓦第 協奏曲 巴洛克" },
   concept: [
     { tier: "析", t: "<b>協奏曲（concerto）</b>的核心是「獨奏 vs. 合奏」的對抗與對話。巴洛克協奏曲多採 <b>ritornello 形式</b>：合奏段（ritornello，「回歸段」）反覆回來，中間穿插獨奏段。<b>這是第 3 週迴旋曲式概念在巴洛克的具體實現。</b>" }
   ],
@@ -80,6 +85,7 @@ window.WEEKS = [
 },
 {
   n: 6, m: "m2", title: "對位法與賦格", en: "Counterpoint & Fugue",
+  yt: { q: "賦格 巴哈", v: [{ t: "極致的音樂創作方式！賦格，為什麼這麼重要?", id: "5o1KYoXO6l4" }] },
   concept: [
     { tier: "析", t: "<b>賦格（fugue）</b>是複音織體的最高度組織形式。基本機制：<br>1. <b>主題（subject）</b>由單一聲部獨自呈示。<br>2. 第二聲部以<b>答題（answer）</b>進入（通常在五度上），此時第一聲部繼續，形成<b>對題（countersubject）</b>。<br>3. 各聲部依序進入，之後主題在不同聲部、不同調性上反覆出現，中間穿插<b>插句（episode）</b>。" }
   ],
@@ -94,6 +100,7 @@ window.WEEKS = [
 },
 {
   n: 7, m: "m2", title: "聲樂與神劇", en: "Vocal Music & Oratorio",
+  yt: { q: "神劇 受難曲 合唱" },
   concept: [
     { tier: "析", t: "巴洛克聲樂作品的兩種基本單位：<br>• <b>宣敘調（recitative）</b>：接近說話的節奏，推進劇情，伴奏稀疏。<br>• <b>詠嘆調（aria）</b>：旋律性強，時間「停下來」，人物抒發情感。多採 <b>da capo aria（ABA）</b>形式。" }
   ],
@@ -107,6 +114,7 @@ window.WEEKS = [
 },
 {
   n: 8, m: "m3", title: "奏鳴曲式", en: "Sonata Form", flag: "全課程最關鍵的單一單元",
+  yt: { q: "奏鳴曲式 交響曲 結構", v: [{ t: "大解密！貝多芬如何寫出偉大的《命運交響曲》!?", id: "me3Ji3KVdwg" }] },
   banner: "奏鳴曲式是 1750 年後約 150 年間西方器樂音樂的主導結構，掌握它等於掌握了大部分交響曲、協奏曲、奏鳴曲、四重奏第一樂章的地圖。<b>若時間有限，請優先投資本週。</b>",
   concept: [{ tier: "析", t: "奏鳴曲式三大段：" }],
   table: {
@@ -128,6 +136,7 @@ window.WEEKS = [
 },
 {
   n: 9, m: "m3", title: "交響曲的成形", en: "Symphony",
+  yt: { q: "海頓 交響曲", v: [{ t: "深入解析，莫札特的音樂為什麼聽起來很「順」?", id: "CLX_fCC97Sk" }] },
   concept: [{ tier: "析", t: "古典交響曲的標準四樂章配置：" }],
   table: {
     head: ["樂章", "速度", "常見曲式", "功能"],
@@ -147,6 +156,7 @@ window.WEEKS = [
 },
 {
   n: 10, m: "m3", title: "協奏曲與歌劇（Mozart）", en: "Concerto & Opera",
+  yt: { q: "莫札特 協奏曲 歌劇", v: [{ t: "為什麼莫札特鋼琴協奏曲是極品尤物？", id: "K5fSeWInowc" }, { t: "《阿瑪迪斯》仍然是神作？深入解析莫札特電影的音樂歷史意涵", id: "Orzo38LamfQ" }, { t: "最多餘的?也是最感人的? 莫札特「聖體頌」為何如此感人?", id: "PYGeap5AGUU" }] },
   concept: [
     { tier: "析", t: "古典協奏曲與巴洛克協奏曲的差異：獨奏者的角色從「合奏中的領奏」轉為<b>具有戲劇性人格的獨立主體</b>。標誌性特徵為<b>裝飾奏（cadenza）</b>——樂團停止，獨奏者獨自演奏一段技巧展示，傳統上帶即興性質。" }
   ],
@@ -159,6 +169,7 @@ window.WEEKS = [
 },
 {
   n: 11, m: "m3", title: "Beethoven：轉折點", en: "Beethoven: The Turning Point",
+  yt: { q: "貝多芬", v: [{ t: "大解密！貝多芬如何寫出偉大的《命運交響曲》!?", id: "me3Ji3KVdwg" }, { t: "貝多芬-第七號交響曲！為什麼是世紀經典？", id: "AuTN_VQDoOA" }, { t: "貝多芬到底有多狂？讓音樂家在台上「互飆」!? 解析《三重協奏曲》", id: "DGWtY2M-pqU" }] },
   concept: [
     { tier: "選析", t: "Beethoven（1770–1827）在音樂史敘述中的位置，是<b>古典形式的完成者與其邊界的突破者</b>。其作品通常分為三期（此三期劃分為<b>傳統學術慣例</b>，非作曲家本人所定）：" }
   ],
@@ -180,6 +191,7 @@ window.WEEKS = [
 },
 {
   n: 12, m: "m4", title: "鋼琴詩人（Chopin & Schumann）", en: "The Piano Poets",
+  yt: { q: "蕭邦", v: [{ t: "深入解析，蕭邦為什麼這麼好聽", id: "RcVyNE5L-zk" }, { t: "回到最初的起點：超級美的蕭邦夜曲 Op.27-2", id: "JRK3uvgc_0M" }, { t: "蕭邦-敘事曲的奧秘，原來還能這樣說故事!?", id: "0h-pg-ob-z0" }] },
   concept: [
     { tier: "析", t: "十九世紀鋼琴製造技術的進步（鑄鐵框架、擊弦機改良）使鋼琴成為<b>能夠獨自承載完整音樂世界的樂器</b>。隨之興起的是<b>性格小品（character piece）</b>——短小、單一情緒、無需大型形式的獨奏曲。" }
   ],
@@ -192,6 +204,7 @@ window.WEEKS = [
 },
 {
   n: 13, m: "m4", title: "藝術歌曲", en: "Lied",
+  yt: { q: "舒伯特 藝術歌曲 歌曲" },
   concept: [
     { tier: "析", t: "<b>藝術歌曲（Lied）</b>的定義性特徵：<b>鋼琴不是伴奏，而是與人聲平等的敘事夥伴</b>。鋼琴部分常獨立描繪場景、心理狀態或潛台詞。" }
   ],
@@ -204,6 +217,7 @@ window.WEEKS = [
 },
 {
   n: 14, m: "m4", title: "標題音樂", en: "Program Music",
+  yt: { q: "白遼士 標題音樂 交響詩" },
   concept: [
     { tier: "析", t: "<b>標題音樂</b>指以音樂敘述特定文學、繪畫或事件內容的器樂作品，與<b>絕對音樂（absolute music）</b>相對。核心技術為<b>主導動機（leitmotif）</b>與 Berlioz 的 <b>idée fixe（固定樂思）</b>——以一段可辨識的旋律代表特定人物或概念，並在全曲中變形出現。" }
   ],
@@ -216,6 +230,7 @@ window.WEEKS = [
 },
 {
   n: 15, m: "m4", title: "交響曲的擴張（Brahms & Tchaikovsky）", en: "The Symphony Expanded",
+  yt: { q: "布拉姆斯 柴可夫斯基 交響曲" },
   concept: [
     { tier: "選析", t: "十九世紀後期交響曲創作呈現兩種取向：<b>Brahms 代表在古典形式框架內深化</b>；<b>Tchaikovsky 代表以情感敘事驅動形式</b>。兩者並非對立陣營，但提供了理解此時期的有用座標。" }
   ],
@@ -228,6 +243,7 @@ window.WEEKS = [
 },
 {
   n: 16, m: "m4", title: "歌劇", en: "Opera",
+  yt: { q: "歌劇 華格納 普契尼" },
   concept: [
     { tier: "選", t: "歌劇對自學者的門檻最高（時長、語言、劇情），故本課程採<b>片段優先策略</b>：先聽著名選曲建立熟悉度，暫不追求全劇。" },
     { tier: "析", t: "十九世紀歌劇的三條主要路線：<br>• <b>義大利 bel canto 至 Verdi</b>：以人聲旋律為核心。<br>• <b>Puccini 的 verismo（寫實主義）</b>：題材貼近日常，旋律直接訴諸情感。<br>• <b>Wagner 的樂劇（Musikdrama）</b>：取消分曲結構，以主導動機與連綿不斷的音樂織體推進戲劇。" }
@@ -241,6 +257,7 @@ window.WEEKS = [
 },
 {
   n: 17, m: "m4", title: "國民樂派", en: "Nationalism",
+  yt: { q: "德弗札克 西貝流士 國民樂派" },
   concept: [
     { tier: "析", t: "十九世紀民族意識興起，作曲家開始有意識地將本國民間音樂素材（音階、節奏、舞曲型態、民謠旋律）納入藝術音樂，並以音樂表述民族認同。" }
   ],
@@ -253,6 +270,7 @@ window.WEEKS = [
 },
 {
   n: 18, m: "m5", title: "印象派", en: "Impressionism",
+  yt: { q: "德布西 拉威爾 印象派" },
   concept: [
     { tier: "析", t: "Debussy（1862–1918）與 Ravel（1875–1937）的核心轉向：<b>音色與音響本身成為結構要素</b>，取代旋律—和聲的功能性推進。手法包括全音音階（whole-tone scale）、平行和弦、模糊的節奏脈動。" }
   ],
@@ -266,6 +284,7 @@ window.WEEKS = [
 },
 {
   n: 19, m: "m5", title: "節奏的革命", en: "Stravinsky & Bartók",
+  yt: { q: "史特拉汶斯基 春之祭 節奏" },
   concept: [
     { tier: "析", t: "二十世紀初的另一路線：<b>以節奏、而非旋律或和聲，作為主要驅動力</b>。特徵為不規則節拍、切分、多重節奏疊置、打擊樂化的樂團書寫。" }
   ],
@@ -278,6 +297,7 @@ window.WEEKS = [
 },
 {
   n: 20, m: "m5", title: "調性的解體", en: "Atonality & Serialism", flag: "全課程門檻最高的一週",
+  yt: { q: "荀白克 十二音 無調性" },
   concept: [
     { tier: "析", t: "第二維也納樂派（Second Viennese School）——Schoenberg（1874–1951）、Berg（1885–1935）、Webern（1883–1945）——放棄調性中心，並發展出<b>十二音技法（twelve-tone technique）</b>：將半音階十二個音排成一組音列（tone row），全曲素材由該音列及其變形推導而來。" },
     { tier: "選", t: "目標<b>不是</b>「喜歡」或「聽出音列」，而是理解<b>為什麼有人要這樣寫</b>，以及辨識其聲響特徵。" }
@@ -291,6 +311,7 @@ window.WEEKS = [
 },
 {
   n: 21, m: "m5", title: "戰後至當代", en: "Post-1945",
+  yt: { q: "蕭士塔高維契 極簡主義 當代" },
   concept: [
     { tier: "選", t: "二十世紀後半的多條路線中，選取三條對當代聽眾最具可及性者：<b>政治壓力下的交響傳統</b>、<b>神聖極簡主義（Holy Minimalism）</b>、<b>過程性極簡主義（Process Minimalism）</b>。" }
   ],
@@ -303,6 +324,7 @@ window.WEEKS = [
 },
 {
   n: 22, m: "m6", title: "版本比較", en: "Comparative Listening",
+  yt: { q: "詮釋 版本 指揮" },
   concept: [
     { tier: "選析", t: "古典音樂的<b>樂譜與演出是分離的</b>：同一部作品經由不同指揮、樂團與時代，可產生顯著不同的結果。<b>能夠聽出版本差異，是從「聽曲子」進階到「聽演出」的分水嶺。</b>" }
   ],
@@ -333,6 +355,7 @@ window.WEEKS = [
 },
 {
   n: 23, m: "m6", title: "歷史知情演奏", en: "Historically Informed Performance (HIP)",
+  yt: { q: "古樂器 巴洛克 演奏法" },
   concept: [
     { tier: "析", t: "HIP 運動主張以作品<b>創作年代的樂器、演奏技法與演出慣例</b>重現作品。" }
   ],
@@ -363,6 +386,7 @@ window.WEEKS = [
 },
 {
   n: 24, m: "m6", title: "建立自主聆聽路徑", en: "Building Your Own Path",
+  yt: { q: "古典音樂 入門 推薦" },
   banner: "本週任務不是聽新曲目，而是<b>整理與規劃</b>。",
   concept: [],
   works: [],
