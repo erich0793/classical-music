@@ -1,0 +1,2446 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>古典音樂系統聆聽課程｜24 週 · KKBOX 適配版</title>
+<meta name="description" content="24 週古典音樂自學課程，每首曲目附著名版本推薦，依 Hi-Res / Hi-Fi 音質優先排序，一鍵連往 KKBOX。">
+<meta name="color-scheme" content="light dark">
+<style>
+:root{
+  --bg:#f7f5f1; --bg2:#fffdfa; --fg:#22201d; --mut:#6d6760; --line:#e2ddd4;
+  --acc:#8a5a2b; --acc2:#b8813f; --sel:#f0e6d6;
+  --hires:#1c6b52; --hiresBg:#dff0e8; --hifi:#2f5d8a; --hifiBg:#dde9f4;
+  --hist:#7a5b2e; --histBg:#f0e6d2;
+  --t-shi:#2f5d8a; --t-xi:#6b4a86; --t-xuan:#8a5a2b;
+  --sh:0 1px 2px rgba(0,0,0,.05),0 8px 24px -12px rgba(0,0,0,.15);
+  --r:12px;
+}
+[data-theme="dark"]{
+  --bg:#16151a; --bg2:#1e1d23; --fg:#e9e6e1; --mut:#9c968e; --line:#33313a;
+  --acc:#d6a35f; --acc2:#e0b878; --sel:#2b2731;
+  --hires:#6fd3ac; --hiresBg:#16342a; --hifi:#8bbde8; --hifiBg:#1a2c3d;
+  --hist:#d3ae70; --histBg:#332a1a;
+  --t-shi:#8bbde8; --t-xi:#c3a5e0; --t-xuan:#d6a35f;
+  --sh:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  line-height:1.75;font-size:15.5px;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--acc);text-decoration:none}
+a:hover{text-decoration:underline}
+code{background:var(--sel);padding:.1em .4em;border-radius:5px;font-size:.88em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* ---------- layout ---------- */
+.wrap{display:grid;grid-template-columns:250px minmax(0,1fr);gap:0;max-width:1440px;margin:0 auto}
+.side{
+  position:sticky;top:0;height:100vh;overflow-y:auto;padding:20px 14px 60px;
+  border-right:1px solid var(--line);background:var(--bg2);
+}
+.main{padding:24px 30px 100px;min-width:0}
+
+/* ---------- header ---------- */
+.brand{font-weight:700;font-size:17px;letter-spacing:-.01em;margin-bottom:2px}
+.brand small{display:block;font-weight:400;font-size:12px;color:var(--mut);letter-spacing:0}
+.topbar{
+  position:sticky;top:0;z-index:40;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  padding:12px 0 12px;margin:-24px 0 20px;background:linear-gradient(var(--bg) 78%,transparent);
+  backdrop-filter:blur(6px);
+}
+.search{
+  flex:1;min-width:180px;display:flex;align-items:center;gap:8px;
+  background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+}
+.search input{flex:1;border:none;background:none;color:inherit;font:inherit;outline:none}
+.iconbtn{
+  border:1px solid var(--line);background:var(--bg2);border-radius:999px;
+  padding:7px 13px;font-size:13px;white-space:nowrap;transition:.15s;
+}
+.iconbtn:hover{border-color:var(--acc);color:var(--acc)}
+.iconbtn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+
+/* ---------- nav ---------- */
+.navmod{margin:16px 0 6px;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--mut);text-transform:uppercase}
+.navmod span{color:var(--acc)}
+.navitem{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  padding:5px 9px;border-radius:8px;font-size:13.5px;color:var(--fg);
+  transition:.12s;border:1px solid transparent;
+}
+.navitem:hover{background:var(--sel)}
+.navitem.active{background:var(--sel);border-color:var(--line);font-weight:600}
+.navitem .wn{
+  flex:none;width:23px;height:23px;border-radius:6px;background:var(--sel);
+  display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--mut);
+  font-variant-numeric:tabular-nums;
+}
+.navitem.active .wn,.navitem.done .wn{background:var(--acc);color:#fff}
+.navitem.done .wn::after{content:"✓";font-size:12px}
+.navitem.done .wn span{display:none}
+.navitem .tx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- progress ---------- */
+.prog{margin:14px 0 4px;font-size:12px;color:var(--mut)}
+.bar{height:5px;border-radius:99px;background:var(--sel);overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .4s}
+
+/* ---------- cards ---------- */
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;margin-bottom:18px;box-shadow:var(--sh)}
+.card h2{margin:0 0 4px;font-size:22px;letter-spacing:-.015em}
+.card h3{margin:22px 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
+.card h3::before{content:"";width:3px;height:15px;background:var(--acc);border-radius:2px}
+.eyebrow{font-size:12px;color:var(--mut);letter-spacing:.04em;margin-bottom:6px}
+.enttl{font-size:13px;color:var(--mut);font-style:italic;margin-bottom:14px}
+.flag{display:inline-block;background:var(--acc);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.banner{background:var(--sel);border-left:3px solid var(--acc);padding:11px 15px;border-radius:0 8px 8px 0;margin:12px 0;font-size:14px}
+
+/* ---------- tier tags ---------- */
+.tier{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;border:1px solid;vertical-align:middle;margin-right:6px;line-height:1.6}
+.tier.史{color:var(--t-shi);border-color:var(--t-shi)}
+.tier.析{color:var(--t-xi);border-color:var(--t-xi)}
+.tier.選{color:var(--t-xuan);border-color:var(--t-xuan)}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:12px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:400px}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
+
+/* ---------- works ---------- */
+.work{border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow:hidden;background:var(--bg)}
+.workhd{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;cursor:pointer;transition:.12s}
+.workhd:hover{background:var(--sel)}
+.workhd .ttl{flex:1;min-width:0}
+.workhd .ttl b{font-size:15px;font-weight:650;display:block}
+.workhd .ttl em{font-size:12.5px;color:var(--mut);font-style:normal;display:block}
+.star{flex:none;font-size:17px;line-height:1;padding:2px 4px;color:var(--line);transition:.15s}
+.star:hover{transform:scale(1.15)}
+.star.on{color:var(--acc2)}
+.chev{flex:none;color:var(--mut);font-size:12px;transition:transform .2s;padding-top:4px}
+.work.open .chev{transform:rotate(90deg)}
+.workbd{display:none;padding:0 15px 14px;border-top:1px dashed var(--line)}
+.work.open .workbd{display:block}
+.meta{font-size:13px;color:var(--mut);margin:10px 0 4px}
+.meta b{color:var(--fg)}
+
+/* ---------- versions ---------- */
+.vlist{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.v{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start;
+   border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:var(--bg2)}
+.v.hires{border-left:3px solid var(--hires)}
+.v.hifi{border-left:3px solid var(--hifi)}
+.v.historic{border-left:3px solid var(--hist);opacity:.92}
+.v .p{font-weight:600;font-size:14px}
+.v .sub{font-size:12px;color:var(--mut);margin-top:1px}
+.v .why{font-size:12.5px;color:var(--mut);margin-top:5px;line-height:1.6}
+.v .acts{display:flex;flex-direction:column;gap:5px;align-items:stretch}
+.qbadge{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:5px;margin-right:6px;white-space:nowrap}
+.qbadge.hires{color:var(--hires);background:var(--hiresBg)}
+.qbadge.hifi{color:var(--hifi);background:var(--hifiBg)}
+.qbadge.historic{color:var(--hist);background:var(--histBg)}
+.tag{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:5px;background:var(--sel);color:var(--mut);margin-right:4px}
+.play{
+  display:block;text-align:center;background:var(--acc);color:#fff;font-size:12.5px;font-weight:600;
+  padding:6px 14px;border-radius:7px;white-space:nowrap;transition:.15s;
+}
+.play:hover{background:var(--acc2);text-decoration:none;color:#fff}
+.copy{border:1px solid var(--line);border-radius:7px;padding:5px 14px;font-size:12px;color:var(--mut);background:var(--bg)}
+.copy:hover{border-color:var(--acc);color:var(--acc)}
+.copy.ok{border-color:var(--hires);color:var(--hires)}
+
+/* ---------- checklists ---------- */
+.chk{list-style:none;padding:0;margin:8px 0;display:grid;gap:7px}
+.chk li{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.7}
+.chk input{margin-top:6px;flex:none;width:15px;height:15px;accent-color:var(--acc);cursor:pointer}
+.chk li.must>span::before{content:"必做";font-size:10.5px;font-weight:700;background:var(--acc);color:#fff;padding:1px 6px;border-radius:5px;margin-right:7px;vertical-align:2px}
+.chk li.dn>span{opacity:.5;text-decoration:line-through}
+
+/* ---------- misc ---------- */
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 11px;background:var(--bg2);color:var(--mut)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.note{font-size:13px;color:var(--mut);border-left:2px solid var(--line);padding-left:12px;margin:12px 0}
+.rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
+.foot{text-align:center;color:var(--mut);font-size:12px;padding:30px 0}
+.hidden{display:none!important}
+
+/* ---------- drawer ---------- */
+.drawer{
+  position:fixed;top:0;right:0;width:min(430px,92vw);height:100vh;background:var(--bg2);
+  border-left:1px solid var(--line);box-shadow:-8px 0 40px -12px rgba(0,0,0,.3);
+  transform:translateX(100%);transition:transform .25s;z-index:60;overflow-y:auto;padding:20px 22px 60px;
+}
+.drawer.open{transform:none}
+.drawer h3{margin-top:0}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.25s;z-index:55}
+.scrim.on{opacity:1;pointer-events:auto}
+.fld{margin:14px 0}
+.fld label{display:block;font-size:12px;color:var(--mut);margin-bottom:5px}
+.fld select,.fld input[type=text]{
+  width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg);color:var(--fg);font:inherit;font-size:14px;
+}
+.hint{font-size:12px;color:var(--mut);margin-top:5px;line-height:1.6}
+.menubtn{display:none}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);z-index:80;
+  background:var(--fg);color:var(--bg);padding:9px 18px;border-radius:999px;font-size:13px;
+  opacity:0;pointer-events:none;transition:.2s;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;width:265px;z-index:70;transform:translateX(-100%);transition:transform .25s}
+  .side.open{transform:none}
+  .main{padding:18px 16px 90px}
+  .menubtn{display:inline-block}
+  .card{padding:16px 15px}
+  .v{grid-template-columns:1fr}
+  .v .acts{flex-direction:row}
+  .play,.copy{flex:1}
+}
+@media print{
+  .side,.topbar,.drawer,.scrim,.star,.copy{display:none!important}
+  .wrap{grid-template-columns:1fr}
+  .workbd{display:block!important}
+  body{background:#fff}
+}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="brand">古典音樂系統聆聽課程<small>24 週 · KKBOX 適配版</small></div>
+    <div class="prog"><span id="progTxt">已完成 0 / 24 週</span><div class="bar"><i id="progBar" style="width:0"></i></div></div>
+    <nav id="nav"></nav>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="iconbtn menubtn" id="menuBtn">☰</button>
+      <div class="search">
+        <span aria-hidden="true">🔍</span>
+        <input id="q" type="text" placeholder="搜尋曲目、作曲家、演奏家…（Esc 清除）" autocomplete="off">
+      </div>
+      <button class="iconbtn" id="favBtn">★ 重聽區 (0)</button>
+      <button class="iconbtn" id="setBtn">⚙ 設定</button>
+    </div>
+    <div id="content"></div>
+  </main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* 課程骨架：模組、時期概覽、名詞表 */
+window.CORE = {
+  meta: {
+    title: "古典音樂系統聆聽課程",
+    subtitle: "24 週完整教程 · KKBOX 串流適配版",
+    version: "v1.0",
+    platform: "KKBOX（含 Hi-Fi / Hi-Res 音質選項）"
+  },
+
+  tiers: {
+    "史": { name: "史實層", en: "Historical Fact", desc: "可由標準音樂學參考文獻獨立查證之客觀事實", verify: "高，可指名查證" },
+    "析": { name: "分析層", en: "Analytical Convention", desc: "主流音樂理論與音樂學教材之通行分析結論；屬學界通說，但分析框架存在學派差異", verify: "中，通說可查證，但存在合理異見" },
+    "選": { name: "策展層", en: "Editorial Curation", desc: "編者之教學判斷與主觀選擇，無客觀對錯", verify: "不適用，屬價值判斷" }
+  },
+
+  quality: {
+    hires: { label: "Hi-Res 優先", short: "HR", desc: "近年數位錄音，或大廠已發行 24bit 高解析重製；在 KKBOX 上出現 Hi-Res 標記的機率最高" },
+    hifi:  { label: "Hi-Fi 無損", short: "HiFi", desc: "類比時代名盤之數位重製，通常為 16bit/44.1kHz 無損等級；部分有 24bit 重製" },
+    historic: { label: "歷史錄音", short: "歷史", desc: "單聲道或早期立體聲，音質受限。收錄理由為詮釋史地位，不以音質取勝" }
+  },
+
+  modules: [
+    { id: "m1", label: "模組一", title: "聆聽的基本工具", weeks: [1,2,3,4],
+      goal: "在進入歷史脈絡之前，先建立四項可跨時代通用的聆聽能力。這四項能力是後續 20 週的工具，投資報酬率最高。" },
+    { id: "m2", label: "模組二", title: "巴洛克時期", weeks: [5,6,7], period: "baroque" },
+    { id: "m3", label: "模組三", title: "古典時期", weeks: [8,9,10,11], period: "classical" },
+    { id: "m4", label: "模組四", title: "浪漫時期", weeks: [12,13,14,15,16,17], period: "romantic" },
+    { id: "m5", label: "模組五", title: "二十世紀與現代", weeks: [18,19,20,21], period: "modern" },
+    { id: "m6", label: "模組六", title: "深化與自主", weeks: [22,23,24] }
+  ],
+
+  periods: {
+    baroque: {
+      title: "巴洛克時期概覽",
+      rows: [
+        ["年代", "史", "約 1600–1750（下限常以 J.S. Bach 逝世年 1750 為界）"],
+        ["核心美學", "析", "恆定的動能（steady motoric rhythm）、單一樂章單一情緒（Affektenlehre 情感論）、通奏低音（basso continuo）為結構骨幹、對位法高度發展"],
+        ["代表作曲家", "史", "Monteverdi（1567–1643）、Vivaldi（1678–1741）、J.S. Bach（1685–1750）、Handel（1685–1759）"],
+        ["典型編制", "", "小型合奏，鍵盤（大鍵琴 harpsichord）+ 低音樂器持續伴奏"]
+      ],
+      cue: { tier: "選", text: "聽到大鍵琴那種金屬感的撥弦聲持續在底下跑，且節奏像縫紉機一樣穩定不停，通常就是巴洛克。" }
+    },
+    classical: {
+      title: "古典時期概覽",
+      rows: [
+        ["年代", "史", "約 1750–1820"],
+        ["核心美學", "析", "對稱與均衡、清晰的樂句結構（多為 4 或 8 小節）、主音織體取代複音織體為主流、動態對比（漸強漸弱）成為表現手段、通奏低音退場"],
+        ["代表作曲家", "史", "Haydn（1732–1809）、Mozart（1756–1791）、Beethoven（1770–1827，跨越至浪漫）"],
+        ["關鍵形式", "", "奏鳴曲式、交響曲、弦樂四重奏、古典協奏曲"]
+      ],
+      cue: { tier: "選", text: "巴洛克像不停轉動的機器，古典時期則像對話——一句、停頓、回應一句。樂句有明顯的呼吸感。" }
+    },
+    romantic: {
+      title: "浪漫時期概覽",
+      rows: [
+        ["年代", "史", "約 1820–1900"],
+        ["核心美學", "析", "個人情感表達優先於形式均衡、和聲語彙擴張（半音化 chromaticism）、音色成為獨立表現要素、樂團編制大幅擴大、標題音樂興起、民族意識進入音樂"],
+        ["關鍵張力", "", "形式 vs. 表現：作曲家在承襲古典形式與突破形式之間的持續拉鋸"]
+      ]
+    },
+    modern: {
+      title: "二十世紀與現代概覽",
+      rows: [
+        ["結構特徵", "析", "二十世紀音樂不存在單一主導風格，這與前述各時期根本不同。理解方式應為「數條並行且互相競爭的路線」，而非「一個時代的共同語言」。"]
+      ],
+      cue: { tier: "選", text: "給自學者的預先提醒：本模組的部分曲目在初次接觸時可能令人不適或困惑。這是正常反應，且是必要的過程。建議策略是——不強求「喜歡」，只求「聽完並辨識出作曲家在做什麼」。" }
+    }
+  },
+
+  practice: {
+    search: [
+      "優先使用原文／英文搜尋，而非中文譯名。古典曲目的資料庫著錄多以原文或英文為主，中文譯名命中率顯著低於 <code>Vivaldi Four Seasons</code>。",
+      "採「作曲家 + 作品 + 演奏者」三段式。差：<code>第五號交響曲</code>；中：<code>Beethoven Symphony No. 5</code>；佳：<code>Beethoven Symphony 5 Kleiber</code>。",
+      "搜尋「專輯」優於搜尋「單曲」。古典作品依樂章分軌，單曲搜尋會得到散落的個別樂章。請以專輯為單位加入收藏。",
+      "善用作品編號。<code>BWV 1046</code>、<code>K. 550</code>、<code>Op. 67</code> 等編號是最精確的識別符。"
+    ],
+    audio: [
+      "在吵雜環境（通勤、車內）聽交響曲，弱奏段落會完全被環境噪音蓋掉，導致你以為「這裡沒東西」。獨奏鋼琴、弦樂四重奏、藝術歌曲等編制較小的曲目較適合此類環境。",
+      "專注聆聽時段請使用耳機，並開啟 KKBOX 的高音質設定。",
+      "不要使用「音量標準化 / normalization」功能，該功能會壓縮動態範圍，破壞古典音樂的張力設計。"
+    ],
+    hires: [
+      "在 KKBOX App 中至「設定 → 音質」把串流與下載音質都調到最高（Hi-Fi 無損 / Hi-Res）。此設定為帳號層級，只需做一次。",
+      "專輯或歌曲列表上會出現音質標記。有 <b>Hi-Res</b> 標記者為 24bit 高解析；僅有 <b>Hi-Fi</b> 標記者為 16bit/44.1kHz 無損。本站的版本清單已依此優先排序。",
+      "同一演出常有多個發行版本（原始發行、週年重製、精選輯）。<b>優先點進標有 Hi-Res 的那一張</b>，通常是近年的重製版。",
+      "1960 年代前的歷史錄音（如 Furtwängler、Casals、Gould 1955）<b>不可能有真正的高解析母帶優勢</b>；即使標示 Hi-Res 也只是高位元的類比轉錄。本站已把這類錄音獨立標為「歷史錄音」，收錄理由是詮釋史地位。",
+      "有線耳機優於藍牙。多數藍牙編碼（SBC/AAC）會把無損訊號重新壓縮，Hi-Res 設定形同虛設。"
+    ]
+  },
+
+  glossary: [
+    ["織體", "Texture", "同時進行之聲部間的關係"],
+    ["複音", "Polyphony", "多條地位平等的旋律線並行"],
+    ["主音織體", "Homophony", "主旋律 + 伴奏"],
+    ["單音織體", "Monophony", "僅一條旋律線，無伴奏"],
+    ["對位法", "Counterpoint", "多聲部獨立進行的作曲技術"],
+    ["賦格", "Fugue", "高度組織化的對位曲式"],
+    ["奏鳴曲式", "Sonata form", "呈示部—發展部—再現部三段結構"],
+    ["呈示部", "Exposition", "主題首次呈示"],
+    ["發展部", "Development", "主題素材之拆解與轉調"],
+    ["再現部", "Recapitulation", "主題回歸主調"],
+    ["裝飾奏", "Cadenza", "協奏曲中之獨奏技巧展示段"],
+    ["終止", "Cadence", "樂句之結束式"],
+    ["轉調", "Modulation", "調性中心之轉移"],
+    ["迴旋曲式", "Rondo", "主題反覆回歸，中間穿插不同段落"],
+    ["主導動機", "Leitmotif", "代表特定人物或概念之音樂片段"],
+    ["固定樂思", "Idée fixe", "Berlioz 之主導動機用法"],
+    ["通奏低音", "Basso continuo", "巴洛克之持續低音伴奏"],
+    ["彈性速度", "Rubato", "演奏中之速度伸縮"],
+    ["藝術歌曲", "Lied", "人聲與鋼琴平等之德語歌曲"],
+    ["連篇歌曲集", "Song cycle", "具敘事關聯之成組歌曲"],
+    ["神劇", "Oratorio", "無舞台演出之大型聲樂作品"],
+    ["宣敘調", "Recitative", "接近說話節奏、推進劇情的聲樂段落"],
+    ["詠嘆調", "Aria", "旋律性強、抒發情感的聲樂段落"],
+    ["Ritornello", "Ritornello form", "巴洛克協奏曲中合奏段反覆回歸的結構"],
+    ["十二音技法", "Twelve-tone technique", "以十二音音列為素材基礎之作曲法"],
+    ["歷史知情演奏", "HIP", "以創作年代之樂器與慣例演出"]
+  ],
+
+  caveats: {
+    title: "限制、缺口與再查證事項",
+    items: [
+      ["內容缺口", "本課程為聆聽導向，不教授記譜法、音程、和聲學或視唱聽寫。若目標包含讀譜或演奏，需另行安排樂理課程。"],
+      ["未提供時間戳", "本課程刻意不標註「第幾分幾秒」。不同版本演奏時間差異可達 10–20%，標註時間戳將在多數版本上失準。改以結構事件描述（如「開頭主題原封不動回來的瞬間」）取代。"],
+      ["版本推薦之性質", "全部版本推薦屬【選】層，為編者之教學判斷，無客觀正確答案。若指定版本在 KKBOX 無法取得，改用平台上任何其他版本仍可完成全部聆聽任務。"],
+      ["Hi-Res 標記之時效性", "串流平台之古典曲庫與音質規格會隨授權異動。本站標示的音質等級為「依錄音年代與發行廠牌所作之推估」，非 KKBOX 即時資料，實際請以 App 內標記為準。"],
+      ["連結可用性", "KKBOX 的網頁搜尋網址格式可能改版。若連結失效，請用每個版本旁的「複製」按鈕，把搜尋字串貼進 KKBOX App 的搜尋列——此方式永遠可用。"]
+    ],
+    disputes: [
+      ["BWV 565《觸技曲與賦格》之作者歸屬", "部分學者質疑是否為 J.S. Bach 所作"],
+      ["Beethoven 三期分法", "傳統學術慣例，非作曲家本人所定，分界點有異見"],
+      ["Shostakovich 第 5 號末樂章之詮釋", "「真誠的勝利」vs.「反諷」，長期爭議未決"],
+      ["HIP 之歷史還原可能性", "歷史證據不完整，詮釋不可避免，學界持續辯論"],
+      ["Brahms 第 1 號與 Beethoven 第 9 號主題之關聯", "相似性受注意，關聯之意圖性有不同解讀"]
+    ]
+  },
+
+  local: {
+    venues: "國家兩廳院（國家音樂廳、國家戲劇院，台北）、臺中國家歌劇院、衛武營國家藝術文化中心（高雄）",
+    orchestras: "國家交響樂團（NSO／臺灣愛樂）、臺北市立交響樂團（TSO）、長榮交響樂團",
+    tickets: "OPENTIX 兩廳院文化生活"
+  }
+};
+
+</script>
+<script>
+/* 曲目資料庫 A：第 1–11 週
+   qa（音質推估）：hires = Hi-Res 優先；hifi = Hi-Fi 無損；historic = 歷史錄音
+   標籤 t：ref=公認代表版 / period=古樂器 / modern=現代樂器 / entry=入門友善 / narrated=附旁白 */
+window.WORKS = Object.assign(window.WORKS || {}, {
+
+  "britten-ypg": {
+    title: "Britten《青少年管弦樂入門》Op. 34",
+    en: "The Young Person's Guide to the Orchestra",
+    composer: "Benjamin Britten",
+    q: "Britten Young Person's Guide to the Orchestra",
+    fact: "作於 1946 年，原為英國教育影片配樂，全曲以 Purcell 之主題為基礎，依序展示管弦樂團各樂器組，其設計目的即為樂器辨識教學。",
+    pick: "附旁白版（narrated）優先，若無則任何版本皆可。",
+    versions: [
+      { p: "Simon Rattle / City of Birmingham SO", l: "EMI／Warner", y: 1990, qa: "hires", t: ["ref"], q: "Britten Young Person's Guide Rattle", w: "數位錄音、聲部分離清晰，最適合本週的「聽出樂器」任務。" },
+      { p: "Marin Alsop / Bournemouth SO", l: "Naxos", y: 2004, qa: "hires", t: ["entry"], q: "Britten Young Person's Guide Alsop", w: "近年錄音，動態自然，Naxos 曲庫在 KKBOX 上通常齊全。" },
+      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1961, qa: "hifi", t: ["narrated"], q: "Bernstein Young Person's Guide to the Orchestra", w: "伯恩斯坦親自解說的旁白版，教學性最強。" },
+      { p: "André Previn / London SO", l: "EMI", y: 1972, qa: "hifi", t: [], q: "Britten Young Person's Guide Previn", w: "類比時代名盤，音色溫暖。" }
+    ]
+  },
+
+  "prokofiev-peter": {
+    title: "Prokofiev《彼得與狼》Op. 67",
+    en: "Peter and the Wolf",
+    composer: "Sergei Prokofiev",
+    q: "Prokofiev Peter and the Wolf",
+    pick: "任意版本皆可；此曲刻意將「角色—樂器」一對一綁定，是最有效的記憶錨點。",
+    versions: [
+      { p: "Claudio Abbado / Chamber Orch of Europe（旁白：Sting）", l: "DG", y: 1990, qa: "hires", t: ["ref", "narrated"], q: "Prokofiev Peter and the Wolf Abbado Sting", w: "DG 數位錄音 + Sting 旁白，錄音與演奏皆為現行首選。" },
+      { p: "Eugene Ormandy / Philadelphia（旁白：David Bowie）", l: "RCA", y: 1978, qa: "hifi", t: ["narrated"], q: "Peter and the Wolf David Bowie Ormandy", w: "最著名的旁白版之一，Bowie 的敘事節奏極佳。" },
+      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1960, qa: "hifi", t: ["narrated"], q: "Bernstein Peter and the Wolf", w: "伯恩斯坦旁白版，語速較慢，適合初次接觸。" }
+    ]
+  },
+
+  "saintsaens-carnival": {
+    title: "Saint-Saëns《動物狂歡節》",
+    en: "Le Carnaval des animaux",
+    composer: "Camille Saint-Saëns",
+    q: "Saint-Saens Carnival of the Animals",
+    pick: "任意版本。每段各以不同樂器組合描繪一種動物，是樂器辨識的絕佳補充教材。",
+    versions: [
+      { p: "Charles Dutoit / London Sinfonietta（Rogé & Ortiz 雙鋼琴）", l: "Decca", y: 1980, qa: "hifi", t: ["ref"], q: "Saint-Saens Carnival of the Animals Dutoit Roge", w: "Decca 錄音平衡，樂器線條乾淨。" },
+      { p: "André Previn / Vienna Phil", l: "Philips／Decca", y: 1987, qa: "hires", t: [], q: "Saint-Saens Carnival of the Animals Previn Vienna", w: "數位錄音，維也納愛樂音色厚實。" },
+      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1962, qa: "hifi", t: ["narrated"], q: "Bernstein Carnival of the Animals", w: "含解說版本，可與《彼得與狼》連聽。" }
+    ]
+  },
+
+  "gregorian": {
+    title: "葛利果聖歌",
+    en: "Gregorian Chant",
+    composer: "（中世紀單旋律聖歌）",
+    q: "Gregorian Chant",
+    texture: "單音織體 Monophony",
+    versions: [
+      { p: "Coro de Monjes del Monasterio de Silos", l: "EMI", y: 1973, qa: "hifi", t: ["ref"], q: "Gregorian Chant Monks of Santo Domingo de Silos", w: "1994 年再發行後成為全球最暢銷的聖歌錄音，也是最容易在串流上找到的版本。" },
+      { p: "Ensemble Organum / Marcel Pérès", l: "Harmonia Mundi", y: 1990, qa: "hires", t: [], q: "Ensemble Organum Chant Gregorien Peres", w: "學術性強、裝飾唱法還原度高；HM 曲庫多有高解析。" },
+      { p: "Choralschola der Wiener Hofburgkapelle", l: "DG Archiv", y: 1990, qa: "hifi", t: [], q: "Gregorian Chant Wiener Hofburgkapelle", w: "音色乾淨中性，適合單純辨識「只有一條線」的織體特徵。" }
+    ]
+  },
+
+  "chopin-noc9-2": {
+    title: "Chopin 夜曲 Op. 9 No. 2",
+    en: "Nocturne in E-flat major, Op. 9 No. 2",
+    composer: "Frédéric Chopin",
+    q: "Chopin Nocturne Op 9 No 2",
+    texture: "主音織體 Homophony",
+    versions: [
+      { p: "Arthur Rubinstein", l: "RCA", y: 1965, qa: "hifi", t: ["ref"], q: "Chopin Nocturnes Rubinstein", w: "夜曲全集的長年基準版，句法自然不誇飾。" },
+      { p: "Maria João Pires", l: "DG", y: 1996, qa: "hires", t: ["ref"], q: "Chopin Nocturnes Pires", w: "數位錄音時代的代表版，鋼琴音色捕捉極佳，高解析首選。" },
+      { p: "Jan Lisiecki", l: "DG", y: 2021, qa: "hires", t: [], q: "Chopin Nocturnes Lisiecki", w: "近年新錄音，24bit 高解析發行機率最高。" },
+      { p: "Claudio Arrau", l: "Philips", y: 1978, qa: "hifi", t: [], q: "Chopin Nocturnes Arrau", w: "速度較慢、聲部層次分明，適合追蹤左右手關係。" }
+    ]
+  },
+
+  "bach-artoffugue": {
+    title: "Bach《賦格的藝術》Contrapunctus 1",
+    en: "Die Kunst der Fuge, BWV 1080",
+    composer: "J.S. Bach",
+    q: "Bach Art of Fugue Contrapunctus 1",
+    texture: "複音織體 Polyphony",
+    versions: [
+      { p: "Pierre-Laurent Aimard（鋼琴）", l: "DG", y: 2008, qa: "hires", t: ["ref"], q: "Bach Art of Fugue Aimard", w: "鋼琴版，聲部以觸鍵分層，最容易追蹤個別旋律線。高解析首選。" },
+      { p: "Akademie für Alte Musik Berlin（合奏）", l: "Harmonia Mundi", y: 2019, qa: "hires", t: ["period"], q: "Bach Art of Fugue Akademie fur Alte Musik", w: "以不同樂器承擔各聲部，四條線分得最開，本週任務最好懂的版本。" },
+      { p: "Angela Hewitt（鋼琴）", l: "Hyperion", y: 2014, qa: "hires", t: [], q: "Bach Art of Fugue Hewitt", w: "咬字清楚、速度中庸，教學上非常可靠。" },
+      { p: "Glenn Gould", l: "Sony", y: 1962, qa: "historic", t: [], q: "Bach Art of Fugue Gould", w: "管風琴／鋼琴片段錄音，詮釋極具個性，但非本週首選。" }
+    ]
+  },
+
+  "haydn-94": {
+    title: "Haydn 第 94 號交響曲《驚愕》",
+    en: "Symphony No. 94 in G major 'Surprise', Hob. I:94",
+    composer: "Joseph Haydn",
+    q: "Haydn Symphony 94 Surprise",
+    form: "第二樂章＝主題與變奏",
+    fact: "別名「驚愕」源於第二樂章中一次突如其來的強奏（fortissimo）和弦，位於樂章開頭主題第一次呈示之後。",
+    versions: [
+      { p: "Marc Minkowski / Les Musiciens du Louvre", l: "Naïve", y: 2009, qa: "hires", t: ["period", "ref"], q: "Haydn London Symphonies Minkowski", w: "古樂器、對比銳利，那一記「驚愕」和弦效果最強。近年錄音，高解析機率高。" },
+      { p: "Colin Davis / Concertgebouw", l: "Philips", y: 1981, qa: "hifi", t: ["modern", "ref"], q: "Haydn Symphony 94 Colin Davis", w: "現代樂器的標準參照，句法端正。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1982, qa: "hifi", t: ["modern"], q: "Haydn Symphony 94 Karajan", w: "音色豐厚、規模較大，可作為與古樂器版的對照組。" },
+      { p: "Bruno Weil / Tafelmusik", l: "Sony Vivarte", y: 1994, qa: "hifi", t: ["period"], q: "Haydn Symphony 94 Bruno Weil Tafelmusik", w: "古樂器版另一選擇，速度輕快。" }
+    ]
+  },
+
+  "mozart-k525": {
+    title: "Mozart《小夜曲》K. 525",
+    en: "Eine kleine Nachtmusik, K. 525",
+    composer: "W.A. Mozart",
+    q: "Mozart Eine kleine Nachtmusik K 525",
+    form: "第一樂章＝奏鳴曲式（第 8 週深入）",
+    versions: [
+      { p: "Orpheus Chamber Orchestra", l: "DG", y: 1988, qa: "hires", t: ["ref"], q: "Mozart Eine kleine Nachtmusik Orpheus Chamber Orchestra", w: "無指揮室內樂團，聲部平衡極佳，結構聽得最清楚。" },
+      { p: "Neville Marriner / Academy of St Martin in the Fields", l: "Philips", y: 1985, qa: "hifi", t: ["entry"], q: "Mozart Eine kleine Nachtmusik Marriner", w: "最普及的版本，速度與句法都很標準。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1980, qa: "hifi", t: [], q: "Mozart Eine kleine Nachtmusik Karajan", w: "大編制、線條圓潤的讀法。" }
+    ]
+  },
+
+  "beethoven-elise": {
+    title: "Beethoven《給愛麗絲》",
+    en: "Für Elise, WoO 59",
+    composer: "Ludwig van Beethoven",
+    q: "Beethoven Fur Elise",
+    form: "迴旋曲式 Rondo（主題回歸三次）",
+    versions: [
+      { p: "Wilhelm Kempff", l: "DG", y: 1965, qa: "hifi", t: ["ref"], q: "Beethoven Fur Elise Kempff", w: "句法質樸，主題每次回歸都很好辨認。" },
+      { p: "Alfred Brendel", l: "Philips", y: 1985, qa: "hifi", t: [], q: "Beethoven Bagatelles Brendel", w: "結構感清楚，收錄於小品集中。" },
+      { p: "András Schiff", l: "ECM", y: 2006, qa: "hires", t: [], q: "Beethoven Fur Elise Schiff", w: "ECM 錄音質感佳，高解析機率高。" }
+    ]
+  },
+
+  "mozart-40": {
+    title: "Mozart 第 40 號交響曲 K. 550",
+    en: "Symphony No. 40 in G minor, K. 550",
+    composer: "W.A. Mozart",
+    q: "Mozart Symphony No 40 K 550",
+    key: "g 小調 — 小調的緊張感",
+    versions: [
+      { p: "Karl Böhm / Berlin Phil", l: "DG", y: 1962, qa: "hifi", t: ["ref", "modern"], q: "Mozart Symphony 40 Bohm", w: "課程指定版之一。速度穩、結構清楚，最適合第 8 週找再現部。" },
+      { p: "Nikolaus Harnoncourt / Concentus Musicus Wien", l: "Sony", y: 2014, qa: "hires", t: ["period", "ref"], q: "Mozart Symphony 40 Harnoncourt", w: "課程指定版之一。重音與articulation 極為刻意，主題輪廓最鮮明。近年錄音，高解析首選。" },
+      { p: "Teodor Currentzis / MusicAeterna", l: "Sony", y: 2016, qa: "hires", t: ["period"], q: "Mozart Symphony 40 Currentzis", w: "極端對比、速度激烈，是「小調緊張感」最戲劇化的示範。" },
+      { p: "Bruno Walter / Columbia SO", l: "Sony", y: 1959, qa: "historic", t: [], q: "Mozart Symphony 40 Bruno Walter", w: "歌唱性的經典讀法，音質為早期立體聲。" }
+    ]
+  },
+
+  "mozart-41": {
+    title: "Mozart 第 41 號交響曲《朱庇特》K. 551",
+    en: "Symphony No. 41 in C major 'Jupiter', K. 551",
+    composer: "W.A. Mozart",
+    q: "Mozart Symphony No 41 Jupiter",
+    key: "C 大調 — 大調的開闊感；末樂章五主題對位疊置",
+    versions: [
+      { p: "Charles Mackerras / Scottish Chamber Orchestra", l: "Linn", y: 2007, qa: "hires", t: ["ref"], q: "Mozart Symphony 41 Jupiter Mackerras", w: "Linn Records 以高解析發行著稱，本版是「錄音規格 + 詮釋」兼顧的最佳解。末樂章五條線分得極清楚。" },
+      { p: "Karl Böhm / Berlin Phil", l: "DG", y: 1962, qa: "hifi", t: ["modern"], q: "Mozart Symphony 41 Jupiter Bohm", w: "與第 40 號同一套錄音，便於做大小調的直接對比。" },
+      { p: "Nikolaus Harnoncourt / Concentus Musicus Wien", l: "Sony", y: 2014, qa: "hires", t: ["period"], q: "Mozart Symphony 41 Jupiter Harnoncourt", w: "與第 40 號同一套，對比條件最一致。" },
+      { p: "Leonard Bernstein / Vienna Phil", l: "DG", y: 1984, qa: "hifi", t: [], q: "Mozart Symphony 41 Jupiter Bernstein", w: "規模宏大的浪漫化讀法。" }
+    ]
+  },
+
+  "bach-wtc1-prelude": {
+    title: "Bach《平均律》第一冊 第 1 首前奏曲 BWV 846",
+    en: "Well-Tempered Clavier Book 1, Prelude in C major",
+    composer: "J.S. Bach",
+    q: "Bach Well-Tempered Clavier Book 1 Prelude C major",
+    key: "無旋律，只有分解和弦——純粹的和聲流動",
+    versions: [
+      { p: "Sviatoslav Richter", l: "RCA／Melodiya", y: 1973, qa: "hifi", t: ["ref"], q: "Bach Well-Tempered Clavier Richter", w: "課程指定版之一。速度沉穩、觸鍵中性，最適合觀察和聲的穩定與推進。" },
+      { p: "Angela Hewitt", l: "Hyperion", y: 2008, qa: "hires", t: ["ref"], q: "Bach Well-Tempered Clavier Hewitt", w: "重錄版本，錄音規格最好，高解析首選。" },
+      { p: "András Schiff", l: "ECM", y: 2012, qa: "hires", t: [], q: "Bach Well-Tempered Clavier Schiff ECM", w: "現場錄音，聲響通透。" },
+      { p: "Glenn Gould", l: "Sony", y: 1963, qa: "historic", t: [], q: "Bach Well-Tempered Clavier Gould", w: "課程指定版之一。極具個性，速度與分句都非常規，宜作對照而非入門。" }
+    ]
+  },
+
+  "vivaldi-seasons": {
+    title: "Vivaldi《四季》Op. 8 Nos. 1–4",
+    en: "Le quattro stagioni",
+    composer: "Antonio Vivaldi",
+    q: "Vivaldi Four Seasons",
+    fact: "為《和聲與創意的競賽》Op. 8 之前四首，1725 年於阿姆斯特丹出版，每首附有描述季節景象的十四行詩，屬早期標題音樂。",
+    pick: "古樂器版本較銳利、戲劇性強；第 23 週會用同一曲做古樂器 vs. 現代樂器的比較。",
+    versions: [
+      { p: "Rachel Podger / Brecon Baroque", l: "Channel Classics", y: 2018, qa: "hires", t: ["period", "ref"], q: "Vivaldi Four Seasons Rachel Podger", w: "Channel Classics 為 DSD／高解析錄音廠牌，古樂器版中錄音規格最高。" },
+      { p: "Il Giardino Armonico / Giuliano Carmignola", l: "Naïve", y: 2000, qa: "hires", t: ["period", "ref"], q: "Vivaldi Four Seasons Il Giardino Armonico", w: "課程指定版。速度與力度對比極端，〈夏〉的暴風雨最有衝擊力。" },
+      { p: "Fabio Biondi / Europa Galante", l: "Virgin／Erato", y: 1991, qa: "hifi", t: ["period"], q: "Vivaldi Four Seasons Biondi Europa Galante", w: "古樂器演奏的分水嶺錄音，第 23 週對比可用。" },
+      { p: "I Musici / Felix Ayo", l: "Philips", y: 1959, qa: "hifi", t: ["modern"], q: "Vivaldi Four Seasons I Musici", w: "現代樂器的經典基準，句法圓潤。第 23 週的「現代樂器組」首選。" },
+      { p: "Anne-Sophie Mutter / Trondheim Soloists", l: "DG", y: 1999, qa: "hires", t: ["modern"], q: "Vivaldi Four Seasons Mutter", w: "浪漫化的現代樂器讀法，與古樂器版差異最大。" },
+      { p: "Nigel Kennedy / English Chamber Orchestra", l: "EMI", y: 1989, qa: "hifi", t: ["modern"], q: "Vivaldi Four Seasons Nigel Kennedy", w: "史上最暢銷古典錄音之一，個性強烈。" }
+    ]
+  },
+
+  "bach-bwv1048": {
+    title: "Bach《布蘭登堡協奏曲》第 3 號 BWV 1048",
+    en: "Brandenburg Concerto No. 3",
+    composer: "J.S. Bach",
+    q: "Bach Brandenburg Concerto No 3 BWV 1048",
+    fact: "六首布蘭登堡協奏曲於 1721 年獻呈布蘭登堡侯爵。",
+    versions: [
+      { p: "Trevor Pinnock / The English Concert", l: "DG Archiv", y: 1982, qa: "hifi", t: ["period", "ref"], q: "Bach Brandenburg Concertos Pinnock", w: "課程指定版。古樂器演奏的長年基準。" },
+      { p: "Café Zimmermann", l: "Alpha", y: 2005, qa: "hires", t: ["period", "ref"], q: "Bach Brandenburg Concertos Cafe Zimmermann", w: "近年錄音，聲部透明度極高，高解析首選。" },
+      { p: "Freiburger Barockorchester", l: "Harmonia Mundi", y: 2013, qa: "hires", t: ["period"], q: "Bach Brandenburg Concertos Freiburger Barockorchester", w: "HM 高解析發行，活力充沛。" },
+      { p: "Karl Richter / Munich Bach Orchestra", l: "DG Archiv", y: 1967, qa: "hifi", t: ["modern"], q: "Bach Brandenburg Concertos Karl Richter", w: "現代樂器的代表版，第 23 週對比用。" }
+    ]
+  },
+
+  "bach-bwv1050": {
+    title: "Bach《布蘭登堡協奏曲》第 5 號 BWV 1050",
+    en: "Brandenburg Concerto No. 5",
+    composer: "J.S. Bach",
+    q: "Bach Brandenburg Concerto No 5 BWV 1050",
+    fact: "第一樂章中段有一段極長的大鍵琴獨奏，常被視為鍵盤協奏曲的濫觴。",
+    versions: [
+      { p: "Trevor Pinnock / The English Concert", l: "DG Archiv", y: 1982, qa: "hifi", t: ["period", "ref"], q: "Bach Brandenburg Concertos Pinnock", w: "課程指定版；Pinnock 自己彈大鍵琴獨奏段。" },
+      { p: "Café Zimmermann", l: "Alpha", y: 2005, qa: "hires", t: ["period", "ref"], q: "Bach Brandenburg Concertos Cafe Zimmermann", w: "大鍵琴獨奏段的細節捕捉最清楚，高解析首選。" },
+      { p: "Il Giardino Armonico", l: "Teldec", y: 1996, qa: "hifi", t: ["period"], q: "Bach Brandenburg Concertos Il Giardino Armonico", w: "速度快、稜角分明。" },
+      { p: "Freiburger Barockorchester", l: "Harmonia Mundi", y: 2013, qa: "hires", t: ["period"], q: "Bach Brandenburg Concertos Freiburger Barockorchester", w: "近年高解析發行。" }
+    ]
+  },
+
+  "corelli-op6": {
+    title: "Corelli《大協奏曲》Op. 6",
+    en: "Concerti Grossi, Op. 6",
+    composer: "Arcangelo Corelli",
+    q: "Corelli Concerti Grossi Op 6",
+    extra: true,
+    versions: [
+      { p: "Trevor Pinnock / The English Concert", l: "DG Archiv", y: 1988, qa: "hifi", t: ["period", "ref"], q: "Corelli Concerti Grossi Op 6 Pinnock", w: "古樂器基準版。" },
+      { p: "Rinaldo Alessandrini / Concerto Italiano", l: "Naïve", y: 2015, qa: "hires", t: ["period"], q: "Corelli Concerti Grossi Concerto Italiano", w: "近年錄音，高解析機率高。" }
+    ]
+  },
+
+  "bach-wtc1-fugue": {
+    title: "Bach《平均律》第一冊 第 1 首賦格 BWV 846",
+    en: "Well-Tempered Clavier Book 1, Fugue in C major",
+    composer: "J.S. Bach",
+    q: "Bach Well-Tempered Clavier Book 1 BWV 846",
+    fact: "《平均律鍵盤曲集》兩冊共 48 組前奏曲與賦格（BWV 846–893），涵蓋全部 24 個大小調。",
+    pick: "Glenn Gould（極具個性）或 Sviatoslav Richter（較中性）。本週任務要數主題進入次數，建議先用中性版本。",
+    versions: [
+      { p: "Sviatoslav Richter", l: "RCA／Melodiya", y: 1973, qa: "hifi", t: ["ref"], q: "Bach Well-Tempered Clavier Richter", w: "課程指定版。聲部平均，數主題進入最不容易漏。" },
+      { p: "Angela Hewitt", l: "Hyperion", y: 2008, qa: "hires", t: ["ref"], q: "Bach Well-Tempered Clavier Hewitt", w: "主題每次進入都用觸鍵稍微突顯，教學上最友善。高解析首選。" },
+      { p: "András Schiff", l: "ECM", y: 2012, qa: "hires", t: [], q: "Bach Well-Tempered Clavier Schiff ECM", w: "現場錄音，層次感佳。" },
+      { p: "Glenn Gould", l: "Sony", y: 1963, qa: "historic", t: [], q: "Bach Well-Tempered Clavier Gould", w: "課程指定版。聲部獨立性驚人，但速度極端，建議數完主題後再聽。" }
+    ]
+  },
+
+  "bach-goldberg": {
+    title: "Bach《郭德堡變奏曲》BWV 988",
+    en: "Goldberg Variations",
+    composer: "J.S. Bach",
+    q: "Bach Goldberg Variations",
+    fact: "第一軌詠嘆調（Aria）與最後一軌（Aria da capo）為同一段音樂，中間隔著 30 個變奏。",
+    pick: "課程建議 Gould 1955 或 1981 錄音。兩者皆為單聲道／早期數位，若要兼顧音質請並聽下列高解析版本。",
+    versions: [
+      { p: "Beatrice Rana", l: "Warner", y: 2016, qa: "hires", t: ["ref"], q: "Bach Goldberg Variations Beatrice Rana", w: "近年最受好評的新錄音之一，24bit 發行機率最高。" },
+      { p: "András Schiff", l: "ECM", y: 2001, qa: "hires", t: ["ref"], q: "Bach Goldberg Variations Schiff ECM", w: "現場錄音，音色與空間感俱佳。" },
+      { p: "Murray Perahia", l: "Sony", y: 2000, qa: "hires", t: ["entry"], q: "Bach Goldberg Variations Perahia", w: "句法自然、不刻意，最適合第一次完整聽完。" },
+      { p: "Trevor Pinnock（大鍵琴）", l: "DG Archiv", y: 1980, qa: "hifi", t: ["period"], q: "Bach Goldberg Variations Pinnock harpsichord", w: "原始樂器版，音響世界完全不同。" },
+      { p: "Glenn Gould（1981 錄音）", l: "Sony", y: 1981, qa: "hifi", t: ["ref"], q: "Bach Goldberg Variations Gould 1981", w: "課程指定版。速度大幅放慢，聲部關係經過重新設計。" },
+      { p: "Glenn Gould（1955 錄音）", l: "Sony", y: 1955, qa: "historic", t: ["ref"], q: "Bach Goldberg Variations Gould 1955", w: "課程指定版，單聲道。錄音史上的分水嶺，但音質先天受限——聽詮釋不聽音質。" }
+    ]
+  },
+
+  "bach-cello1": {
+    title: "Bach 無伴奏大提琴組曲第 1 號 BWV 1007",
+    en: "Cello Suite No. 1 in G major",
+    composer: "J.S. Bach",
+    q: "Bach Cello Suite No 1 BWV 1007",
+    pick: "只有一件樂器、一條線，卻透過分解和弦暗示出完整的和聲進行。",
+    versions: [
+      { p: "Jean-Guihen Queyras", l: "Harmonia Mundi", y: 2007, qa: "hires", t: ["ref"], q: "Bach Cello Suites Queyras", w: "錄音極為自然，琴體共鳴與弓法細節都聽得到。高解析首選。" },
+      { p: "Yo-Yo Ma（Six Evolutions, 第三次錄音）", l: "Sony", y: 2018, qa: "hires", t: ["ref", "entry"], q: "Bach Cello Suites Yo-Yo Ma Six Evolutions", w: "最新錄音規格，句法成熟，入門最好上手。" },
+      { p: "Pieter Wispelwey", l: "Channel Classics", y: 2012, qa: "hires", t: ["period"], q: "Bach Cello Suites Wispelwey", w: "古樂器＋DSD 錄音，透明度極高。" },
+      { p: "Anner Bylsma", l: "Sony Vivarte", y: 1992, qa: "hifi", t: ["period"], q: "Bach Cello Suites Bylsma", w: "古樂器演奏的重要參照。" },
+      { p: "Mstislav Rostropovich", l: "EMI", y: 1991, qa: "hifi", t: [], q: "Bach Cello Suites Rostropovich", w: "規模宏大的浪漫化讀法。" },
+      { p: "Pablo Casals", l: "EMI／Warner", y: 1938, qa: "historic", t: ["ref"], q: "Bach Cello Suites Casals", w: "使這套組曲重見天日的歷史錄音，單聲道且雜訊明顯。地位無可取代，但不建議作為第一次聆聽。" }
+    ]
+  },
+
+  "handel-messiah": {
+    title: "Handel《彌賽亞》HWV 56",
+    en: "Messiah",
+    composer: "George Frideric Handel",
+    q: "Handel Messiah",
+    fact: "作於 1741 年，1742 年於都柏林首演。",
+    pick: "任一完整版本，先聽〈Hallelujah〉與〈I know that my Redeemer liveth〉。",
+    versions: [
+      { p: "Harry Christophers / The Sixteen", l: "Coro", y: 2008, qa: "hires", t: ["period", "ref"], q: "Handel Messiah The Sixteen Christophers", w: "近年錄音規格最好的完整版之一，合唱咬字清楚。" },
+      { p: "John Eliot Gardiner / English Baroque Soloists", l: "Philips", y: 1982, qa: "hifi", t: ["period", "ref"], q: "Handel Messiah Gardiner", w: "古樂器演奏的長年基準，速度輕快。" },
+      { p: "Trevor Pinnock / The English Concert", l: "DG Archiv", y: 1988, qa: "hifi", t: ["period"], q: "Handel Messiah Pinnock", w: "另一部古樂器代表版。" },
+      { p: "Colin Davis / London SO", l: "Philips", y: 1966, qa: "hifi", t: ["modern"], q: "Handel Messiah Colin Davis", w: "現代樂器大編制版，宣敘調與詠嘆調的切換極為清楚。" },
+      { p: "Thomas Beecham / RPO", l: "RCA", y: 1959, qa: "historic", t: [], q: "Handel Messiah Beecham", w: "使用 Goossens 的大型現代管弦樂配器，與原作差距大，屬歷史趣味。" }
+    ]
+  },
+
+  "bach-bminor-mass": {
+    title: "Bach《b 小調彌撒》BWV 232",
+    en: "Mass in B minor",
+    composer: "J.S. Bach",
+    q: "Bach Mass in B minor BWV 232",
+    pick: "先聽開頭 Kyrie。",
+    versions: [
+      { p: "Masaaki Suzuki / Bach Collegium Japan", l: "BIS", y: 2007, qa: "hires", t: ["period", "ref"], q: "Bach Mass in B minor Suzuki", w: "BIS 為 SACD／高解析錄音代表廠牌，本版是「音質 + 詮釋」的最佳交集。" },
+      { p: "Philippe Herreweghe / Collegium Vocale Gent", l: "Harmonia Mundi", y: 2011, qa: "hires", t: ["period", "ref"], q: "Bach Mass in B minor Herreweghe", w: "合唱線條極為內斂，Kyrie 的懇求性格最鮮明。" },
+      { p: "John Eliot Gardiner / English Baroque Soloists", l: "DG Archiv", y: 1985, qa: "hifi", t: ["period", "ref"], q: "Bach Mass in B minor Gardiner", w: "戲劇性最強的古樂器版。" },
+      { p: "Karl Richter / Munich Bach Choir", l: "DG Archiv", y: 1961, qa: "hifi", t: ["modern"], q: "Bach Mass in B minor Karl Richter", w: "現代樂器大編制的代表版，厚重莊嚴。" }
+    ]
+  },
+
+  "bach-matthew": {
+    title: "Bach《馬太受難曲》BWV 244",
+    en: "St Matthew Passion",
+    composer: "J.S. Bach",
+    q: "Bach St Matthew Passion BWV 244",
+    pick: "先聽開頭合唱與〈Erbarme dich〉（女中音詠嘆調 + 小提琴獨奏）。",
+    versions: [
+      { p: "Masaaki Suzuki / Bach Collegium Japan", l: "BIS", y: 2019, qa: "hires", t: ["period", "ref"], q: "Bach St Matthew Passion Suzuki", w: "近年錄音規格最高的完整版，雙合唱團的空間分離感清楚。" },
+      { p: "Philippe Herreweghe / Collegium Vocale Gent", l: "Harmonia Mundi", y: 1998, qa: "hires", t: ["period", "ref"], q: "Bach St Matthew Passion Herreweghe", w: "〈Erbarme dich〉由 Andreas Scholl 演唱，是最常被推薦的一版。" },
+      { p: "John Eliot Gardiner / English Baroque Soloists", l: "DG Archiv", y: 1988, qa: "hifi", t: ["period", "ref"], q: "Bach St Matthew Passion Gardiner", w: "戲劇推進最強。" },
+      { p: "Otto Klemperer / Philharmonia", l: "EMI", y: 1961, qa: "hifi", t: ["modern"], q: "Bach St Matthew Passion Klemperer", w: "速度極慢、規模巨大的現代樂器讀法，與古樂器版差異極端。" },
+      { p: "Karl Richter / Munich Bach Orchestra", l: "DG Archiv", y: 1958, qa: "historic", t: ["ref"], q: "Bach St Matthew Passion Karl Richter", w: "二十世紀最具影響力的錄音之一，早期立體聲。" }
+    ]
+  },
+
+  "beethoven-5": {
+    title: "Beethoven 第 5 號交響曲 Op. 67",
+    en: "Symphony No. 5 in C minor",
+    composer: "Ludwig van Beethoven",
+    q: "Beethoven Symphony No 5",
+    pick: "課程指定 Carlos Kleiber / Wiener Philharmoniker。第 22 週會用此曲做三版本比較。",
+    note: "第三樂章至第四樂章不間斷，以一段極長的漸強由 c 小調轉入 C 大調。",
+    versions: [
+      { p: "Carlos Kleiber / Vienna Phil", l: "DG", y: 1974, qa: "hires", t: ["ref", "modern"], q: "Beethoven Symphony 5 Kleiber", w: "課程指定版，也是公認的第一參考。DG 已發行 24bit 重製，優先找標有 Hi-Res 的版本。" },
+      { p: "Riccardo Chailly / Gewandhausorchester", l: "Decca", y: 2011, qa: "hires", t: ["modern"], q: "Beethoven Symphony 5 Chailly", w: "近年數位錄音，速度依貝多芬節拍器指示偏快，動態極大。高解析首選。" },
+      { p: "John Eliot Gardiner / Orchestre Révolutionnaire et Romantique", l: "DG Archiv", y: 1994, qa: "hifi", t: ["period"], q: "Beethoven Symphony 5 Gardiner", w: "第 22 週指定的「古樂器組」。銅管與定音鼓的原始音色差異極明顯。" },
+      { p: "Herbert von Karajan / Berlin Phil（1963 全集）", l: "DG", y: 1963, qa: "hifi", t: ["ref", "modern"], q: "Beethoven Symphony 5 Karajan", w: "第 22 週指定的對照組。線條連綿、音色統一，與 Kleiber 的稜角形成強對比。" },
+      { p: "Teodor Currentzis / SWR Symphonieorchester", l: "Sony", y: 2021, qa: "hires", t: [], q: "Beethoven Symphony 5 Currentzis", w: "近年錄音，處理極端，適合第 22 週再加一個座標。" },
+      { p: "Wilhelm Furtwängler / Berlin Phil", l: "DG／EMI", y: 1943, qa: "historic", t: ["ref"], q: "Beethoven Symphony 5 Furtwangler", w: "戰時實況，單聲道且雜訊重。詮釋史地位極高，但不適合作為音質比較的樣本。" }
+    ]
+  },
+
+  "haydn-104": {
+    title: "Haydn 第 104 號交響曲《倫敦》",
+    en: "Symphony No. 104 in D major 'London'",
+    composer: "Joseph Haydn",
+    q: "Haydn Symphony 104 London",
+    fact: "Haydn 一生創作逾百首交響曲，其對交響曲與弦樂四重奏形式的確立作用，使其常被稱為「交響曲之父」——此稱號屬傳統敘事之簡化。",
+    versions: [
+      { p: "Marc Minkowski / Les Musiciens du Louvre", l: "Naïve", y: 2009, qa: "hires", t: ["period", "ref"], q: "Haydn London Symphonies Minkowski", w: "與第 94 號同一套，四樂章性格對比最鮮明。" },
+      { p: "Colin Davis / Concertgebouw", l: "Philips", y: 1994, qa: "hifi", t: ["modern", "ref"], q: "Haydn Symphony 104 Colin Davis", w: "現代樂器基準版。" },
+      { p: "Eugen Jochum / London Phil", l: "DG", y: 1973, qa: "hifi", t: ["modern"], q: "Haydn London Symphonies Jochum", w: "倫敦交響曲全集的經典錄音。" },
+      { p: "Ádám Fischer / Austro-Hungarian Haydn Orchestra", l: "Nimbus", y: 1990, qa: "hifi", t: [], q: "Haydn Symphony 104 Adam Fischer", w: "海頓交響曲全集，曲目最齊全。" }
+    ]
+  },
+
+  "mozart-k466": {
+    title: "Mozart 第 20 號鋼琴協奏曲 K. 466",
+    en: "Piano Concerto No. 20 in D minor",
+    composer: "W.A. Mozart",
+    q: "Mozart Piano Concerto No 20 K 466",
+    pick: "d 小調，戲劇性強。本週任務是找出裝飾奏（cadenza）的位置。",
+    versions: [
+      { p: "Mitsuko Uchida / Cleveland Orchestra", l: "Decca", y: 2010, qa: "hires", t: ["ref"], q: "Mozart Piano Concerto 20 Uchida Cleveland", w: "近年錄音，鋼琴與樂團的層次極清楚，裝飾奏進出點一聽就知道。高解析首選。" },
+      { p: "Murray Perahia / English Chamber Orchestra", l: "Sony", y: 1980, qa: "hifi", t: ["ref"], q: "Mozart Piano Concerto 20 Perahia", w: "身兼指揮與獨奏，句法統一，全集長年被視為基準。" },
+      { p: "Maria João Pires / Claudio Abbado", l: "DG", y: 1993, qa: "hifi", t: [], q: "Mozart Piano Concerto 20 Pires Abbado", w: "抒情性強，第二樂章極美。" },
+      { p: "Clara Haskil / Igor Markevitch", l: "Philips", y: 1960, qa: "historic", t: ["ref"], q: "Mozart Piano Concerto 20 Clara Haskil", w: "歷史名演，早期立體聲。" }
+    ]
+  },
+
+  "mozart-k467": {
+    title: "Mozart 第 21 號鋼琴協奏曲 K. 467",
+    en: "Piano Concerto No. 21 in C major",
+    composer: "W.A. Mozart",
+    q: "Mozart Piano Concerto No 21 K 467",
+    pick: "第二樂章極為著名。",
+    versions: [
+      { p: "Mitsuko Uchida / Cleveland Orchestra", l: "Decca", y: 2010, qa: "hires", t: ["ref"], q: "Mozart Piano Concerto 21 Uchida Cleveland", w: "與 K. 466 同一套錄音，便於對比。高解析首選。" },
+      { p: "Murray Perahia / English Chamber Orchestra", l: "Sony", y: 1980, qa: "hifi", t: ["ref"], q: "Mozart Piano Concerto 21 Perahia", w: "第二樂章的句法極自然。" },
+      { p: "Géza Anda / Camerata Academica Salzburg", l: "DG", y: 1961, qa: "hifi", t: [], q: "Mozart Piano Concerto 21 Geza Anda", w: "因電影《Elvira Madigan》而聞名的錄音。" }
+    ]
+  },
+
+  "mozart-figaro": {
+    title: "Mozart《費加洛的婚禮》K. 492",
+    en: "Le nozze di Figaro",
+    composer: "W.A. Mozart",
+    q: "Mozart Le nozze di Figaro",
+    pick: "先聽序曲與〈Sull'aria〉二重唱。序曲是「用純器樂建立戲劇氣氛」的範例。",
+    versions: [
+      { p: "Teodor Currentzis / MusicAeterna", l: "Sony", y: 2014, qa: "hires", t: ["period"], q: "Mozart Le nozze di Figaro Currentzis", w: "近年錄音規格最高的全曲版，宣敘調處理極為戲劇化。" },
+      { p: "René Jacobs / Concerto Köln", l: "Harmonia Mundi", y: 2003, qa: "hires", t: ["period", "ref"], q: "Mozart Le nozze di Figaro Rene Jacobs", w: "古樂器版基準，錄音層次極佳。" },
+      { p: "Erich Kleiber / Vienna Phil", l: "Decca", y: 1955, qa: "historic", t: ["ref"], q: "Mozart Le nozze di Figaro Erich Kleiber", w: "公認的歷史名演之一（Carlos Kleiber 之父），單聲道。" },
+      { p: "Carlo Maria Giulini / Philharmonia", l: "EMI", y: 1959, qa: "hifi", t: ["ref"], q: "Mozart Le nozze di Figaro Giulini", w: "以 Schwarzkopf 領銜的黃金卡司。" },
+      { p: "Karl Böhm / Deutsche Oper Berlin", l: "DG", y: 1968, qa: "hifi", t: [], q: "Mozart Le nozze di Figaro Bohm", w: "現代樂器的標準參照。" }
+    ]
+  },
+
+  "mozart-flute": {
+    title: "Mozart《魔笛》K. 620",
+    en: "Die Zauberflöte",
+    composer: "W.A. Mozart",
+    q: "Mozart Die Zauberflote",
+    pick: "先聽〈Der Hölle Rache〉（夜后詠嘆調）。注意人聲被當作器樂化的技巧展示工具使用。",
+    versions: [
+      { p: "René Jacobs / Akademie für Alte Musik Berlin", l: "Harmonia Mundi", y: 2010, qa: "hires", t: ["period", "ref"], q: "Mozart Die Zauberflote Rene Jacobs", w: "近年錄音規格最高，戲劇節奏鮮活。" },
+      { p: "Otto Klemperer / Philharmonia", l: "EMI", y: 1964, qa: "hifi", t: ["ref"], q: "Mozart Die Zauberflote Klemperer", w: "夜后由 Lucia Popp 演唱，是這首詠嘆調最著名的錄音之一。" },
+      { p: "Georg Solti / Vienna Phil", l: "Decca", y: 1969, qa: "hifi", t: ["ref"], q: "Mozart Die Zauberflote Solti", w: "Decca 錄音工藝的代表作，音場極佳。" },
+      { p: "Wolfgang Sawallisch / Bayerische Staatsoper", l: "EMI", y: 1973, qa: "hifi", t: [], q: "Mozart Die Zauberflote Sawallisch Edda Moser", w: "Edda Moser 的夜后被許多人視為技術標竿。" },
+      { p: "John Eliot Gardiner / English Baroque Soloists", l: "DG Archiv", y: 1995, qa: "hifi", t: ["period"], q: "Mozart Die Zauberflote Gardiner", w: "古樂器版，速度輕盈。" }
+    ]
+  },
+
+  "beethoven-3": {
+    title: "Beethoven 第 3 號交響曲《英雄》Op. 55",
+    en: "Symphony No. 3 'Eroica'",
+    composer: "Ludwig van Beethoven",
+    q: "Beethoven Symphony No 3 Eroica",
+    period: "中期",
+    fact: "此曲規模顯著超越當時交響曲慣例。",
+    versions: [
+      { p: "Riccardo Chailly / Gewandhausorchester", l: "Decca", y: 2009, qa: "hires", t: ["modern", "ref"], q: "Beethoven Symphony 3 Eroica Chailly", w: "近年數位錄音，速度快、結構緊，高解析首選。" },
+      { p: "John Eliot Gardiner / ORR", l: "DG Archiv", y: 1993, qa: "hifi", t: ["period", "ref"], q: "Beethoven Symphony 3 Eroica Gardiner", w: "古樂器，銅管的粗糲感讓「英雄」的衝擊力更直接。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1963, qa: "hifi", t: ["modern", "ref"], q: "Beethoven Symphony 3 Eroica Karajan", w: "音色統一、線條連綿的經典讀法。" },
+      { p: "Otto Klemperer / Philharmonia", l: "EMI", y: 1959, qa: "hifi", t: [], q: "Beethoven Symphony 3 Eroica Klemperer", w: "速度沉穩、結構感極強。" }
+    ]
+  },
+
+  "beethoven-9": {
+    title: "Beethoven 第 9 號交響曲 Op. 125",
+    en: "Symphony No. 9 in D minor",
+    composer: "Ludwig van Beethoven",
+    q: "Beethoven Symphony No 9",
+    period: "晚期",
+    versions: [
+      { p: "Riccardo Chailly / Gewandhausorchester", l: "Decca", y: 2011, qa: "hires", t: ["modern", "ref"], q: "Beethoven Symphony 9 Chailly", w: "近年錄音，合唱與樂團平衡極好，高解析首選。" },
+      { p: "Simon Rattle / Berlin Phil", l: "EMI／Warner", y: 2002, qa: "hires", t: ["modern"], q: "Beethoven Symphony 9 Rattle Berlin", w: "現場錄音，數位規格佳。" },
+      { p: "John Eliot Gardiner / ORR", l: "DG Archiv", y: 1994, qa: "hifi", t: ["period"], q: "Beethoven Symphony 9 Gardiner", w: "古樂器版，速度接近作曲家標示。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1962, qa: "hifi", t: ["ref"], q: "Beethoven Symphony 9 Karajan 1962", w: "長年的標準參照。" },
+      { p: "Wilhelm Furtwängler / Bayreuth", l: "EMI／Warner", y: 1951, qa: "historic", t: ["ref"], q: "Beethoven Symphony 9 Furtwangler Bayreuth", w: "音樂史上最著名的第九號錄音，單聲道實況。聽詮釋不聽音質。" }
+    ]
+  },
+
+  "beethoven-moonlight": {
+    title: "Beethoven 鋼琴奏鳴曲《月光》Op. 27 No. 2",
+    en: "Piano Sonata No. 14 'Moonlight'",
+    composer: "Ludwig van Beethoven",
+    q: "Beethoven Moonlight Sonata Op 27",
+    period: "早／中期之交",
+    versions: [
+      { p: "Igor Levit", l: "Sony", y: 2019, qa: "hires", t: ["ref"], q: "Beethoven Piano Sonatas Igor Levit", w: "全集錄音，24bit 發行，鋼琴音色捕捉極佳。" },
+      { p: "Wilhelm Kempff", l: "DG", y: 1965, qa: "hifi", t: ["ref"], q: "Beethoven Moonlight Sonata Kempff", w: "句法質樸、不誇飾，長年基準版。" },
+      { p: "Emil Gilels", l: "DG", y: 1980, qa: "hifi", t: ["ref"], q: "Beethoven Moonlight Sonata Gilels", w: "音色厚重，第一樂章的沉滯感最強。" },
+      { p: "Claudio Arrau", l: "Philips", y: 1985, qa: "hifi", t: [], q: "Beethoven Moonlight Sonata Arrau", w: "速度極慢，聲部層次分明。" }
+    ]
+  },
+
+  "beethoven-op131": {
+    title: "Beethoven 弦樂四重奏 Op. 131",
+    en: "String Quartet No. 14 in C-sharp minor",
+    composer: "Ludwig van Beethoven",
+    q: "Beethoven String Quartet Op 131",
+    period: "晚期",
+    pick: "與《月光》連續對比聽，兩者相隔約 25 年。不需分析，只需感受「可親近程度」的落差。",
+    versions: [
+      { p: "Belcea Quartet", l: "Alpha", y: 2012, qa: "hires", t: ["ref"], q: "Beethoven String Quartets Belcea Quartet", w: "近年全集，錄音規格最高，晚期四重奏的內聲部細節清楚。" },
+      { p: "Takács Quartet", l: "Decca", y: 2004, qa: "hires", t: ["ref"], q: "Beethoven Late String Quartets Takacs", w: "晚期四重奏的現行首選之一，獲獎無數。" },
+      { p: "Alban Berg Quartett", l: "EMI", y: 1983, qa: "hifi", t: ["ref"], q: "Beethoven String Quartets Alban Berg Quartett", w: "音色統一、技術完美的代表版。" },
+      { p: "Quartetto Italiano", l: "Philips", y: 1969, qa: "hifi", t: [], q: "Beethoven String Quartets Quartetto Italiano", w: "句法溫暖，全集長年受推崇。" },
+      { p: "Busch Quartet", l: "EMI／Warner", y: 1936, qa: "historic", t: ["ref"], q: "Beethoven String Quartet Op 131 Busch Quartet", w: "歷史錄音的標竿，單聲道。" }
+    ]
+  }
+
+});
+
+</script>
+<script>
+/* 曲目資料庫 B：第 12–24 週 */
+window.WORKS = Object.assign(window.WORKS || {}, {
+
+  "chopin-nocturnes": {
+    title: "Chopin 夜曲全集",
+    en: "Nocturnes",
+    composer: "Frédéric Chopin",
+    q: "Chopin Nocturnes",
+    pick: "課程指定 Arthur Rubinstein。第 22 週會用夜曲做獨奏曲的版本比較——獨奏曲的版本差異通常比管弦樂更容易察覺。",
+    versions: [
+      { p: "Maria João Pires", l: "DG", y: 1996, qa: "hires", t: ["ref"], q: "Chopin Nocturnes Pires", w: "數位時代的代表全集，rubato 自然不做作。高解析首選。" },
+      { p: "Jan Lisiecki", l: "DG", y: 2021, qa: "hires", t: [], q: "Chopin Nocturnes Lisiecki", w: "近年新錄音，24bit 發行機率最高，第 22 週比較用的「當代組」。" },
+      { p: "Arthur Rubinstein", l: "RCA", y: 1965, qa: "hifi", t: ["ref"], q: "Chopin Nocturnes Rubinstein", w: "課程指定版。第 22 週比較的基準點。" },
+      { p: "Claudio Arrau", l: "Philips", y: 1978, qa: "hifi", t: [], q: "Chopin Nocturnes Arrau", w: "速度最慢、線條最厚，與 Rubinstein 對比極明顯。" },
+      { p: "Nelson Freire", l: "Decca", y: 2009, qa: "hires", t: [], q: "Chopin Nocturnes Nelson Freire", w: "音色溫潤，近年錄音。" }
+    ]
+  },
+
+  "chopin-ballade1": {
+    title: "Chopin 第 1 號敘事曲 Op. 23",
+    en: "Ballade No. 1 in G minor",
+    composer: "Frédéric Chopin",
+    q: "Chopin Ballade No 1 Op 23",
+    pick: "課程指定 Krystian Zimerman。此曲無標準曲式標籤，結構由敘事邏輯而非形式範本決定。",
+    versions: [
+      { p: "Krystian Zimerman", l: "DG", y: 1987, qa: "hires", t: ["ref"], q: "Chopin Ballades Zimerman", w: "課程指定版，也是公認第一參考。DG 有 24bit 重製。" },
+      { p: "Seong-Jin Cho", l: "DG", y: 2016, qa: "hires", t: [], q: "Chopin Ballades Seong-Jin Cho", w: "近年錄音，高解析規格最穩。" },
+      { p: "Arthur Rubinstein", l: "RCA", y: 1959, qa: "hifi", t: ["ref"], q: "Chopin Ballades Rubinstein", w: "敘事線條最自然的類比時代名盤。" },
+      { p: "Vladimir Ashkenazy", l: "Decca", y: 1976, qa: "hifi", t: [], q: "Chopin Ballades Ashkenazy", w: "技術穩健，末段爆發力強。" }
+    ]
+  },
+
+  "chopin-etudes10": {
+    title: "Chopin 練習曲 Op. 10",
+    en: "Études, Op. 10",
+    composer: "Frédéric Chopin",
+    q: "Chopin Etudes Op 10",
+    pick: "特別是 No. 3（〈離別〉）與 No. 12（〈革命〉）。",
+    versions: [
+      { p: "Maurizio Pollini", l: "DG", y: 1972, qa: "hifi", t: ["ref"], q: "Chopin Etudes Pollini", w: "公認的第一參考，技術與音樂性的標竿。" },
+      { p: "Murray Perahia", l: "Sony", y: 2002, qa: "hires", t: ["ref"], q: "Chopin Etudes Perahia", w: "數位錄音，句法最歌唱性，高解析首選。" },
+      { p: "Vladimir Ashkenazy", l: "Decca", y: 1975, qa: "hifi", t: [], q: "Chopin Etudes Ashkenazy", w: "音色明亮，Decca 錄音清晰。" }
+    ]
+  },
+
+  "schumann-kinderszenen": {
+    title: "Schumann《兒時情景》Op. 15",
+    en: "Kinderszenen",
+    composer: "Robert Schumann",
+    q: "Schumann Kinderszenen Op 15",
+    pick: "含著名的〈夢幻曲 Träumerei〉。全套 13 首約 18 分鐘，觀察「一組短曲如何構成一個整體」。",
+    versions: [
+      { p: "Arcadi Volodos", l: "Sony", y: 2017, qa: "hires", t: ["ref"], q: "Schumann Kinderszenen Volodos", w: "近年錄音，弱奏控制驚人，高解析首選。" },
+      { p: "Martha Argerich", l: "DG", y: 1984, qa: "hifi", t: ["ref"], q: "Schumann Kinderszenen Argerich", w: "句法極自由，情緒轉換敏銳。" },
+      { p: "Vladimir Horowitz", l: "Sony／RCA", y: 1962, qa: "hifi", t: ["ref"], q: "Schumann Kinderszenen Horowitz", w: "〈夢幻曲〉最著名的錄音之一。" },
+      { p: "Alfred Cortot", l: "EMI／Warner", y: 1935, qa: "historic", t: [], q: "Schumann Kinderszenen Cortot", w: "歷史錄音，詮釋自由度極高。" }
+    ]
+  },
+
+  "schubert-erlkonig": {
+    title: "Schubert《魔王》D. 328",
+    en: "Erlkönig",
+    composer: "Franz Schubert",
+    q: "Schubert Erlkonig D 328",
+    pick: "課程指定 Dietrich Fischer-Dieskau / Gerald Moore。一名歌手需扮演四個角色，鋼琴的三連音持續模擬奔馳的馬蹄。先查閱歌詞中文翻譯再聽。",
+    versions: [
+      { p: "Matthias Goerne / Andreas Haefliger", l: "Harmonia Mundi", y: 2008, qa: "hires", t: ["ref"], q: "Schubert Erlkonig Matthias Goerne", w: "近年錄音，四個角色的音色分離最清楚。高解析首選。" },
+      { p: "Dietrich Fischer-Dieskau / Gerald Moore", l: "DG", y: 1970, qa: "hifi", t: ["ref"], q: "Schubert Lieder Fischer-Dieskau Gerald Moore", w: "課程指定版。角色切換的教科書級示範。" },
+      { p: "Thomas Quasthoff / Charles Spencer", l: "DG", y: 2002, qa: "hires", t: [], q: "Schubert Erlkonig Quasthoff", w: "數位錄音，低音域厚實，魔王段落極有壓迫感。" },
+      { p: "Bryn Terfel / Malcolm Martineau", l: "DG", y: 1995, qa: "hifi", t: [], q: "Schubert Erlkonig Bryn Terfel", w: "戲劇性強烈。" }
+    ]
+  },
+
+  "schubert-winterreise": {
+    title: "Schubert《冬之旅》D. 911",
+    en: "Winterreise",
+    composer: "Franz Schubert",
+    q: "Schubert Winterreise",
+    fact: "Schubert（1797–1828）創作藝術歌曲逾 600 首。《冬之旅》為 24 首連篇歌曲集，詩作出自 Wilhelm Müller。",
+    pick: "先聽第一首〈Gute Nacht〉與最後一首〈Der Leiermann〉，感受起點與終點的情緒落差。",
+    versions: [
+      { p: "Jonas Kaufmann / Helmut Deutsch", l: "Sony", y: 2014, qa: "hires", t: ["ref"], q: "Schubert Winterreise Jonas Kaufmann", w: "近年錄音規格最高，男高音音色使絕望感更外顯。" },
+      { p: "Matthias Goerne / Christoph Eschenbach", l: "Harmonia Mundi", y: 2011, qa: "hires", t: ["ref"], q: "Schubert Winterreise Goerne Eschenbach", w: "當代最受推崇的版本之一，錄音層次極佳。" },
+      { p: "Dietrich Fischer-Dieskau / Gerald Moore", l: "DG", y: 1972, qa: "hifi", t: ["ref"], q: "Schubert Winterreise Fischer-Dieskau", w: "課程指定版，二十世紀的基準錄音。" },
+      { p: "Dietrich Fischer-Dieskau / Alfred Brendel", l: "Philips", y: 1985, qa: "hifi", t: [], q: "Schubert Winterreise Fischer-Dieskau Brendel", w: "晚年版本，鋼琴角色更主動。" },
+      { p: "Hans Hotter / Gerald Moore", l: "EMI", y: 1954, qa: "historic", t: ["ref"], q: "Schubert Winterreise Hans Hotter", w: "低音的沉重感無人能及，單聲道。" }
+    ]
+  },
+
+  "schumann-dichterliebe": {
+    title: "Schumann《詩人之戀》Op. 48",
+    en: "Dichterliebe",
+    composer: "Robert Schumann",
+    q: "Schumann Dichterliebe Op 48",
+    pick: "鋼琴不是伴奏，而是與人聲平等的敘事夥伴——本曲末段的鋼琴後奏是最好的例證。",
+    versions: [
+      { p: "Matthias Goerne / Markus Hinterhäuser", l: "Harmonia Mundi", y: 2013, qa: "hires", t: ["ref"], q: "Schumann Dichterliebe Goerne", w: "近年錄音，高解析首選。" },
+      { p: "Fritz Wunderlich / Hubert Giesen", l: "DG", y: 1965, qa: "hifi", t: ["ref"], q: "Schumann Dichterliebe Fritz Wunderlich", w: "傳奇性的錄音，音色之美長年被視為不可超越。" },
+      { p: "Dietrich Fischer-Dieskau / Christoph Eschenbach", l: "DG", y: 1976, qa: "hifi", t: ["ref"], q: "Schumann Dichterliebe Fischer-Dieskau Eschenbach", w: "字句處理最細膩。" },
+      { p: "Ian Bostridge / Julius Drake", l: "EMI／Warner", y: 1998, qa: "hifi", t: [], q: "Schumann Dichterliebe Bostridge", w: "敘事性強，咬字清楚。" }
+    ]
+  },
+
+  "berlioz-fantastique": {
+    title: "Berlioz《幻想交響曲》Op. 14",
+    en: "Symphonie fantastique",
+    composer: "Hector Berlioz",
+    q: "Berlioz Symphonie fantastique",
+    fact: "作於 1830 年，副標為「一位藝術家生涯中的插曲」，作曲家為其撰寫了詳細的情節綱要。五樂章。",
+    pick: "任務：記住第一樂章的 idée fixe（代表「摯愛」的主題），再跳到第五樂章找出同一旋律被扭曲成怪誕版本的段落。",
+    versions: [
+      { p: "François-Xavier Roth / Les Siècles", l: "Harmonia Mundi", y: 2019, qa: "hires", t: ["period", "ref"], q: "Berlioz Symphonie fantastique Les Siecles Roth", w: "使用 1830 年代樂器，鐘、英國管、蛇形號的音色與現代樂團完全不同。近年高解析錄音。" },
+      { p: "John Eliot Gardiner / ORR", l: "Philips", y: 1991, qa: "hifi", t: ["period", "ref"], q: "Berlioz Symphonie fantastique Gardiner", w: "古樂器版的先行者，第五樂章的怪誕感最強。" },
+      { p: "Charles Munch / Boston SO", l: "RCA", y: 1962, qa: "hifi", t: ["ref"], q: "Berlioz Symphonie fantastique Munch Boston", w: "長年公認的第一參考，速度激烈。RCA Living Stereo 有 24bit 重製。" },
+      { p: "Colin Davis / Concertgebouw", l: "Philips", y: 1974, qa: "hifi", t: ["ref"], q: "Berlioz Symphonie fantastique Colin Davis", w: "Berlioz 專家的代表錄音，結構最清楚。" },
+      { p: "Leonard Bernstein / Orchestre National de France", l: "EMI", y: 1976, qa: "hifi", t: [], q: "Berlioz Symphonie fantastique Bernstein", w: "極端誇張的讀法，作為對照組很有效。" }
+    ]
+  },
+
+  "liszt-preludes": {
+    title: "Liszt《前奏曲》",
+    en: "Les Préludes, S. 97",
+    composer: "Franz Liszt",
+    q: "Liszt Les Preludes",
+    pick: "交響詩（symphonic poem）的代表作。",
+    versions: [
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1967, qa: "hifi", t: ["ref"], q: "Liszt Les Preludes Karajan", w: "長年基準版，銅管輝煌。" },
+      { p: "Kurt Masur / Gewandhausorchester", l: "Philips", y: 1980, qa: "hifi", t: [], q: "Liszt Les Preludes Masur", w: "李斯特交響詩全集，曲目最齊。" },
+      { p: "Riccardo Muti / Philharmonia", l: "EMI", y: 1985, qa: "hifi", t: [], q: "Liszt Les Preludes Muti", w: "線條清晰。" }
+    ]
+  },
+
+  "mussorgsky-pictures": {
+    title: "Mussorgsky《展覽會之畫》",
+    en: "Pictures at an Exhibition",
+    composer: "Modest Mussorgsky（Ravel 管弦樂版）",
+    q: "Mussorgsky Pictures at an Exhibition Ravel",
+    pick: "各曲之間穿插的〈漫步 Promenade〉代表參觀者在畫作之間行走。任務：數出〈漫步〉出現幾次。",
+    versions: [
+      { p: "Fritz Reiner / Chicago SO", l: "RCA", y: 1957, qa: "hifi", t: ["ref"], q: "Mussorgsky Pictures at an Exhibition Reiner", w: "Living Stereo 名盤，配器細節極清楚，有 24bit 重製。" },
+      { p: "Valery Gergiev / Vienna Phil", l: "Philips", y: 2000, qa: "hires", t: [], q: "Mussorgsky Pictures at an Exhibition Gergiev", w: "近年數位錄音，高解析機率高。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1965, qa: "hifi", t: ["ref"], q: "Mussorgsky Pictures at an Exhibition Karajan", w: "音色最豐厚的版本。" },
+      { p: "Georg Solti / Chicago SO", l: "Decca", y: 1980, qa: "hifi", t: [], q: "Mussorgsky Pictures at an Exhibition Solti", w: "動態極大，銅管有壓迫感。" },
+      { p: "Sviatoslav Richter（鋼琴原版）", l: "Philips", y: 1958, qa: "historic", t: ["ref"], q: "Mussorgsky Pictures at an Exhibition Richter piano", w: "鋼琴原版的傳奇實況，可與 Ravel 配器版對比「同一素材、兩種音響」。" }
+    ]
+  },
+
+  "brahms-1": {
+    title: "Brahms 第 1 號交響曲 Op. 68",
+    en: "Symphony No. 1 in C minor",
+    composer: "Johannes Brahms",
+    q: "Brahms Symphony No 1 Op 68",
+    pick: "特別注意末樂章主題，並與 Beethoven 第 9 號〈歡樂頌〉主題對比——兩者的相似性長期為評論者所注意。",
+    versions: [
+      { p: "Riccardo Chailly / Gewandhausorchester", l: "Decca", y: 2013, qa: "hires", t: ["ref"], q: "Brahms Symphony 1 Chailly", w: "近年數位錄音，內聲部清楚，高解析首選。" },
+      { p: "Andris Nelsons / Boston SO", l: "DG", y: 2016, qa: "hires", t: [], q: "Brahms Symphony 1 Nelsons Boston", w: "最新錄音之一，規格最穩。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1978, qa: "hifi", t: ["ref"], q: "Brahms Symphony 1 Karajan", w: "音色最厚重的經典讀法。" },
+      { p: "Bruno Walter / Columbia SO", l: "Sony", y: 1959, qa: "historic", t: ["ref"], q: "Brahms Symphony 1 Bruno Walter", w: "歌唱性讀法的代表，早期立體聲。" }
+    ]
+  },
+
+  "brahms-4": {
+    title: "Brahms 第 4 號交響曲 Op. 98",
+    en: "Symphony No. 4 in E minor",
+    composer: "Johannes Brahms",
+    q: "Brahms Symphony No 4 Op 98",
+    pick: "末樂章為帕薩卡里亞（passacaglia），建立於一段反覆的低音主題之上，主題共出現 30 餘次——這是巴洛克技術在十九世紀末的復歸。",
+    versions: [
+      { p: "Carlos Kleiber / Vienna Phil", l: "DG", y: 1981, qa: "hires", t: ["ref"], q: "Brahms Symphony 4 Kleiber", w: "公認的第一參考。DG 有 24bit 重製，優先找 Hi-Res 標記。" },
+      { p: "Riccardo Chailly / Gewandhausorchester", l: "Decca", y: 2013, qa: "hires", t: [], q: "Brahms Symphony 4 Chailly", w: "近年錄音，末樂章的低音主題最好追蹤。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1978, qa: "hifi", t: ["ref"], q: "Brahms Symphony 4 Karajan", w: "線條連綿的對照組。" },
+      { p: "Wilhelm Furtwängler / Berlin Phil", l: "DG", y: 1948, qa: "historic", t: [], q: "Brahms Symphony 4 Furtwangler", w: "歷史錄音，速度伸縮極大。" }
+    ]
+  },
+
+  "tchaikovsky-6": {
+    title: "Tchaikovsky 第 6 號交響曲《悲愴》Op. 74",
+    en: "Symphony No. 6 'Pathétique'",
+    composer: "Pyotr Ilyich Tchaikovsky",
+    q: "Tchaikovsky Symphony No 6 Pathetique",
+    pick: "傳統交響曲末樂章多為快速、外向、收束於強奏；此曲末樂章為緩慢的哀歌，且以極弱的消散作結。",
+    versions: [
+      { p: "Teodor Currentzis / MusicAeterna", l: "Sony", y: 2017, qa: "hires", t: [], q: "Tchaikovsky Symphony 6 Currentzis", w: "近年錄音規格最高，末樂章的消散處理極端，動態範圍很考驗設備。" },
+      { p: "Valery Gergiev / Mariinsky Orchestra", l: "Mariinsky", y: 2010, qa: "hires", t: [], q: "Tchaikovsky Symphony 6 Gergiev Mariinsky", w: "Mariinsky 廠牌為 SACD／高解析發行。" },
+      { p: "Evgeny Mravinsky / Leningrad Phil", l: "DG", y: 1960, qa: "hifi", t: ["ref"], q: "Tchaikovsky Symphony 6 Mravinsky", w: "公認的第一參考，紀律與張力無人能及。DG 有重製版。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1976, qa: "hifi", t: ["ref"], q: "Tchaikovsky Symphony 6 Karajan", w: "音色最華麗的讀法。" },
+      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1986, qa: "hifi", t: [], q: "Tchaikovsky Symphony 6 Bernstein", w: "晚年 DG 版速度極慢，情緒外放到極致。" }
+    ]
+  },
+
+  "tchaikovsky-pc1": {
+    title: "Tchaikovsky 第 1 號鋼琴協奏曲 Op. 23",
+    en: "Piano Concerto No. 1 in B-flat minor",
+    composer: "Pyotr Ilyich Tchaikovsky",
+    q: "Tchaikovsky Piano Concerto No 1",
+    pick: "開頭極為著名。",
+    versions: [
+      { p: "Daniil Trifonov / Valery Gergiev", l: "DG", y: 2016, qa: "hires", t: [], q: "Tchaikovsky Piano Concerto 1 Trifonov", w: "近年錄音，高解析規格最穩。" },
+      { p: "Yuja Wang / Claudio Abbado", l: "DG", y: 2011, qa: "hires", t: [], q: "Tchaikovsky Piano Concerto 1 Yuja Wang", w: "數位錄音，鋼琴與樂團平衡佳。" },
+      { p: "Martha Argerich / Kirill Kondrashin", l: "Philips", y: 1980, qa: "hifi", t: ["ref"], q: "Tchaikovsky Piano Concerto 1 Argerich Kondrashin", w: "現場實況，速度與能量都在極限上，公認的名演。" },
+      { p: "Van Cliburn / Kirill Kondrashin", l: "RCA", y: 1958, qa: "hifi", t: ["ref"], q: "Tchaikovsky Piano Concerto 1 Van Cliburn", w: "柴可夫斯基大賽奪冠後的錄音，史上最暢銷古典唱片之一。" },
+      { p: "Sviatoslav Richter / Herbert von Karajan", l: "DG", y: 1962, qa: "hifi", t: ["ref"], q: "Tchaikovsky Piano Concerto 1 Richter Karajan", w: "速度沉重、結構感強，與 Argerich 是兩個極端。" }
+    ]
+  },
+
+  "verdi-traviata": {
+    title: "Verdi《茶花女》",
+    en: "La traviata",
+    composer: "Giuseppe Verdi",
+    q: "Verdi La traviata",
+    pick: "先聽〈飲酒歌 Libiamo〉。",
+    versions: [
+      { p: "Carlos Kleiber / Bayerisches Staatsorchester", l: "DG", y: 1977, qa: "hires", t: ["ref"], q: "Verdi La traviata Kleiber", w: "公認的第一參考（Cotrubaș／Domingo）。DG 有 24bit 重製。" },
+      { p: "Antonio Pappano / Covent Garden", l: "EMI／Warner", y: 2005, qa: "hires", t: [], q: "Verdi La traviata Pappano", w: "近年錄音，規格佳。" },
+      { p: "Georg Solti / National Phil", l: "Decca", y: 1981, qa: "hifi", t: [], q: "Verdi La traviata Solti", w: "Decca 錄音工藝，音場開闊。" },
+      { p: "Carlo Maria Giulini / La Scala（Maria Callas）", l: "EMI／Warner", y: 1955, qa: "historic", t: ["ref"], q: "Verdi La traviata Callas Giulini 1955", w: "史上最著名的實況之一，單聲道且音質粗糙。聽詮釋不聽音質。" }
+    ]
+  },
+
+  "puccini-boheme": {
+    title: "Puccini《波希米亞人》",
+    en: "La bohème",
+    composer: "Giacomo Puccini",
+    q: "Puccini La boheme",
+    pick: "〈Che gelida manina〉、〈Sì, mi chiamano Mimì〉。若要挑戰完整歌劇，本劇約 110 分鐘、劇情單純，是最好的起點。",
+    versions: [
+      { p: "Herbert von Karajan / Berlin Phil", l: "Decca", y: 1972, qa: "hires", t: ["ref"], q: "Puccini La boheme Karajan Pavarotti Freni", w: "公認的第一參考（Freni／Pavarotti）。Decca 有 24bit 重製，是本週最值得優先找 Hi-Res 的一張。" },
+      { p: "Antonio Pappano / Santa Cecilia", l: "Warner", y: 2018, qa: "hires", t: [], q: "Puccini La boheme Pappano", w: "近年錄音，規格最新。" },
+      { p: "Thomas Beecham / RCA Victor SO", l: "EMI／Warner", y: 1956, qa: "hifi", t: ["ref"], q: "Puccini La boheme Beecham", w: "de los Ángeles／Björling，長年並列首選。" },
+      { p: "Tullio Serafin / La Scala（Maria Callas）", l: "EMI／Warner", y: 1956, qa: "historic", t: [], q: "Puccini La boheme Callas Serafin", w: "Callas 的咪咪，單聲道。" }
+    ]
+  },
+
+  "puccini-turandot": {
+    title: "Puccini《杜蘭朵》",
+    en: "Turandot",
+    composer: "Giacomo Puccini",
+    q: "Puccini Turandot",
+    pick: "〈Nessun dorma〉。",
+    versions: [
+      { p: "Zubin Mehta / London Phil", l: "Decca", y: 1972, qa: "hires", t: ["ref"], q: "Puccini Turandot Mehta Pavarotti Sutherland", w: "Pavarotti 的〈Nessun dorma〉即出自此版，也是公認的錄音室首選。Decca 有 24bit 重製。" },
+      { p: "Herbert von Karajan / Vienna Phil", l: "DG", y: 1981, qa: "hifi", t: [], q: "Puccini Turandot Karajan", w: "Ricciarelli／Domingo，音響最華麗。" },
+      { p: "Antonio Pappano / Santa Cecilia", l: "Warner", y: 2022, qa: "hires", t: [], q: "Puccini Turandot Pappano", w: "最新錄音，高解析規格最穩。" },
+      { p: "Francesco Molinari-Pradelli / Rome Opera", l: "EMI", y: 1965, qa: "hifi", t: [], q: "Puccini Turandot Nilsson Corelli", w: "Nilsson 的杜蘭朵被視為聲量標竿。" }
+    ]
+  },
+
+  "wagner-walkure": {
+    title: "Wagner《女武神》〈女武神的騎行〉",
+    en: "Die Walküre – Ride of the Valkyries",
+    composer: "Richard Wagner",
+    q: "Wagner Die Walkure Ride of the Valkyries",
+    versions: [
+      { p: "Georg Solti / Vienna Phil", l: "Decca", y: 1965, qa: "hires", t: ["ref"], q: "Wagner Die Walkure Solti", w: "Decca《指環》全集，錄音史上的里程碑，有 24bit 重製。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1967, qa: "hifi", t: ["ref"], q: "Wagner Die Walkure Karajan", w: "音色最統一的版本。" },
+      { p: "Marek Janowski / Staatskapelle Dresden", l: "Pentatone", y: 1981, qa: "hires", t: [], q: "Wagner Die Walkure Janowski Pentatone", w: "Pentatone 為高解析／SACD 廠牌，音場極佳。" },
+      { p: "Karl Böhm / Bayreuth", l: "Philips", y: 1967, qa: "hifi", t: [], q: "Wagner Die Walkure Bohm Bayreuth", w: "實況錄音，戲劇張力強。" }
+    ]
+  },
+
+  "wagner-tristan": {
+    title: "Wagner《崔斯坦與伊索德》前奏曲",
+    en: "Tristan und Isolde – Prelude",
+    composer: "Richard Wagner",
+    q: "Wagner Tristan und Isolde Prelude",
+    pick: "開頭數小節的和聲（俗稱「崔斯坦和弦」）長時間不解決至穩定終止。任務：感受那種「一直想要落地卻始終落不下來」的懸置感。",
+    versions: [
+      { p: "Christian Thielemann / Vienna Phil", l: "DG", y: 2004, qa: "hires", t: [], q: "Wagner Tristan und Isolde Prelude Thielemann", w: "近年錄音，弱奏起始的細節最清楚，高解析首選。" },
+      { p: "Carlos Kleiber / Staatskapelle Dresden", l: "DG", y: 1982, qa: "hires", t: ["ref"], q: "Wagner Tristan und Isolde Kleiber", w: "數位時代的代表全曲版，DG 有 24bit 重製。" },
+      { p: "Herbert von Karajan / Berlin Phil（管弦樂選段）", l: "DG", y: 1974, qa: "hifi", t: ["ref"], q: "Wagner Orchestral Music Karajan Tristan", w: "只要前奏曲的話，選段專輯最方便。" },
+      { p: "Wilhelm Furtwängler / Philharmonia", l: "EMI／Warner", y: 1952, qa: "historic", t: ["ref"], q: "Wagner Tristan und Isolde Furtwangler", w: "公認的歷史名演，單聲道。" }
+    ]
+  },
+
+  "smetana-vltava": {
+    title: "Smetana《我的祖國》之〈莫爾道河〉",
+    en: "Má vlast – Vltava",
+    composer: "Bedřich Smetana",
+    q: "Smetana Ma Vlast Vltava",
+    country: "捷克",
+    pick: "描繪一條河流從源頭到入海的全程。閉眼聽，試著標記出：兩條溪流匯合、林中狩獵、鄉村婚禮、月光下的水仙女、急流、河流開闊入城。",
+    versions: [
+      { p: "Jiří Bělohlávek / Czech Phil", l: "Decca", y: 2014, qa: "hires", t: ["ref"], q: "Smetana Ma Vlast Belohlavek", w: "近年錄音規格最高的捷克愛樂版本。" },
+      { p: "Rafael Kubelík / Czech Phil（1990 布拉格之春實況）", l: "Supraphon", y: 1990, qa: "hifi", t: ["ref"], q: "Smetana Ma Vlast Kubelik Czech Philharmonic 1990", w: "流亡 42 年後返國的實況，象徵意義極重，是最常被推薦的一版。" },
+      { p: "Rafael Kubelík / Bavarian RSO", l: "Orfeo／DG", y: 1984, qa: "hifi", t: [], q: "Smetana Ma Vlast Kubelik Bavarian", w: "錄音條件較好的錄音室版。" },
+      { p: "Herbert von Karajan / Vienna Phil", l: "Decca", y: 1960, qa: "hifi", t: [], q: "Smetana Vltava Karajan", w: "只要〈莫爾道河〉單曲的話最容易找到。" }
+    ]
+  },
+
+  "dvorak-9": {
+    title: "Dvořák 第 9 號交響曲《來自新世界》Op. 95",
+    en: "Symphony No. 9 'From the New World'",
+    composer: "Antonín Dvořák",
+    q: "Dvorak Symphony No 9 New World",
+    country: "捷克（作於美國時期）",
+    pick: "第二樂章（Largo）的主要旋律極為著名。",
+    versions: [
+      { p: "Jiří Bělohlávek / Czech Phil", l: "Decca", y: 2014, qa: "hires", t: ["ref"], q: "Dvorak Symphony 9 Belohlavek", w: "近年錄音，捷克愛樂的木管音色最道地。高解析首選。" },
+      { p: "Rafael Kubelík / Berlin Phil", l: "DG", y: 1972, qa: "hifi", t: ["ref"], q: "Dvorak Symphony 9 Kubelik", w: "長年公認的第一參考之一。" },
+      { p: "Karel Ančerl / Czech Phil", l: "Supraphon", y: 1961, qa: "hifi", t: ["ref"], q: "Dvorak Symphony 9 Ancerl", w: "捷克傳統的代表錄音。" },
+      { p: "István Kertész / Vienna Phil", l: "Decca", y: 1961, qa: "hifi", t: ["ref"], q: "Dvorak Symphony 9 Kertesz", w: "Decca 錄音優異，全集長年受推崇。" },
+      { p: "Nikolaus Harnoncourt / Concertgebouw", l: "Teldec", y: 1999, qa: "hifi", t: [], q: "Dvorak Symphony 9 Harnoncourt", w: "articulation 刻意，結構聽得特別清楚。" }
+    ]
+  },
+
+  "sibelius-finlandia": {
+    title: "Sibelius《芬蘭頌》Op. 26",
+    en: "Finlandia",
+    composer: "Jean Sibelius",
+    q: "Sibelius Finlandia",
+    country: "芬蘭",
+    versions: [
+      { p: "Osmo Vänskä / Lahti SO", l: "BIS", y: 1998, qa: "hires", t: ["ref"], q: "Sibelius Finlandia Vanska Lahti", w: "BIS 為高解析錄音代表廠牌，西貝流士曲目的權威。" },
+      { p: "Paavo Berglund / Helsinki Phil", l: "EMI", y: 1985, qa: "hifi", t: ["ref"], q: "Sibelius Finlandia Berglund", w: "芬蘭傳統的代表詮釋。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1976, qa: "hifi", t: [], q: "Sibelius Finlandia Karajan", w: "音色最厚重的版本。" },
+      { p: "Colin Davis / London SO", l: "LSO Live", y: 2006, qa: "hires", t: [], q: "Sibelius Finlandia Colin Davis LSO", w: "LSO Live 為 SACD／高解析發行。" }
+    ]
+  },
+
+  "rimsky-scheherazade": {
+    title: "Rimsky-Korsakov《天方夜譚》Op. 35",
+    en: "Scheherazade",
+    composer: "Nikolai Rimsky-Korsakov",
+    q: "Rimsky-Korsakov Scheherazade",
+    country: "俄國",
+    pick: "小提琴獨奏代表說故事的 Scheherazade，與代表蘇丹的低音銅管主題交替出現——主導動機技術的另一應用。",
+    versions: [
+      { p: "Valery Gergiev / Kirov Orchestra", l: "Philips", y: 2001, qa: "hires", t: [], q: "Rimsky-Korsakov Scheherazade Gergiev", w: "近年數位錄音，配器細節豐富。" },
+      { p: "Fritz Reiner / Chicago SO", l: "RCA", y: 1960, qa: "hifi", t: ["ref"], q: "Rimsky-Korsakov Scheherazade Reiner", w: "Living Stereo 名盤，長年公認第一參考，有 24bit 重製。" },
+      { p: "Kirill Kondrashin / Concertgebouw", l: "Philips", y: 1979, qa: "hifi", t: ["ref"], q: "Rimsky-Korsakov Scheherazade Kondrashin", w: "俄式張力 + 荷蘭音色，錄音極佳。" },
+      { p: "Charles Dutoit / Montréal SO", l: "Decca", y: 1983, qa: "hifi", t: [], q: "Rimsky-Korsakov Scheherazade Dutoit", w: "音色透明，配器層次最清楚。" }
+    ]
+  },
+
+  "grieg-peergynt": {
+    title: "Grieg《皮爾金組曲》",
+    en: "Peer Gynt Suites",
+    composer: "Edvard Grieg",
+    q: "Grieg Peer Gynt Suite",
+    country: "挪威",
+    versions: [
+      { p: "Paavo Järvi / Estonian National SO", l: "Virgin／Erato", y: 2005, qa: "hires", t: [], q: "Grieg Peer Gynt Paavo Jarvi", w: "近年錄音，規格佳。" },
+      { p: "Neeme Järvi / Gothenburg SO", l: "DG", y: 1987, qa: "hifi", t: ["ref"], q: "Grieg Peer Gynt Neeme Jarvi", w: "北歐樂團的代表錄音，含聲樂段落。" },
+      { p: "Herbert Blomstedt / San Francisco SO", l: "Decca", y: 1989, qa: "hifi", t: ["ref"], q: "Grieg Peer Gynt Blomstedt", w: "Decca 數位錄音，音場開闊。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1982, qa: "hifi", t: [], q: "Grieg Peer Gynt Karajan", w: "組曲版本，音色最厚。" }
+    ]
+  },
+
+  "debussy-faune": {
+    title: "Debussy《牧神的午後前奏曲》",
+    en: "Prélude à l'après-midi d'un faune",
+    composer: "Claude Debussy",
+    q: "Debussy Prelude a l'apres-midi d'un faune",
+    fact: "1894 年首演。",
+    pick: "注意此曲沒有明確的節拍感，也沒有傳統意義的「主題呈示」。與 Mozart K. 550 開頭做直接對比。",
+    versions: [
+      { p: "François-Xavier Roth / Les Siècles", l: "Harmonia Mundi", y: 2017, qa: "hires", t: ["period"], q: "Debussy Prelude a l'apres-midi Les Siecles Roth", w: "使用世紀之交的法國樂器，長笛音色與現代完全不同。近年高解析錄音。" },
+      { p: "Pierre Boulez / Cleveland Orchestra", l: "DG", y: 1991, qa: "hires", t: ["ref"], q: "Debussy Prelude a l'apres-midi Boulez Cleveland", w: "結構最透明的讀法，數位錄音。" },
+      { p: "Charles Dutoit / Montréal SO", l: "Decca", y: 1989, qa: "hifi", t: ["ref"], q: "Debussy Orchestral Works Dutoit", w: "法式音色的代表，錄音清透。" },
+      { p: "Claudio Abbado / London SO", l: "DG", y: 1985, qa: "hifi", t: [], q: "Debussy Prelude a l'apres-midi Abbado", w: "句法柔和。" }
+    ]
+  },
+
+  "debussy-clairdelune": {
+    title: "Debussy《月光》",
+    en: "Clair de Lune（出自《貝加馬斯克組曲》）",
+    composer: "Claude Debussy",
+    q: "Debussy Clair de Lune",
+    pick: "本模組中最容易親近的一首，可作為心理緩衝。",
+    versions: [
+      { p: "Seong-Jin Cho", l: "DG", y: 2021, qa: "hires", t: [], q: "Debussy Clair de Lune Seong-Jin Cho", w: "近年錄音，高解析規格最穩。" },
+      { p: "Jean-Yves Thibaudet", l: "Decca", y: 1996, qa: "hires", t: ["ref"], q: "Debussy Clair de Lune Thibaudet", w: "德布西鋼琴全集，音色控制細膩。" },
+      { p: "Krystian Zimerman", l: "DG", y: 1994, qa: "hifi", t: ["ref"], q: "Debussy Preludes Zimerman", w: "觸鍵層次極豐富。" },
+      { p: "Walter Gieseking", l: "EMI／Warner", y: 1954, qa: "historic", t: ["ref"], q: "Debussy Clair de Lune Gieseking", w: "德布西演奏的歷史標竿，單聲道。" }
+    ]
+  },
+
+  "debussy-lamer": {
+    title: "Debussy《海》",
+    en: "La Mer",
+    composer: "Claude Debussy",
+    q: "Debussy La Mer",
+    pick: "三樂章交響素描。",
+    versions: [
+      { p: "François-Xavier Roth / Les Siècles", l: "Harmonia Mundi", y: 2017, qa: "hires", t: ["period"], q: "Debussy La Mer Les Siecles Roth", w: "時代樂器版，音色最特別。近年高解析。" },
+      { p: "Pierre Boulez / Cleveland Orchestra", l: "DG", y: 1993, qa: "hires", t: ["ref"], q: "Debussy La Mer Boulez Cleveland", w: "織體最透明的讀法。" },
+      { p: "Charles Dutoit / Montréal SO", l: "Decca", y: 1989, qa: "hifi", t: ["ref"], q: "Debussy La Mer Dutoit", w: "法式音色與 Decca 錄音的最佳結合。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "EMI", y: 1964, qa: "hifi", t: [], q: "Debussy La Mer Karajan", w: "音色最豐厚的版本。" }
+    ]
+  },
+
+  "ravel-bolero": {
+    title: "Ravel《波麗露》",
+    en: "Boléro",
+    composer: "Maurice Ravel",
+    q: "Ravel Bolero",
+    pick: "全曲旋律與和聲幾乎不變，只有配器與音量持續累積。任務：記錄每一次旋律重複時新加入的樂器。這是最好的配器法教材。",
+    versions: [
+      { p: "Charles Dutoit / Montréal SO", l: "Decca", y: 1981, qa: "hifi", t: ["ref"], q: "Ravel Bolero Dutoit", w: "公認的第一參考，每件樂器的進入都聽得一清二楚——正好是本週任務所需。" },
+      { p: "Yannick Nézet-Séguin / Orchestre Métropolitain", l: "ATMA", y: 2011, qa: "hires", t: [], q: "Ravel Bolero Nezet-Seguin", w: "近年錄音，高解析機率高。" },
+      { p: "Pierre Boulez / Berlin Phil", l: "DG", y: 1993, qa: "hires", t: [], q: "Ravel Bolero Boulez", w: "數位錄音，聲部分離極佳。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1977, qa: "hifi", t: [], q: "Ravel Bolero Karajan", w: "音色最華麗，但樂器分離度略低於 Dutoit。" }
+    ]
+  },
+
+  "ravel-pavane": {
+    title: "Ravel《死公主的孔雀舞》",
+    en: "Pavane pour une infante défunte",
+    composer: "Maurice Ravel",
+    q: "Ravel Pavane pour une infante defunte",
+    versions: [
+      { p: "Charles Dutoit / Montréal SO", l: "Decca", y: 1983, qa: "hifi", t: ["ref"], q: "Ravel Pavane Dutoit", w: "管弦樂版基準，法國號獨奏極美。" },
+      { p: "Jean-Yves Thibaudet（鋼琴原版）", l: "Decca", y: 1992, qa: "hires", t: [], q: "Ravel Pavane Thibaudet piano", w: "鋼琴原版，可與管弦樂版對比。" },
+      { p: "Pierre Boulez / Berlin Phil", l: "DG", y: 1994, qa: "hires", t: [], q: "Ravel Pavane Boulez", w: "數位錄音，線條清晰。" }
+    ]
+  },
+
+  "stravinsky-rite": {
+    title: "Stravinsky《春之祭》",
+    en: "Le Sacre du printemps",
+    composer: "Igor Stravinsky",
+    q: "Stravinsky Rite of Spring",
+    fact: "1913 年於巴黎香榭麗舍劇院首演，首演當晚觀眾席發生嚴重騷動。",
+    pick: "聽第一部分〈春之預兆〉時試著跟著打拍子——你會失敗。此段使用不規則的重音配置，刻意破壞穩定的節拍預期。",
+    versions: [
+      { p: "François-Xavier Roth / Les Siècles", l: "Harmonia Mundi", y: 2013, qa: "hires", t: ["period", "ref"], q: "Stravinsky Rite of Spring Les Siecles Roth", w: "使用 1913 年首演時期的樂器，音色粗糲，近年高解析錄音。極受好評。" },
+      { p: "Simon Rattle / Berlin Phil", l: "EMI／Warner", y: 2013, qa: "hires", t: [], q: "Stravinsky Rite of Spring Rattle Berlin", w: "現場錄音，動態極大，高解析規格佳。" },
+      { p: "Pierre Boulez / Cleveland Orchestra", l: "DG", y: 1969, qa: "hifi", t: ["ref"], q: "Stravinsky Rite of Spring Boulez Cleveland", w: "節奏精準度的標竿，長年第一參考。" },
+      { p: "Igor Stravinsky / Columbia SO", l: "Sony", y: 1960, qa: "hifi", t: ["ref"], q: "Stravinsky Rite of Spring Stravinsky conducts", w: "作曲家親自指揮，具文獻價值。" },
+      { p: "Riccardo Muti / Philadelphia Orchestra", l: "EMI", y: 1978, qa: "hifi", t: [], q: "Stravinsky Rite of Spring Muti Philadelphia", w: "音量與衝擊力極強。" },
+      { p: "Pierre Monteux / Paris Conservatoire", l: "Decca", y: 1956, qa: "historic", t: [], q: "Stravinsky Rite of Spring Monteux", w: "首演指揮者的錄音，歷史價值高。" }
+    ]
+  },
+
+  "stravinsky-firebird": {
+    title: "Stravinsky《火鳥》組曲",
+    en: "The Firebird Suite",
+    composer: "Igor Stravinsky",
+    q: "Stravinsky Firebird Suite",
+    pick: "較易入門。課程建議：先聽《春之祭》開頭 5 分鐘，再聽《火鳥》——先承受衝擊，再獲得緩解。",
+    versions: [
+      { p: "Valery Gergiev / Mariinsky Orchestra", l: "Mariinsky", y: 2010, qa: "hires", t: [], q: "Stravinsky Firebird Gergiev Mariinsky", w: "SACD／高解析發行。" },
+      { p: "Charles Dutoit / Montréal SO", l: "Decca", y: 1984, qa: "hifi", t: ["ref"], q: "Stravinsky Firebird Dutoit", w: "音色最美的版本，配器細節清楚。" },
+      { p: "Antal Doráti / London SO", l: "Mercury", y: 1959, qa: "hifi", t: ["ref"], q: "Stravinsky Firebird Dorati", w: "Mercury Living Presence 名盤。" },
+      { p: "Pierre Boulez / Chicago SO", l: "DG", y: 1992, qa: "hires", t: [], q: "Stravinsky Firebird Boulez Chicago", w: "數位錄音，結構透明。" }
+    ]
+  },
+
+  "stravinsky-petrushka": {
+    title: "Stravinsky《彼得洛希卡》",
+    en: "Petrushka",
+    composer: "Igor Stravinsky",
+    q: "Stravinsky Petrushka",
+    versions: [
+      { p: "Simon Rattle / City of Birmingham SO", l: "EMI／Warner", y: 1987, qa: "hifi", t: ["ref"], q: "Stravinsky Petrushka Rattle", w: "節奏鮮活，錄音佳。" },
+      { p: "Pierre Boulez / New York Phil", l: "Sony", y: 1971, qa: "hifi", t: ["ref"], q: "Stravinsky Petrushka Boulez", w: "結構最清楚的讀法。" },
+      { p: "Charles Dutoit / Montréal SO", l: "Decca", y: 1986, qa: "hifi", t: [], q: "Stravinsky Petrushka Dutoit", w: "音色透明。" },
+      { p: "Yannick Nézet-Séguin / Philadelphia", l: "DG", y: 2021, qa: "hires", t: [], q: "Stravinsky Petrushka Nezet-Seguin", w: "近年錄音，高解析規格最穩。" }
+    ]
+  },
+
+  "bartok-msoc": {
+    title: "Bartók《為弦樂、打擊樂與鋼片琴而作的音樂》",
+    en: "Music for Strings, Percussion and Celesta, Sz. 106",
+    composer: "Béla Bartók",
+    q: "Bartok Music for Strings Percussion and Celesta",
+    pick: "第一樂章為賦格——可直接對照第 6 週的 Bach。同一種形式，相隔 200 年，聲響完全不同。",
+    versions: [
+      { p: "Iván Fischer / Budapest Festival Orchestra", l: "Channel Classics", y: 2004, qa: "hires", t: ["ref"], q: "Bartok Music for Strings Percussion Celesta Ivan Fischer", w: "Channel Classics 高解析錄音，匈牙利樂團的語法最道地。" },
+      { p: "Fritz Reiner / Chicago SO", l: "RCA", y: 1958, qa: "hifi", t: ["ref"], q: "Bartok Music for Strings Percussion Celesta Reiner", w: "長年公認第一參考，有 24bit 重製。" },
+      { p: "Pierre Boulez / Chicago SO", l: "DG", y: 1994, qa: "hires", t: [], q: "Bartok Music for Strings Percussion Celesta Boulez", w: "第一樂章的賦格聲部進入最好追蹤。" },
+      { p: "Georg Solti / Chicago SO", l: "Decca", y: 1989, qa: "hifi", t: [], q: "Bartok Music for Strings Percussion Celesta Solti", w: "動態極大。" }
+    ]
+  },
+
+  "schoenberg-verklarte": {
+    title: "Schoenberg《昇華之夜》Op. 4",
+    en: "Verklärte Nacht",
+    composer: "Arnold Schoenberg",
+    q: "Schoenberg Verklarte Nacht Op 4",
+    diff: "低",
+    fact: "作於 1899 年，屬 Schoenberg 早期調性作品，聽感接近晚期浪漫派。",
+    pick: "這證明了：他有能力寫「好聽」的音樂，後來的轉向是選擇而非能力不足。這個認知對接受後續作品至關重要。",
+    versions: [
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1974, qa: "hifi", t: ["ref"], q: "Schoenberg Verklarte Nacht Karajan", w: "弦樂團版的公認名盤，音色極美，是本週最好的入口。" },
+      { p: "Pierre Boulez / Ensemble InterContemporain", l: "Sony／DG", y: 1996, qa: "hires", t: [], q: "Schoenberg Verklarte Nacht Boulez", w: "六重奏原始編制版，線條最清楚。" },
+      { p: "Rattle / Birmingham Contemporary Music Group", l: "EMI／Warner", y: 1994, qa: "hifi", t: [], q: "Schoenberg Verklarte Nacht Rattle", w: "室內樂版另一選擇。" }
+    ]
+  },
+
+  "berg-violin": {
+    title: "Berg 小提琴協奏曲",
+    en: "Violin Concerto 'To the Memory of an Angel'",
+    composer: "Alban Berg",
+    q: "Berg Violin Concerto",
+    diff: "中",
+    fact: "此曲題獻「紀念一位天使」。曲中引用了 Bach 的聖詠——十二音技法與調性素材在此共存。",
+    versions: [
+      { p: "Isabelle Faust / Claudio Abbado", l: "Harmonia Mundi", y: 2012, qa: "hires", t: ["ref"], q: "Berg Violin Concerto Isabelle Faust", w: "近年最受好評的版本，錄音規格最高。" },
+      { p: "Anne-Sophie Mutter / James Levine", l: "DG", y: 1992, qa: "hifi", t: ["ref"], q: "Berg Violin Concerto Mutter", w: "音色最豐潤，情感面最外顯。" },
+      { p: "Itzhak Perlman / Seiji Ozawa", l: "DG", y: 1978, qa: "hifi", t: [], q: "Berg Violin Concerto Perlman", w: "旋律線最歌唱性。" },
+      { p: "Frank Peter Zimmermann / Daniel Harding", l: "Sony", y: 2013, qa: "hires", t: [], q: "Berg Violin Concerto Frank Peter Zimmermann", w: "近年錄音，結構清楚。" }
+    ]
+  },
+
+  "schoenberg-pierrot": {
+    title: "Schoenberg《月光小丑》Op. 21",
+    en: "Pierrot Lunaire",
+    composer: "Arnold Schoenberg",
+    q: "Schoenberg Pierrot Lunaire",
+    diff: "高",
+    versions: [
+      { p: "Christine Schäfer / Pierre Boulez", l: "DG", y: 1998, qa: "hires", t: ["ref"], q: "Schoenberg Pierrot Lunaire Schafer Boulez", w: "公認的現行首選，Sprechstimme 的處理最清楚，數位錄音。" },
+      { p: "Yvonne Minton / Pierre Boulez", l: "Sony", y: 1977, qa: "hifi", t: [], q: "Schoenberg Pierrot Lunaire Boulez Minton", w: "Boulez 的較早版本。" },
+      { p: "Jane Manning / Nash Ensemble", l: "Chandos", y: 1977, qa: "hifi", t: [], q: "Schoenberg Pierrot Lunaire Jane Manning", w: "英語系聽眾常用的參照版。" }
+    ]
+  },
+
+  "webern-op10": {
+    title: "Webern 管弦樂小品 Op. 10",
+    en: "Five Pieces for Orchestra",
+    composer: "Anton Webern",
+    q: "Webern Five Pieces for Orchestra Op 10",
+    diff: "高",
+    pick: "全套五首總長度不到 5 分鐘。任務：只需注意「每個聲音都被單獨對待」的密度與寂靜的使用。",
+    versions: [
+      { p: "Pierre Boulez / Berlin Phil（Webern 全集）", l: "DG", y: 1995, qa: "hires", t: ["ref"], q: "Webern Complete Works Boulez", w: "全集錄音，數位規格佳。極弱奏的細節需要好的音質才聽得到——本曲特別值得找 Hi-Res。" },
+      { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1974, qa: "hifi", t: [], q: "Webern Karajan Berlin", w: "音色最美的版本，與 Boulez 的分析式讀法對比明顯。" }
+    ]
+  },
+
+  "shostakovich-5": {
+    title: "Shostakovich 第 5 號交響曲 Op. 47",
+    en: "Symphony No. 5",
+    composer: "Dmitri Shostakovich",
+    line: "政治壓力下的交響傳統",
+    q: "Shostakovich Symphony No 5",
+    pick: "末樂章結尾究竟是真誠的勝利宣示或反諷，長期為評論者所爭議。任務：形成你自己的判斷。",
+    versions: [
+      { p: "Andris Nelsons / Boston SO", l: "DG", y: 2015, qa: "hires", t: ["ref"], q: "Shostakovich Symphony 5 Nelsons Boston", w: "近年錄音規格最高，動態極大，獲葛萊美獎。" },
+      { p: "Vasily Petrenko / Royal Liverpool Phil", l: "Naxos", y: 2008, qa: "hires", t: [], q: "Shostakovich Symphony 5 Petrenko", w: "近年全集，結構清楚。" },
+      { p: "Evgeny Mravinsky / Leningrad Phil", l: "Melodiya／Erato", y: 1973, qa: "hifi", t: ["ref"], q: "Shostakovich Symphony 5 Mravinsky", w: "首演指揮者，末樂章速度極快，反諷讀法的代表。" },
+      { p: "Leonard Bernstein / New York Phil", l: "Sony", y: 1959, qa: "hifi", t: ["ref"], q: "Shostakovich Symphony 5 Bernstein", w: "末樂章外向輝煌，「勝利讀法」的代表。與 Mravinsky 併聽即為本週任務。" },
+      { p: "Bernard Haitink / Concertgebouw", l: "Decca", y: 1981, qa: "hifi", t: [], q: "Shostakovich Symphony 5 Haitink", w: "中性、不預設立場的讀法。" }
+    ]
+  },
+
+  "shostakovich-sq8": {
+    title: "Shostakovich 第 8 號弦樂四重奏 Op. 110",
+    en: "String Quartet No. 8",
+    composer: "Dmitri Shostakovich",
+    line: "政治壓力下的交響傳統",
+    q: "Shostakovich String Quartet No 8",
+    versions: [
+      { p: "Pacifica Quartet", l: "Cedille", y: 2011, qa: "hires", t: [], q: "Shostakovich String Quartet 8 Pacifica Quartet", w: "近年全集，錄音規格佳。" },
+      { p: "Borodin Quartet", l: "Melodiya／Decca", y: 1978, qa: "hifi", t: ["ref"], q: "Shostakovich String Quartet 8 Borodin Quartet", w: "公認的第一參考，曾與作曲家本人共同排練。" },
+      { p: "Emerson String Quartet", l: "DG", y: 1999, qa: "hifi", t: ["ref"], q: "Shostakovich String Quartets Emerson", w: "技術完美，全集獲獎。" },
+      { p: "Fitzwilliam Quartet", l: "Decca", y: 1975, qa: "hifi", t: [], q: "Shostakovich String Quartets Fitzwilliam", w: "西方第一套全集。" }
+    ]
+  },
+
+  "gorecki-3": {
+    title: "Górecki 第 3 號交響曲 Op. 36",
+    en: "Symphony No. 3 'Symphony of Sorrowful Songs'",
+    composer: "Henryk Górecki",
+    line: "神聖極簡主義 Holy Minimalism",
+    q: "Gorecki Symphony No 3",
+    fact: "作於 1976 年；1992 年由 Dawn Upshaw 與 David Zinman 指揮之錄音發行後，取得極不尋常的商業成功。",
+    versions: [
+      { p: "Dawn Upshaw / David Zinman / London Sinfonietta", l: "Nonesuch", y: 1992, qa: "hifi", t: ["ref"], q: "Gorecki Symphony No 3 Upshaw Zinman", w: "課程指定版，也是使此曲聞名全球的錄音。" },
+      { p: "Beth Gibbons / Krzysztof Penderecki / NOSPR", l: "Domino", y: 2019, qa: "hires", t: [], q: "Gorecki Symphony 3 Beth Gibbons", w: "近年錄音，由 Portishead 主唱擔綱，高解析發行。詮釋取向截然不同。" },
+      { p: "Antoni Wit / Polish National RSO", l: "Naxos", y: 1994, qa: "hifi", t: [], q: "Gorecki Symphony 3 Antoni Wit", w: "波蘭本地樂團版本。" }
+    ]
+  },
+
+  "part-spiegel": {
+    title: "Arvo Pärt《鏡中鏡》",
+    en: "Spiegel im Spiegel",
+    composer: "Arvo Pärt",
+    line: "神聖極簡主義",
+    q: "Arvo Part Spiegel im Spiegel",
+    pick: "約 9 分鐘，極簡至僅有鋼琴與一件獨奏樂器。這是本模組中最容易接受的作品，可作為進入當代音樂的入口。",
+    versions: [
+      { p: "Vladimir Spivakov / Sergej Bezrodny（收於《Alina》）", l: "ECM New Series", y: 1999, qa: "hires", t: ["ref"], q: "Arvo Part Alina ECM", w: "ECM 的《Alina》專輯是此曲的標準版本，錄音空間感極佳，高解析首選。" },
+      { p: "Tasmin Little / Martin Roscoe", l: "Chandos", y: 2003, qa: "hires", t: [], q: "Arvo Part Spiegel im Spiegel Tasmin Little", w: "小提琴版另一選擇。" },
+      { p: "Angèle Dubeau / La Pietà", l: "Analekta", y: 2013, qa: "hires", t: [], q: "Arvo Part Spiegel im Spiegel Angele Dubeau", w: "近年錄音，音色柔和。" }
+    ]
+  },
+
+  "part-fratres": {
+    title: "Arvo Pärt《兄弟》",
+    en: "Fratres",
+    composer: "Arvo Pärt",
+    line: "神聖極簡主義",
+    q: "Arvo Part Fratres",
+    versions: [
+      { p: "Gidon Kremer / Keith Jarrett（收於《Tabula Rasa》）", l: "ECM New Series", y: 1984, qa: "hires", t: ["ref"], q: "Arvo Part Tabula Rasa ECM", w: "使 Pärt 聞名西方的專輯，此曲的標準參照。" },
+      { p: "Tallinn Chamber Orchestra / Tõnu Kaljuste", l: "ECM", y: 1996, qa: "hires", t: [], q: "Arvo Part Fratres Kaljuste", w: "弦樂團版，愛沙尼亞本地樂團。" },
+      { p: "Hungarian State Opera Orchestra", l: "Naxos", y: 1996, qa: "hifi", t: [], q: "Arvo Part Fratres Naxos", w: "收錄多種編制版本，可比較同曲的不同配器。" }
+    ]
+  },
+
+  "reich-18": {
+    title: "Steve Reich《為 18 位音樂家而作的音樂》",
+    en: "Music for 18 Musicians",
+    composer: "Steve Reich",
+    line: "過程性極簡主義 Process Minimalism",
+    q: "Steve Reich Music for 18 Musicians",
+    pick: "重點不在旋律，而在細微變化的漸進累積——注意你何時察覺「事情變了」，以及變化實際上是何時開始的。兩者的落差即為此類音樂的核心體驗。",
+    versions: [
+      { p: "Steve Reich and Musicians", l: "ECM New Series", y: 1978, qa: "hires", t: ["ref"], q: "Steve Reich Music for 18 Musicians ECM", w: "作曲家本人參與的首錄，公認的標準版本。ECM 錄音品質極高。" },
+      { p: "Ensemble Modern", l: "RCA", y: 1998, qa: "hifi", t: [], q: "Steve Reich Music for 18 Musicians Ensemble Modern", w: "節奏精準度更高的版本。" },
+      { p: "Grand Valley State University New Music Ensemble", l: "Innova", y: 2007, qa: "hires", t: [], q: "Steve Reich Music for 18 Musicians Grand Valley", w: "近年錄音，規格佳。" }
+    ]
+  }
+
+});
+
+</script>
+<script>
+/* 24 週單元資料。tasks[0] 為「必做」＝核心 15 分鐘的最低完成標準 */
+window.WEEKS = [
+{
+  n: 1, m: "m1", title: "音色與樂器辨識", en: "Timbre & Instrumentation",
+  concept: [
+    { tier: "析", t: "管弦樂團依發聲原理分為四大家族：<b>弦樂（strings）、木管（woodwinds）、銅管（brass）、打擊（percussion）</b>。辨識樂器是所有後續聆聽的基礎——你無法描述你聽不出來的東西。" }
+  ],
+  works: ["britten-ypg", "prokofiev-peter", "saintsaens-carnival"],
+  tasks: [
+    "聽 Britten Op. 34。<b>不看曲目說明</b>，準備紙筆，每一段變奏開始時寫下你判斷的樂器家族（弦／木管／銅管／打擊）。全曲結束後對照曲目說明，計算正確率。",
+    "聽《彼得與狼》，記下每個角色對應的樂器。此曲刻意將「角色—樂器」一對一綁定，是最有效的記憶錨點。",
+    "挑出三種你<b>最容易混淆</b>的樂器（常見組合：雙簧管 oboe vs. 單簧管 clarinet；小號 trumpet vs. 法國號 horn；中提琴 viola vs. 大提琴 cello），單獨搜尋該樂器的獨奏曲各聽 2 分鐘。"
+  ],
+  checks: [
+    "能在合奏中辨識出弦樂、木管、銅管、打擊四大家族",
+    "能單獨辨識：小提琴、大提琴、長笛、雙簧管、單簧管、小號、法國號、定音鼓"
+  ]
+},
+{
+  n: 2, m: "m1", title: "織體", en: "Texture",
+  concept: [
+    { tier: "析", t: "織體指音樂中「同時進行的聲部之間的關係」。" }
+  ],
+  table: {
+    head: ["織體", "定義", "聽覺特徵"],
+    rows: [
+      ["<b>單音織體</b><br>Monophony", "僅一條旋律線，無伴奏", "「只有一個人在唱／拉」"],
+      ["<b>主音織體</b><br>Homophony", "一條主旋律 + 伴奏聲部", "「有主角，其他人在襯托」——流行音樂幾乎皆屬此類"],
+      ["<b>複音織體</b><br>Polyphony", "多條<b>地位平等</b>的旋律線同時進行", "「好幾條旋律在互相追逐，聽不出誰是主角」"]
+    ]
+  },
+  key: "辨識關鍵：問自己「這裡有幾條旋律？它們是平等的嗎？」",
+  works: ["gregorian", "chopin-noc9-2", "bach-artoffugue"],
+  tasks: [
+    "依序聽上表三首。聽 Chopin 時，用一隻手在膝上跟著「主旋律」比劃；聽 Bach 時，嘗試同樣的事——<b>你會發現手不夠用</b>。這個挫折感就是複音織體的體驗本身。",
+    "聽 Bach《賦格的藝術》第一首，只追蹤<b>最低聲部（bass）</b>，忽略其他聲部。再聽一次，只追蹤最高聲部。",
+    "隨機播放任一古典曲目，在 30 秒內判定其織體類型。重複 5 次。"
+  ],
+  checks: ["能在 30 秒內判定一段音樂的織體類型", "理解「複音織體聽起來比較複雜」不是錯覺，而是結構事實"]
+},
+{
+  n: 3, m: "m1", title: "曲式", en: "Form",
+  concept: [
+    { tier: "析", t: "曲式是音樂的時間結構。所有曲式都建立在三種基本操作上：<b>重複（repetition）、對比（contrast）、變化（variation）</b>。入門階段先掌握三種：<br>• <b>二段體 / 三段體（Binary / Ternary, AB / ABA）</b>：最基本的對比結構。ABA 的關鍵是「回來了」的辨識。<br>• <b>主題與變奏（Theme and Variations）</b>：同一主題經歷多次改裝。<br>• <b>迴旋曲式（Rondo, ABACA…）</b>：主題反覆回歸，中間穿插不同段落。" }
+  ],
+  works: ["haydn-94", "mozart-k525", "beethoven-elise"],
+  tasks: [
+    "聽 Haydn 第 94 號第二樂章。<b>數出主題共出現幾次</b>，並在每次出現時記下「這次變了什麼」（變快？變成小調？加了裝飾音？換了樂器？）。",
+    "聽《給愛麗絲》，標記主題（那段最有名的旋律）每次回歸的時刻。你會發現它回來了三次。",
+    "在本週任一背景聆聽中，只做一件事：<b>察覺「這段我剛才聽過」的時刻</b>。這是曲式感知的起點。"
+  ],
+  checks: ["能辨識主題的回歸", "能描述變奏中「改變了哪一個參數」"]
+},
+{
+  n: 4, m: "m1", title: "調性與張力", en: "Tonality & Tension",
+  concept: [
+    { tier: "析", t: "調性系統是西方古典音樂約 1600–1900 年間的組織原則。入門階段需掌握三件事：<br>1. <b>大調 vs. 小調</b>：最粗糙但最有用的區分。大調聽感偏明亮、穩定；小調偏黯淡、緊張。<b>此為文化習得之聽感關聯，非物理必然</b>——但在西方古典曲目中高度一致。<br>2. <b>終止感（cadence）</b>：音樂「講完一句話」的感覺。完全終止給人「句號」感，半終止給人「逗號」感。<br>3. <b>轉調（modulation）</b>：音樂中途換了「家」。聽覺特徵是「本來很穩定的地方，突然變得不太一樣，但也還算穩定」。" }
+  ],
+  works: ["mozart-40", "mozart-41", "bach-wtc1-prelude"],
+  tasks: [
+    "連續對比聽 Mozart 第 40 號與第 41 號的開頭各 60 秒。<b>不要分析，只感受兩者的情緒差異。</b> 這個差異就是小調與大調。",
+    "聽 Bach 平均律第一首前奏曲（約 2 分鐘）。此曲無旋律，只有分解和弦——<b>它是純粹的和聲流動</b>。聽的時候只注意「什麼時候感覺穩定、什麼時候感覺想往前走」。",
+    "隨機播放 10 段古典音樂片段，各聽 20 秒，判定大調或小調。目標正確率 70%。"
+  ],
+  checks: ["能以約 70% 正確率區分大小調", "能察覺樂句結束（終止感）的位置"],
+  after: "<b>模組一完成後的自我評估</b>：若四項自我檢核中有兩項以上未達成，建議<b>重做本模組一次</b>再前進。這四項工具在後續 20 週中會不斷使用，基礎不穩會使後續學習事倍功半。"
+},
+{
+  n: 5, m: "m2", title: "協奏曲與 Ritornello 形式", en: "Concerto & Ritornello",
+  concept: [
+    { tier: "析", t: "<b>協奏曲（concerto）</b>的核心是「獨奏 vs. 合奏」的對抗與對話。巴洛克協奏曲多採 <b>ritornello 形式</b>：合奏段（ritornello，「回歸段」）反覆回來，中間穿插獨奏段。<b>這是第 3 週迴旋曲式概念在巴洛克的具體實現。</b>" }
+  ],
+  works: ["vivaldi-seasons", "bach-bwv1048", "bach-bwv1050"],
+  tasks: [
+    "聽《四季》之〈春〉第一樂章。<b>標記每一次合奏主題（ritornello）回來的時刻</b>。你會發現它像副歌一樣反覆出現，中間夾著小提琴獨奏。",
+    "聽《四季》之〈夏〉第三樂章，對照該樂章的十四行詩（描述暴風雨）。這是「音樂描繪具體事物」的早期範例。",
+    "聽布蘭登堡第 5 號第一樂章。此曲中段有一段<b>極長的大鍵琴獨奏</b>，常被視為鍵盤協奏曲的濫觴。找到它開始的位置。"
+  ],
+  extraWorks: ["corelli-op6"]
+},
+{
+  n: 6, m: "m2", title: "對位法與賦格", en: "Counterpoint & Fugue",
+  concept: [
+    { tier: "析", t: "<b>賦格（fugue）</b>是複音織體的最高度組織形式。基本機制：<br>1. <b>主題（subject）</b>由單一聲部獨自呈示。<br>2. 第二聲部以<b>答題（answer）</b>進入（通常在五度上），此時第一聲部繼續，形成<b>對題（countersubject）</b>。<br>3. 各聲部依序進入，之後主題在不同聲部、不同調性上反覆出現，中間穿插<b>插句（episode）</b>。" }
+  ],
+  key: "入門者只需掌握一件事：辨識主題每一次的進入。",
+  works: ["bach-wtc1-fugue", "bach-goldberg", "bach-cello1"],
+  note: { tier: "史析", t: "<b>一則值得注意的個案</b>：廣為人知的《d 小調觸技曲與賦格》BWV 565，其作者歸屬在音樂學界存在爭議。此例可作為理解分類系統的實例：「BWV 565 存在」屬【史】；「它是否為巴赫所作」則屬【析】——通說與異見並存，本課程據此不將其列為巴赫代表作。" },
+  tasks: [
+    "聽 BWV 846 賦格（約 2 分鐘）。<b>先單獨記住開頭的主題</b>（前 5 秒），然後從頭聽，每次聽到主題出現就在紙上畫一筆。全曲聽 3 遍，比較三次的計數是否一致。",
+    "聽《郭德堡變奏曲》的詠嘆調（Aria，第一軌）與最後一軌（Aria da capo）。兩者為同一段音樂，中間隔著 30 個變奏。感受「回到原點但你已經不同」的效果。",
+    "聽大提琴組曲第 1 號前奏曲。此曲<b>只有一件樂器、一條線</b>，但透過分解和弦暗示出完整的和聲進行——這是「單旋律暗示複音」的極致範例。"
+  ]
+},
+{
+  n: 7, m: "m2", title: "聲樂與神劇", en: "Vocal Music & Oratorio",
+  concept: [
+    { tier: "析", t: "巴洛克聲樂作品的兩種基本單位：<br>• <b>宣敘調（recitative）</b>：接近說話的節奏，推進劇情，伴奏稀疏。<br>• <b>詠嘆調（aria）</b>：旋律性強，時間「停下來」，人物抒發情感。多採 <b>da capo aria（ABA）</b>形式。" }
+  ],
+  key: "辨識線索：聽起來「像在講話、沒什麼旋律」= 宣敘調；聽起來「開始唱歌了、旋律優美且會重複」= 詠嘆調。",
+  works: ["handel-messiah", "bach-bminor-mass", "bach-matthew"],
+  tasks: [
+    "聽《彌賽亞》開頭連續三軌。<b>標記宣敘調與詠嘆調的切換點</b>——你會清楚感覺到「講話模式」與「唱歌模式」的差別。",
+    "聽《馬太受難曲》中的〈Erbarme dich〉（女中音詠嘆調 + 小提琴獨奏）。此曲常被列為巴赫最著名的單曲之一。只聽，不分析。",
+    "對比《彌賽亞》〈Hallelujah〉與 Bach《b 小調彌撒》Kyrie：同為大型合唱，<b>一者外向宣示、一者內向懇求</b>。感受兩者的情緒差異如何由音樂手段造成。"
+  ]
+},
+{
+  n: 8, m: "m3", title: "奏鳴曲式", en: "Sonata Form", flag: "全課程最關鍵的單一單元",
+  banner: "奏鳴曲式是 1750 年後約 150 年間西方器樂音樂的主導結構，掌握它等於掌握了大部分交響曲、協奏曲、奏鳴曲、四重奏第一樂章的地圖。<b>若時間有限，請優先投資本週。</b>",
+  concept: [{ tier: "析", t: "奏鳴曲式三大段：" }],
+  table: {
+    head: ["段落", "內容", "聽覺辨識線索"],
+    rows: [
+      ["<b>呈示部</b><br>Exposition", "第一主題（主調）→ 過渡 → 第二主題（屬調或關係大調）→ 結束句", "通常會<b>整段重複一次</b>（早期作品）。聽到「咦，剛才那段又來了」就是呈示部反覆"],
+      ["<b>發展部</b><br>Development", "主題素材被拆解、轉調、重組，調性不穩定", "<b>聽起來「迷路了」、不知道現在在哪裡</b>——這種不安定感就是發展部"],
+      ["<b>再現部</b><br>Recapitulation", "兩個主題皆回歸，且<b>皆在主調上</b>", "<b>「開頭的東西原封不動回來了」的瞬間非常明顯</b>。這是最容易辨識的結構點"]
+    ]
+  },
+  works: ["mozart-40", "mozart-k525", "beethoven-5"],
+  tasks: [
+    "聽 Mozart K. 550 第一樂章，<b>專門找「再現部開始」的那個瞬間</b>——即開頭那個著名主題原封不動回來的時刻。找到後記下時間點。<b>這一個任務就值得單獨花 15 分鐘。</b>",
+    "同一樂章聽第二遍，這次找<b>第二主題</b>：第一主題結束後，音樂會經過一段不安定的過渡，然後出現一個<b>性格明顯不同、較為抒情</b>的新旋律。",
+    "聽第三遍，標出發展部的起訖。提示：呈示部結束後（若有反覆則為第二次結束後），音樂開始「亂跑」的地方即為發展部起點。",
+    "用同樣的三個步驟分析 Beethoven 第 5 號第一樂章。此曲的動機（三短一長）在發展部中被拆解得極為徹底，是觀察「素材如何被發展」的最佳範例。"
+  ],
+  checks: ["能在 Mozart K. 550 第一樂章中指出再現部的起點", "能區分第一主題與第二主題的性格差異"]
+},
+{
+  n: 9, m: "m3", title: "交響曲的成形", en: "Symphony",
+  concept: [{ tier: "析", t: "古典交響曲的標準四樂章配置：" }],
+  table: {
+    head: ["樂章", "速度", "常見曲式", "功能"],
+    rows: [
+      ["I", "快板 Allegro", "奏鳴曲式", "最具份量的結構性樂章"],
+      ["II", "慢板 Adagio / Andante", "三段體、主題與變奏", "抒情核心"],
+      ["III", "中速", "小步舞曲 Minuet / 詼諧曲 Scherzo（ABA）", "舞曲性格"],
+      ["IV", "快板 / 急板 Presto", "奏鳴曲式、迴旋曲式", "終樂章，收束全局"]
+    ]
+  },
+  works: ["haydn-94", "haydn-104", "mozart-41"],
+  tasks: [
+    "完整聽 Haydn 第 94 號（約 23 分鐘）。<b>每個樂章結束時暫停，用一句話寫下該樂章的性格。</b> 目的是建立「四樂章是一個整體」的架構感。",
+    "聽 Mozart 第 41 號末樂章。此樂章結尾將五個主題以對位方式同時疊置——<b>這是古典時期形式與巴洛克對位技術的結合</b>。即使聽不出五條線，也請感受那種「越堆越滿、最後爆開」的效果。",
+    "對照第 3 週所學：Haydn 第 94 號第二樂章即為主題與變奏。此時再聽一次，你應該能辨識得比第 3 週更清楚。"
+  ]
+},
+{
+  n: 10, m: "m3", title: "協奏曲與歌劇（Mozart）", en: "Concerto & Opera",
+  concept: [
+    { tier: "析", t: "古典協奏曲與巴洛克協奏曲的差異：獨奏者的角色從「合奏中的領奏」轉為<b>具有戲劇性人格的獨立主體</b>。標誌性特徵為<b>裝飾奏（cadenza）</b>——樂團停止，獨奏者獨自演奏一段技巧展示，傳統上帶即興性質。" }
+  ],
+  works: ["mozart-k466", "mozart-k467", "mozart-figaro", "mozart-flute"],
+  tasks: [
+    "聽 K. 466 第一樂章，<b>找出裝飾奏的位置</b>：樂團突然全體停止、只剩鋼琴獨奏、之後樂團再進來收尾。此結構在幾乎所有古典協奏曲中皆適用。",
+    "聽《魔笛》夜后詠嘆調〈Der Hölle Rache〉。注意人聲被當作<b>器樂化的技巧展示工具</b>使用。",
+    "聽《費加洛的婚禮》序曲（約 4 分鐘）。這是「用純器樂建立戲劇氣氛」的範例。"
+  ]
+},
+{
+  n: 11, m: "m3", title: "Beethoven：轉折點", en: "Beethoven: The Turning Point",
+  concept: [
+    { tier: "選析", t: "Beethoven（1770–1827）在音樂史敘述中的位置，是<b>古典形式的完成者與其邊界的突破者</b>。其作品通常分為三期（此三期劃分為<b>傳統學術慣例</b>，非作曲家本人所定）：" }
+  ],
+  table: {
+    head: ["分期", "大致範圍", "特徵"],
+    rows: [
+      ["早期", "至約 1802", "承襲 Haydn、Mozart 之古典語法"],
+      ["中期（「英雄期」）", "約 1803–1814", "規模擴張、戲劇張力強化、動機發展手法極端化"],
+      ["晚期", "約 1815 之後", "結構高度個人化、賦格再度大量出現、內省性強"]
+    ]
+  },
+  works: ["beethoven-5", "beethoven-3", "beethoven-9", "beethoven-moonlight", "beethoven-op131"],
+  tasks: [
+    "聽第 5 號交響曲<b>第三樂章至第四樂章的接續處</b>。兩樂章之間不間斷，且以一段極長的漸強由 c 小調轉入 C 大調——這是「黑暗到光明」敘事在音樂結構上的具體實現，也是後世無數作品的模板。",
+    "聽《英雄》第一樂章。此曲規模顯著超越當時交響曲慣例。感受「這首曲子比 Haydn 的長很多」這件事本身。",
+    "<b>對比實驗</b>：連續聽《月光》第一樂章與 Op. 131 第一樂章。兩者相隔約 25 年。不需分析，只需感受兩者在「可親近程度」上的落差——這個落差就是 Beethoven 晚期風格的體驗。"
+  ],
+  after: "<b>模組三完成後</b>：你已具備聆聽 1750–1820 年間絕大多數器樂作品的結構工具。此時可自行探索任何古典時期曲目。"
+},
+{
+  n: 12, m: "m4", title: "鋼琴詩人（Chopin & Schumann）", en: "The Piano Poets",
+  concept: [
+    { tier: "析", t: "十九世紀鋼琴製造技術的進步（鑄鐵框架、擊弦機改良）使鋼琴成為<b>能夠獨自承載完整音樂世界的樂器</b>。隨之興起的是<b>性格小品（character piece）</b>——短小、單一情緒、無需大型形式的獨奏曲。" }
+  ],
+  works: ["chopin-nocturnes", "chopin-ballade1", "chopin-etudes10", "schumann-kinderszenen"],
+  tasks: [
+    "聽 Chopin 夜曲 Op. 9 No. 2。注意<b>左手（伴奏）與右手（旋律）的節奏並不嚴格對齊</b>——此為 rubato（彈性速度）的體現，是浪漫時期演奏美學的核心。",
+    "聽 Chopin 第 1 號敘事曲全曲（約 9 分鐘）。此曲無標準曲式標籤，結構由<b>敘事邏輯</b>而非形式範本決定。留意情緒的推進與最後的爆發。",
+    "聽 Schumann《兒時情景》全套 13 首（約 18 分鐘）。每首約 1–2 分鐘。<b>觀察「一組短曲如何構成一個整體」</b>。"
+  ]
+},
+{
+  n: 13, m: "m4", title: "藝術歌曲", en: "Lied",
+  concept: [
+    { tier: "析", t: "<b>藝術歌曲（Lied）</b>的定義性特徵：<b>鋼琴不是伴奏，而是與人聲平等的敘事夥伴</b>。鋼琴部分常獨立描繪場景、心理狀態或潛台詞。" }
+  ],
+  works: ["schubert-erlkonig", "schubert-winterreise", "schumann-dichterliebe"],
+  tasks: [
+    "聽《魔王》（約 4 分鐘）。<b>先查閱歌詞中文翻譯</b>，再聽。此曲中一名歌手需扮演四個角色（敘述者、父親、孩子、魔王），且<b>鋼琴的三連音持續模擬奔馳的馬蹄</b>。任務：辨識出四個角色的音區與語氣切換。",
+    "聽《冬之旅》第一首〈Gute Nacht〉與最後一首〈Der Leiermann〉。感受連篇歌曲集的起點與終點在情緒上的落差。",
+    "<b>本週特別建議</b>：藝術歌曲是<b>編制最小、最適合零碎時間與吵雜環境</b>的古典曲類（人聲 + 鋼琴，動態範圍較窄）。可作為通勤時段的主要曲目。"
+  ]
+},
+{
+  n: 14, m: "m4", title: "標題音樂", en: "Program Music",
+  concept: [
+    { tier: "析", t: "<b>標題音樂</b>指以音樂敘述特定文學、繪畫或事件內容的器樂作品，與<b>絕對音樂（absolute music）</b>相對。核心技術為<b>主導動機（leitmotif）</b>與 Berlioz 的 <b>idée fixe（固定樂思）</b>——以一段可辨識的旋律代表特定人物或概念，並在全曲中變形出現。" }
+  ],
+  works: ["berlioz-fantastique", "liszt-preludes", "mussorgsky-pictures"],
+  tasks: [
+    "聽《幻想交響曲》第一樂章，<b>記住 idée fixe 的旋律</b>（代表「摯愛」的主題）。然後跳到第五樂章〈女巫安息日之夜〉，<b>找出同一旋律被扭曲成怪誕版本的段落</b>。這是主導動機技術最戲劇化的示範。",
+    "聽《展覽會之畫》。各曲之間穿插的〈漫步 Promenade〉代表參觀者在畫作之間行走——<b>這是曲式中的「迴旋」原則被賦予敘事意義</b>。數出〈漫步〉出現幾次。",
+    "<b>對比思考</b>：對照第 5 週的 Vivaldi《四季》。兩者皆為標題音樂，相隔約 100 年。差異在哪裡？"
+  ]
+},
+{
+  n: 15, m: "m4", title: "交響曲的擴張（Brahms & Tchaikovsky）", en: "The Symphony Expanded",
+  concept: [
+    { tier: "選析", t: "十九世紀後期交響曲創作呈現兩種取向：<b>Brahms 代表在古典形式框架內深化</b>；<b>Tchaikovsky 代表以情感敘事驅動形式</b>。兩者並非對立陣營，但提供了理解此時期的有用座標。" }
+  ],
+  works: ["brahms-1", "brahms-4", "tchaikovsky-6", "tchaikovsky-pc1"],
+  tasks: [
+    "聽 Tchaikovsky 第 6 號<b>末樂章</b>。傳統交響曲末樂章多為快速、外向、收束於強奏；此曲末樂章為緩慢的哀歌，且<b>以極弱的消散作結</b>。這是形式慣例被情感敘事推翻的明確案例。",
+    "聽 Brahms 第 4 號末樂章。此樂章建立於一段反覆的低音主題之上（passacaglia），主題共出現 30 餘次——<b>這是巴洛克技術在十九世紀末的復歸</b>，可對照第 6 週的對位法內容。",
+    "對比 Brahms 第 1 號末樂章的主題與 Beethoven 第 9 號〈歡樂頌〉主題。兩者的相似性長期為評論者所注意，Brahms 本人對此有所回應。"
+  ]
+},
+{
+  n: 16, m: "m4", title: "歌劇", en: "Opera",
+  concept: [
+    { tier: "選", t: "歌劇對自學者的門檻最高（時長、語言、劇情），故本課程採<b>片段優先策略</b>：先聽著名選曲建立熟悉度，暫不追求全劇。" },
+    { tier: "析", t: "十九世紀歌劇的三條主要路線：<br>• <b>義大利 bel canto 至 Verdi</b>：以人聲旋律為核心。<br>• <b>Puccini 的 verismo（寫實主義）</b>：題材貼近日常，旋律直接訴諸情感。<br>• <b>Wagner 的樂劇（Musikdrama）</b>：取消分曲結構，以主導動機與連綿不斷的音樂織體推進戲劇。" }
+  ],
+  works: ["verdi-traviata", "puccini-boheme", "puccini-turandot", "wagner-walkure", "wagner-tristan"],
+  tasks: [
+    "聽《崔斯坦與伊索德》前奏曲開頭 3 分鐘。開頭數小節的和聲（俗稱「崔斯坦和弦」）<b>長時間不解決至穩定終止</b>，此手法常被視為調性系統瓦解的重要標誌。任務：感受那種「一直想要落地卻始終落不下來」的懸置感。",
+    "對比聽 Verdi〈飲酒歌〉與 Wagner〈女武神的騎行〉。兩者同為十九世紀中後期，但美學取向截然不同。",
+    "<b>選擇性挑戰</b>：若時間充裕，選一部完整歌劇（建議《波希米亞人》，約 110 分鐘，劇情單純），<b>先讀劇情摘要，再配合中文字幕或歌詞翻譯完整聽一次</b>。"
+  ]
+},
+{
+  n: 17, m: "m4", title: "國民樂派", en: "Nationalism",
+  concept: [
+    { tier: "析", t: "十九世紀民族意識興起，作曲家開始有意識地將本國民間音樂素材（音階、節奏、舞曲型態、民謠旋律）納入藝術音樂，並以音樂表述民族認同。" }
+  ],
+  works: ["smetana-vltava", "dvorak-9", "sibelius-finlandia", "rimsky-scheherazade", "grieg-peergynt"],
+  tasks: [
+    "聽〈莫爾道河〉（約 12 分鐘）。此曲描繪一條河流從源頭到入海的全程。<b>閉眼聽，試著標記出：兩條溪流匯合、林中狩獵、鄉村婚禮、月光下的水仙女、急流、河流開闊入城</b>。這是標題音樂最易懂的範例之一。",
+    "聽 Dvořák 第 9 號第二樂章（Largo）。其主要旋律極為著名。",
+    "聽《天方夜譚》第一樂章。注意<b>小提琴獨奏代表說故事的 Scheherazade</b>，與代表蘇丹的低音銅管主題交替出現——這是主導動機技術的另一應用。"
+  ]
+},
+{
+  n: 18, m: "m5", title: "印象派", en: "Impressionism",
+  concept: [
+    { tier: "析", t: "Debussy（1862–1918）與 Ravel（1875–1937）的核心轉向：<b>音色與音響本身成為結構要素</b>，取代旋律—和聲的功能性推進。手法包括全音音階（whole-tone scale）、平行和弦、模糊的節奏脈動。" }
+  ],
+  key: "聽覺辨識線索：聽起來「沒有明確的方向感、像在漂浮」，但和聲仍然悅耳——通常就是印象派。",
+  works: ["debussy-faune", "debussy-clairdelune", "debussy-lamer", "ravel-bolero", "ravel-pavane"],
+  tasks: [
+    "聽《牧神的午後前奏曲》開頭（長笛獨奏）。注意<b>此曲沒有明確的節拍感，也沒有傳統意義的「主題呈示」</b>。與第 8 週的 Mozart K. 550 開頭做直接對比——兩者的「開場方式」差異即為此模組的核心轉變。",
+    "聽《波麗露》全曲（約 15 分鐘）。全曲<b>旋律與和聲幾乎不變，只有配器與音量持續累積</b>。任務：記錄每一次旋律重複時<b>新加入的樂器</b>。這是最好的配器法教材。",
+    "聽 Debussy《月光》。這可能是本模組中最容易親近的一首，可作為心理緩衝。"
+  ]
+},
+{
+  n: 19, m: "m5", title: "節奏的革命", en: "Stravinsky & Bartók",
+  concept: [
+    { tier: "析", t: "二十世紀初的另一路線：<b>以節奏、而非旋律或和聲，作為主要驅動力</b>。特徵為不規則節拍、切分、多重節奏疊置、打擊樂化的樂團書寫。" }
+  ],
+  works: ["stravinsky-rite", "stravinsky-firebird", "stravinsky-petrushka", "bartok-msoc"],
+  tasks: [
+    "聽《火鳥》組曲<b>之前</b>，先聽《春之祭》開頭 5 分鐘。然後聽《火鳥》。此順序刻意設計：先承受衝擊，再獲得緩解，你會更清楚感受兩者的差距。",
+    "聽《春之祭》第一部分〈春之預兆〉。<b>試著跟著打拍子——你會失敗。</b> 這個失敗即為重點：此段使用不規則的重音配置，刻意破壞穩定的節拍預期。",
+    "聽 Bartók《為弦樂、打擊樂與鋼片琴而作的音樂》第一樂章。此樂章為賦格——可直接對照第 6 週的 Bach。<b>同一種形式，相隔 200 年，聲響完全不同。</b>"
+  ]
+},
+{
+  n: 20, m: "m5", title: "調性的解體", en: "Atonality & Serialism", flag: "全課程門檻最高的一週",
+  concept: [
+    { tier: "析", t: "第二維也納樂派（Second Viennese School）——Schoenberg（1874–1951）、Berg（1885–1935）、Webern（1883–1945）——放棄調性中心，並發展出<b>十二音技法（twelve-tone technique）</b>：將半音階十二個音排成一組音列（tone row），全曲素材由該音列及其變形推導而來。" },
+    { tier: "選", t: "目標<b>不是</b>「喜歡」或「聽出音列」，而是理解<b>為什麼有人要這樣寫</b>，以及辨識其聲響特徵。" }
+  ],
+  works: ["schoenberg-verklarte", "berg-violin", "schoenberg-pierrot", "webern-op10"],
+  tasks: [
+    "<b>依上表難度順序</b>聽。先聽《昇華之夜》——此曲作於 1899 年，屬 Schoenberg 早期調性作品，聽感接近晚期浪漫派。這證明了：<b>他有能力寫「好聽」的音樂，後來的轉向是選擇而非能力不足。</b> 這個認知對接受後續作品至關重要。",
+    "聽 Berg 小提琴協奏曲。此曲題獻「紀念一位天使」。曲中引用了 Bach 的聖詠——<b>十二音技法與調性素材在此共存</b>。",
+    "聽 Webern Op. 10。全套五首<b>總長度不到 5 分鐘</b>。任務：只需注意「每個聲音都被單獨對待」的密度與寂靜的使用。"
+  ]
+},
+{
+  n: 21, m: "m5", title: "戰後至當代", en: "Post-1945",
+  concept: [
+    { tier: "選", t: "二十世紀後半的多條路線中，選取三條對當代聽眾最具可及性者：<b>政治壓力下的交響傳統</b>、<b>神聖極簡主義（Holy Minimalism）</b>、<b>過程性極簡主義（Process Minimalism）</b>。" }
+  ],
+  works: ["shostakovich-5", "shostakovich-sq8", "gorecki-3", "part-spiegel", "part-fratres", "reich-18"],
+  tasks: [
+    "聽 Pärt《鏡中鏡》（約 9 分鐘）。此曲極簡至僅有鋼琴與一件獨奏樂器。這是本模組中最容易接受的作品，可作為進入當代音樂的入口。",
+    "聽 Reich《為 18 位音樂家而作的音樂》開頭 10 分鐘。重點不在旋律，而在<b>細微變化的漸進累積</b>——注意你何時察覺「事情變了」，以及變化實際上是何時開始的。兩者的落差即為此類音樂的核心體驗。",
+    "聽 Shostakovich 第 5 號末樂章。此樂章的結尾究竟是真誠的勝利宣示或反諷，長期為評論者所爭議——<b>兩種詮釋並存，本課程不作裁定</b>。任務：形成你自己的判斷。"
+  ]
+},
+{
+  n: 22, m: "m6", title: "版本比較", en: "Comparative Listening",
+  concept: [
+    { tier: "選析", t: "古典音樂的<b>樂譜與演出是分離的</b>：同一部作品經由不同指揮、樂團與時代，可產生顯著不同的結果。<b>能夠聽出版本差異，是從「聽曲子」進階到「聽演出」的分水嶺。</b>" }
+  ],
+  table: {
+    head: ["比較維度", "觀察重點"],
+    rows: [
+      ["<b>速度 Tempo</b>", "全曲總長度可差距 10–20% 以上"],
+      ["<b>力度對比 Dynamics</b>", "強弱落差的極端程度"],
+      ["<b>樂句處理 Phrasing</b>", "呼吸點、句法的塑造"],
+      ["<b>音色 Sound</b>", "樂團音色、錄音年代與空間感"],
+      ["<b>樂器類型</b>", "現代樂器 vs. 古樂器（period instruments）"]
+    ]
+  },
+  works: ["beethoven-5", "chopin-nocturnes"],
+  compare: {
+    title: "本週指定比較：Beethoven 第 5 號交響曲 第一樂章 × 3 版本",
+    picks: [
+      { q: "Beethoven Symphony 5 Kleiber", label: "Carlos Kleiber / Wiener Philharmoniker", qa: "hires" },
+      { q: "Beethoven Symphony 5 Karajan", label: "Herbert von Karajan / Berliner Philharmoniker", qa: "hifi" },
+      { q: "Beethoven Symphony 5 Gardiner", label: "任一古樂器版本（Gardiner / ORR）", qa: "hifi" }
+    ]
+  },
+  tasks: [
+    "選定 <b>Beethoven 第 5 號交響曲第一樂章</b>，找出三個版本聆聽（見上方指定比較）。<b>記錄各版本的樂章長度</b>，並用三個形容詞描述各自性格。",
+    "對同一首 Chopin 夜曲做同樣的事（建議比較 Rubinstein 與其他鋼琴家）。獨奏曲的版本差異通常比管弦樂更容易察覺。",
+    "建立一份個人筆記：<b>你偏好什麼樣的演出取向？</b> 這個答案沒有對錯，但它是你音樂品味成形的證據。"
+  ]
+},
+{
+  n: 23, m: "m6", title: "歷史知情演奏", en: "Historically Informed Performance (HIP)",
+  concept: [
+    { tier: "析", t: "HIP 運動主張以作品<b>創作年代的樂器、演奏技法與演出慣例</b>重現作品。" }
+  ],
+  table: {
+    head: ["面向", "古樂器演奏", "現代樂器演奏"],
+    rows: [
+      ["弦樂", "羊腸弦、較少揉音（vibrato）", "金屬弦、持續揉音"],
+      ["音高", "通常較低（如 A=415 Hz）", "標準 A=440 Hz 或以上"],
+      ["樂團規模", "較小", "較大"],
+      ["整體聽感", "較透明、銳利、輕盈", "較豐厚、圓潤、有重量"]
+    ]
+  },
+  works: ["vivaldi-seasons", "bach-bwv1048"],
+  compare: {
+    title: "本週指定比較：Vivaldi《四季》古樂器 vs. 現代樂器",
+    picks: [
+      { q: "Vivaldi Four Seasons Il Giardino Armonico", label: "古樂器組：Il Giardino Armonico", qa: "hires" },
+      { q: "Vivaldi Four Seasons Rachel Podger", label: "古樂器組：Rachel Podger / Brecon Baroque", qa: "hires" },
+      { q: "Vivaldi Four Seasons I Musici", label: "現代樂器組：I Musici", qa: "hifi" },
+      { q: "Vivaldi Four Seasons Nigel Kennedy", label: "現代樂器組：Nigel Kennedy / ECO", qa: "hifi" }
+    ]
+  },
+  tasks: [
+    "找出 Vivaldi《四季》的兩個版本——一個古樂器，一個現代樂器，聽同一樂章。<b>差異會非常明顯。</b>",
+    "對 Bach《布蘭登堡協奏曲》做同樣比較（古樂器：Pinnock 或 Café Zimmermann；現代樂器：Karl Richter）。",
+    "<b>注意此議題的爭議性</b>：HIP 是否真能「還原」歷史演出，學界存在持續辯論——反對意見指出歷史證據的不完整性與詮釋的不可避免性。<b>本課程不對此作裁定，但你應知道爭議存在。</b>"
+  ]
+},
+{
+  n: 24, m: "m6", title: "建立自主聆聽路徑", en: "Building Your Own Path",
+  banner: "本週任務不是聽新曲目，而是<b>整理與規劃</b>。",
+  concept: [],
+  works: [],
+  tasks: [
+    "檢視 24 份播放清單，將<b>你會主動想再聽</b>的曲目移入「重聽區」（本站右上角的 ★ 收藏即為此用途，可一鍵匯出全部搜尋字串）。",
+    "統計：你的重聽區中，哪個時期／作曲家／編制佔比最高？<b>這就是你的品味起點。</b>",
+    "針對佔比最高的方向，選定<b>一位作曲家進行深度探索</b>（建議下一個 6 個月聽完該作曲家的主要作品）。"
+  ],
+  gaps: {
+    title: "本課程未涵蓋的主要區塊",
+    items: [
+      "<b>文藝復興及更早期音樂</b>（約 1400–1600）：Palestrina、Josquin、Monteverdi 牧歌",
+      "<b>Mahler 交響曲全集</b>：極為重要，但單曲長度（60–90 分鐘）不適合入門階段",
+      "<b>室內樂深度</b>：弦樂四重奏為古典音樂最精密的曲類，值得單獨一輪課程",
+      "<b>鍵盤獨奏深度</b>：Beethoven 32 首鋼琴奏鳴曲全集",
+      "<b>完整歌劇聆聽</b>：本課程僅採片段策略",
+      "<b>非西方藝術音樂傳統</b>：本課程完全限於西方古典音樂脈絡"
+    ]
+  },
+  live: "<b>強烈建議</b>：本課程結束後，安排一次現場音樂會。錄音與現場的差異（動態範圍、空間感、視覺資訊、社會情境）無法由串流取代。建議首次選擇<b>曲目熟悉的管弦樂音樂會</b>，而非歌劇或當代作品。"
+}
+];
+
+</script>
+<script>
+(function () {
+  "use strict";
+  var CORE = window.CORE, WORKS = window.WORKS, WEEKS = window.WEEKS;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); };
+
+  /* ---------------- 設定與狀態（localStorage） ---------------- */
+  var LS = "cmc.v1";
+  var DEFAULTS = {
+    region: "tw", lang: "tc", scheme: "word",
+    hiresFirst: true, hideHistoric: false, theme: "auto",
+    done: {}, tasks: {}, checks: {}, fav: {}
+  };
+  var S = load();
+  function load() {
+    try { return Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem(LS) || "{}")); }
+    catch (e) { return Object.assign({}, DEFAULTS); }
+  }
+  function save() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} }
+
+  /* ---------------- KKBOX 連結 ---------------- */
+  // KKBOX 的搜尋網址格式可能隨網站改版變動，故做成可切換。
+  // 若某一格式失效，使用者可在「設定」中改用另一種，或直接用「複製」把字串貼進 App。
+  var SCHEMES = {
+    word: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search?word=" + encodeURIComponent(q); },
+    path: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search/all/" + encodeURIComponent(q) + "/1"; },
+    play: function (q) { return "https://play.kkbox.com/search/" + encodeURIComponent(q); }
+  };
+  function kk(q) { return SCHEMES[S.scheme in SCHEMES ? S.scheme : "word"](q, S.region, S.lang); }
+
+  /* ---------------- 小工具 ---------------- */
+  var toastT;
+  function toast(msg) {
+    var t = $("#toast"); t.textContent = msg; t.classList.add("on");
+    clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove("on"); }, 1800);
+  }
+  function copyText(txt, btn) {
+    var done = function () {
+      if (btn) { var o = btn.textContent; btn.textContent = "已複製"; btn.classList.add("ok");
+        setTimeout(function () { btn.textContent = o; btn.classList.remove("ok"); }, 1400); }
+      else toast("已複製");
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(txt).then(done, function () { fallback(txt, done); });
+    } else fallback(txt, done);
+  }
+  function fallback(txt, cb) {
+    var ta = document.createElement("textarea");
+    ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); cb(); } catch (e) { toast("複製失敗，請手動選取"); }
+    document.body.removeChild(ta);
+  }
+  function tierTags(str) {
+    if (!str) return "";
+    return String(str).split("").map(function (c) { return '<span class="tier ' + c + '" title="' + esc(CORE.tiers[c] ? CORE.tiers[c].name + "：" + CORE.tiers[c].desc : "") + '">' + c + "</span>"; }).join("");
+  }
+  var TAGNAME = { ref: "公認代表版", period: "古樂器", modern: "現代樂器", entry: "入門友善", narrated: "附旁白" };
+
+  /* ---------------- 版本排序 / 過濾 ---------------- */
+  var QORDER = { hires: 0, hifi: 1, historic: 2 };
+  function sortVersions(vs) {
+    var arr = vs.slice();
+    if (S.hiresFirst) {
+      arr.sort(function (a, b) {
+        var d = QORDER[a.qa] - QORDER[b.qa];
+        if (d) return d;
+        var ar = a.t && a.t.indexOf("ref") > -1 ? 0 : 1, br = b.t && b.t.indexOf("ref") > -1 ? 0 : 1;
+        return ar - br;
+      });
+    }
+    if (S.hideHistoric) arr = arr.filter(function (v) { return v.qa !== "historic"; });
+    return arr;
+  }
+
+  /* ---------------- 渲染：版本 ---------------- */
+  function versionHTML(v) {
+    var q = CORE.quality[v.qa];
+    var tags = (v.t || []).map(function (t) { return '<span class="tag">' + esc(TAGNAME[t] || t) + "</span>"; }).join("");
+    return '<li class="v ' + v.qa + '">' +
+      "<div>" +
+        '<div class="p">' + esc(v.p) + "</div>" +
+        '<div class="sub"><span class="qbadge ' + v.qa + '" title="' + esc(q.desc) + '">' + esc(q.label) + "</span>" +
+          esc(v.l) + (v.y ? " · " + v.y : "") + " " + tags + "</div>" +
+        (v.w ? '<div class="why">' + esc(v.w) + "</div>" : "") +
+      "</div>" +
+      '<div class="acts">' +
+        '<a class="play" href="' + esc(kk(v.q)) + '" target="_blank" rel="noopener">在 KKBOX 開啟</a>' +
+        '<button class="copy" data-copy="' + esc(v.q) + '">複製搜尋字串</button>' +
+      "</div></li>";
+  }
+
+  /* ---------------- 渲染：曲目 ---------------- */
+  function workHTML(id, wk) {
+    var w = WORKS[id];
+    if (!w) return '<div class="work"><div class="workhd"><div class="ttl"><b>（缺少資料：' + esc(id) + "）</b></div></div></div>";
+    var vs = sortVersions(w.versions || []);
+    var open = false;
+    var fav = !!S.fav[id];
+    var metas = [];
+    if (w.texture) metas.push("<b>對應織體：</b>" + esc(w.texture));
+    if (w.form) metas.push("<b>對應曲式：</b>" + esc(w.form));
+    if (w.key) metas.push("<b>重點：</b>" + esc(w.key));
+    if (w.country) metas.push("<b>國別：</b>" + esc(w.country));
+    if (w.line) metas.push("<b>路線：</b>" + esc(w.line));
+    if (w.diff) metas.push("<b>難度：</b>" + esc(w.diff));
+    if (w.period) metas.push("<b>分期：</b>" + esc(w.period));
+
+    return '<div class="work' + (open ? " open" : "") + '" data-work="' + esc(id) + '" data-search="' +
+        esc((w.title + " " + (w.en || "") + " " + w.composer + " " + w.q + " " + (w.versions || []).map(function (v) { return v.p; }).join(" ")).toLowerCase()) + '">' +
+      '<div class="workhd">' +
+        '<button class="star' + (fav ? " on" : "") + '" data-fav="' + esc(id) + '" title="加入／移出重聽區">' + (fav ? "★" : "☆") + "</button>" +
+        '<div class="ttl"><b>' + esc(w.title) + "</b><em>" + esc(w.en || "") + " · " + esc(w.composer) + "</em></div>" +
+        '<span class="chev">▶</span>' +
+      "</div>" +
+      '<div class="workbd">' +
+        (metas.length ? '<div class="meta">' + metas.join(" ｜ ") + "</div>" : "") +
+        (w.fact ? '<div class="meta">' + tierTags("史") + esc(w.fact) + "</div>" : "") +
+        (w.pick ? '<div class="meta">' + tierTags("選") + esc(w.pick) + "</div>" : "") +
+        (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
+        '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">複製通用搜尋字串：' + esc(w.q) + "</button></div>" +
+        '<ul class="vlist">' + vs.map(versionHTML).join("") + "</ul>" +
+      "</div></div>";
+  }
+
+  /* ---------------- 渲染：週 ---------------- */
+  function tableHTML(t) {
+    return '<div class="tw"><table><thead><tr>' + t.head.map(function (h) { return "<th>" + h + "</th>"; }).join("") +
+      "</tr></thead><tbody>" + t.rows.map(function (r) {
+        return "<tr>" + r.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>";
+      }).join("") + "</tbody></table></div>";
+  }
+
+  function weekHTML(wk) {
+    var mod = CORE.modules.filter(function (m) { return m.id === wk.m; })[0];
+    var h = "";
+    h += '<div class="card" id="week-' + wk.n + '">';
+    h += '<div class="eyebrow">' + esc(mod.label) + " · " + esc(mod.title) + "</div>";
+    h += "<h2>第 " + wk.n + " 週｜" + esc(wk.title) + (wk.flag ? '<span class="flag">' + esc(wk.flag) + "</span>" : "") + "</h2>";
+    h += '<div class="enttl">' + esc(wk.en || "") + "</div>";
+
+    // 時期概覽（模組首週）
+    if (mod.period && mod.weeks[0] === wk.n) h += periodHTML(CORE.periods[mod.period]);
+    if (mod.goal && mod.weeks[0] === wk.n) h += '<div class="banner"><b>本模組目標：</b>' + esc(mod.goal) + "</div>";
+    if (wk.banner) h += '<div class="banner">' + wk.banner + "</div>";
+
+    if (wk.concept && wk.concept.length) {
+      h += "<h3>本週核心概念</h3>";
+      wk.concept.forEach(function (c) { h += "<p>" + tierTags(c.tier) + c.t + "</p>"; });
+    }
+    if (wk.table) h += tableHTML(wk.table);
+    if (wk.key) h += '<div class="banner">' + wk.key + "</div>";
+    if (wk.note) h += '<div class="note">' + tierTags(wk.note.tier) + wk.note.t + "</div>";
+
+    if (wk.works && wk.works.length) {
+      h += "<h3>必聽曲目與版本建議 " + tierTags("選") + "</h3>";
+      h += '<div class="hint" style="margin-bottom:8px">點曲名展開版本清單。' +
+        (S.hiresFirst ? "目前<b>依 Hi-Res 優先排序</b>" : "目前<b>依編者推薦順序排列</b>") +
+        (S.hideHistoric ? "，且已隱藏歷史錄音" : "") + "。</div>";
+      h += wk.works.map(function (id) { return workHTML(id, wk); }).join("");
+    }
+    if (wk.compare) {
+      h += "<h3>" + esc(wk.compare.title) + "</h3><ul class=\"vlist\">";
+      h += wk.compare.picks.map(function (p) {
+        return '<li class="v ' + p.qa + '"><div><div class="p">' + esc(p.label) + "</div>" +
+          '<div class="sub"><span class="qbadge ' + p.qa + '">' + esc(CORE.quality[p.qa].label) + "</span><code>" + esc(p.q) + "</code></div></div>" +
+          '<div class="acts"><a class="play" href="' + esc(kk(p.q)) + '" target="_blank" rel="noopener">在 KKBOX 開啟</a>' +
+          '<button class="copy" data-copy="' + esc(p.q) + '">複製</button></div></li>';
+      }).join("") + "</ul>";
+    }
+    if (wk.extraWorks && wk.extraWorks.length) {
+      h += "<h3>延伸（深化）</h3>" + wk.extraWorks.map(function (id) { return workHTML(id, wk); }).join("");
+    }
+    if (wk.tasks && wk.tasks.length) {
+      h += "<h3>聆聽任務</h3><ul class=\"chk\">";
+      h += wk.tasks.map(function (t, i) {
+        var k = wk.n + ":" + i, on = !!S.tasks[k];
+        return '<li class="' + (i === 0 ? "must " : "") + (on ? "dn" : "") + '">' +
+          '<input type="checkbox" data-task="' + k + '"' + (on ? " checked" : "") + "><span>" + t + "</span></li>";
+      }).join("") + "</ul>";
+    }
+    if (wk.checks && wk.checks.length) {
+      h += "<h3>自我檢核</h3><ul class=\"chk\">";
+      h += wk.checks.map(function (t, i) {
+        var k = wk.n + ":" + i, on = !!S.checks[k];
+        return '<li class="' + (on ? "dn" : "") + '"><input type="checkbox" data-check="' + k + '"' + (on ? " checked" : "") + "><span>" + t + "</span></li>";
+      }).join("") + "</ul>";
+    }
+    if (wk.gaps) {
+      h += "<h3>" + esc(wk.gaps.title) + " " + tierTags("選") + "</h3><ul>";
+      h += wk.gaps.items.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</ul>";
+    }
+    if (wk.live) h += '<div class="banner">' + wk.live + "</div>";
+    if (wk.n === 24) {
+      h += "<h3>台灣在地資源 " + tierTags("史選") + "</h3>";
+      h += '<div class="note">時效性警示：以下機構與平台資訊可能異動，實際場次與購票方式請於使用時查證。</div>';
+      h += tableHTML({ head: ["類型", "資源"], rows: [
+        ["主要場館", esc(CORE.local.venues)], ["主要樂團", esc(CORE.local.orchestras)], ["售票平台", esc(CORE.local.tickets)] ] });
+    }
+    if (wk.after) h += '<div class="banner">' + wk.after + "</div>";
+
+    // 底部操作
+    var done = !!S.done[wk.n];
+    h += '<div class="rowbtns">' +
+      '<button class="iconbtn' + (done ? " on" : "") + '" data-done="' + wk.n + '">' + (done ? "✓ 本週已完成" : "標記本週完成") + "</button>" +
+      (wk.works && wk.works.length ?
+        '<button class="iconbtn" data-copyweek="' + wk.n + '">複製本週全部搜尋字串（建 W' + (wk.n < 10 ? "0" : "") + wk.n + " 播放清單用）</button>" : "") +
+      "</div>";
+    h += "</div>";
+    return h;
+  }
+
+  function periodHTML(p) {
+    if (!p) return "";
+    var h = "<h3>" + esc(p.title) + "</h3>";
+    h += '<div class="tw"><table><tbody>' + p.rows.map(function (r) {
+      return "<tr><th>" + esc(r[0]) + "</th><td>" + tierTags(r[1]) + esc(r[2]) + "</td></tr>";
+    }).join("") + "</tbody></table></div>";
+    if (p.cue) h += '<div class="banner">' + tierTags(p.cue.tier) + esc(p.cue.text) + "</div>";
+    return h;
+  }
+
+  /* ---------------- 靜態頁 ---------------- */
+  function homeHTML() {
+    var totalWorks = Object.keys(WORKS).length;
+    var totalVers = Object.keys(WORKS).reduce(function (a, k) { return a + (WORKS[k].versions || []).length; }, 0);
+    var hires = Object.keys(WORKS).reduce(function (a, k) {
+      return a + (WORKS[k].versions || []).filter(function (v) { return v.qa === "hires"; }).length; }, 0);
+    var h = '<div class="card"><h2>' + esc(CORE.meta.title) + "</h2>" +
+      '<div class="enttl">' + esc(CORE.meta.subtitle) + " · " + esc(CORE.meta.version) + "</div>" +
+      "<p>24 週、每週 15–90 分鐘可調整的自學路徑。每首曲目都附<b>經過挑選的著名版本</b>，並依 <b>Hi-Res &gt; Hi-Fi &gt; 歷史錄音</b> 排序，可直接連往 KKBOX 搜尋。</p>" +
+      '<div class="grid2" style="margin:16px 0">' +
+        stat("24", "週單元") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本推薦") + stat(String(hires), "個 Hi-Res 優先版本") +
+      "</div>" +
+      '<div class="rowbtns"><button class="iconbtn on" data-go="week-1">從第 1 週開始</button>' +
+      '<button class="iconbtn" data-go="p-hires">先看 Hi-Res 設定說明</button>' +
+      '<button class="iconbtn" data-open="settings">連結／排序設定</button></div></div>';
+
+    h += '<div class="card" id="p-hires"><h2>Hi-Res / Hi-Fi 版本怎麼挑</h2>' +
+      '<div class="enttl">本站所有版本清單都預設把高解析排在最前面</div>' +
+      "<ol>" + CORE.practice.hires.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ol>" +
+      "<h3>本站的音質標記代表什麼</h3><div class=\"tw\"><table><thead><tr><th>標記</th><th>意義</th></tr></thead><tbody>" +
+      Object.keys(CORE.quality).map(function (k) {
+        return '<tr><td><span class="qbadge ' + k + '">' + esc(CORE.quality[k].label) + "</span></td><td>" + esc(CORE.quality[k].desc) + "</td></tr>";
+      }).join("") + "</tbody></table></div>" +
+      '<div class="note">這些標記是<b>依錄音年代與發行廠牌所作的推估</b>，不是 KKBOX 的即時資料。實際請以 App 內顯示的音質標記為準。</div></div>';
+
+    h += '<div class="card" id="p-method"><h2>課程設計原則</h2>' +
+      "<h3>核心方法論：重複聆聽優先於廣度覆蓋 " + tierTags("選") + "</h3>" +
+      "<p><b>這是本課程最重要、也最違反直覺的設計決定。</b>成人自學古典音樂最常見的失敗模式，是「聽過 100 首、每首聽一次」。此模式無法建立聆聽能力，因為：</p>" +
+      "<ul><li>古典音樂的資訊密度高，<b>單次聆聽的注意力頻寬不足以同時處理旋律、和聲、織體、配器與曲式</b>。</li>" +
+      "<li>音樂理解高度依賴<b>預期（expectation）</b>——你必須先熟悉一首曲子的走向，才可能察覺作曲家在哪裡偏離了你的預期。第一次聽時，你沒有預期可言。</li></ul>" +
+      "<p>因此本課程的設計是：<b>每單元僅 1–3 首核心曲目，反覆聽 4–6 次，但每次的「注意力標的」不同。</b></p>" +
+      '<div class="note"><b>與臨床技能習得的類比</b>：這與影像判讀訓練同構。放射科住院醫師不是靠看過一萬張不同的片子而變強，而是靠對同一批片子在不同教學重點下反覆檢視——第一次看肺野、第二次看縱膈腔、第三次看骨骼。聆聽訓練的機制相同：deliberate practice with a single focused target per repetition。</div>' +
+      "<h3>專注聆聽 vs. 背景聆聽</h3>" +
+      tableHTML({ head: ["類型", "定義", "功能", "本課程中的角色"], rows: [
+        ["<b>專注聆聽</b><br>Focused listening", "不做其他事，戴耳機或面對喇叭，執行明確的聆聽任務", "<b>建立能力</b>", "每週「聆聽任務」必須以此方式進行，<b>最低 15 分鐘</b>"],
+        ["<b>背景聆聽</b><br>Background listening", "通勤、家務、閱讀時播放", "<b>建立熟悉度</b>，為下次專注聆聽提供預期基礎", "用於本週曲目的<b>重複曝光</b>，時數不限"] ] }) +
+      "<h3>三級時間結構</h3><ul>" +
+      "<li><b>核心（15 分鐘）</b>：僅執行「必聽」第一首 + 聆聽任務第 1 題。<b>這是最低完成標準，不可再壓縮。</b></li>" +
+      "<li><b>標準（45 分鐘）</b>：核心 + 全部必聽曲目 + 全部聆聽任務 + 概念說明。</li>" +
+      "<li><b>深化（90 分鐘以上）</b>：標準 + 延伸曲目 + 版本比較。</li></ul>" +
+      "<p><b>若某週只能做到核心，請照做核心並前進，不要暫停課程。</b> 課程的連續性比單週的完整性重要。</p></div>";
+
+    h += '<div class="card" id="p-kkbox"><h2>KKBOX 操作實務</h2>' +
+      "<h3>搜尋策略 " + tierTags("選") + "</h3><ol>" + CORE.practice.search.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ol>" +
+      "<h3>播放清單管理</h3><p><b>建議建立 24 個播放清單</b>，命名為 <code>古典課程 W01</code>～<code>W24</code>，每週開始時先建好當週清單。此舉的價值不在整理，而在於<b>課程結束後，你會擁有一份自己的、有結構的個人曲庫</b>。</p>" +
+      "<p>另建一份 <code>古典課程｜重聽區</code>，凡是聽了有感覺的曲目立即丟進去。本站右上角的 <b>★ 重聽區</b> 即對應此用途，可一鍵匯出全部搜尋字串。</p>" +
+      "<h3>音質與設備 " + tierTags("選") + "</h3>" +
+      "<p>古典音樂的動態範圍（dynamic range）遠大於流行音樂——最弱與最強的音量差距可達 60 dB 以上。實務影響：</p>" +
+      "<ul>" + CORE.practice.audio.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul></div>";
+
+    h += '<div class="card" id="p-tiers"><h2>內容性質分類宣告</h2>' +
+      '<div class="enttl">Content-Nature Classification Declaration</div>' +
+      "<p>本課程屬<b>人文藝術教學設計</b>，不包含療效、診斷、預後或風險等可經 RCT 檢定之命題，故<b>不採用 GRADE / Oxford CEBM</b>——強行套用臨床分級系統將構成分級系統誤用。改採專為本領域定義之三層內容性質分類，判準為「陳述可否經由標準參考文獻查證」。</p>" +
+      tableHTML({ head: ["標記", "層級", "定義", "可查證性"], rows: Object.keys(CORE.tiers).map(function (k) {
+        var t = CORE.tiers[k];
+        return ['<span class="tier ' + k + '">' + k + "</span>", "<b>" + esc(t.name) + "</b><br>" + esc(t.en), esc(t.desc), esc(t.verify)];
+      }) }) +
+      "<p><b>查證基準</b>：【史】層為 <i>Grove Music Online</i>、各作曲家標準作品目錄（BWV、K.、D. 等）及標準校訂樂譜；【析】層為通行音樂理論教材（Kostka &amp; Payne, <i>Tonal Harmony</i>；Burkholder, Grout &amp; Palisca, <i>A History of Western Music</i>）；【選】層無外部基準，即為本課程之教學設計。</p>" +
+      "<p><b>本課程中【選】層佔比最高</b>——包含全部 24 週的排序、全部曲目選擇、全部版本推薦、全部聆聽任務設計與難度評估。這是教學設計文件的必然性質：本課程並非唯一正確路徑，僅為一條經過設計、內在一致的路徑。</p></div>";
+
+    h += '<div class="card" id="p-glossary"><h2>名詞速查表</h2>' +
+      tableHTML({ head: ["中文", "原文／英文", "簡要定義"], rows: CORE.glossary.map(function (g) {
+        return [esc(g[0]), "<i>" + esc(g[1]) + "</i>", esc(g[2])]; }) }) + "</div>";
+
+    h += '<div class="card" id="p-caveats"><h2>' + esc(CORE.caveats.title) + "</h2>" +
+      tableHTML({ head: ["項目", "說明"], rows: CORE.caveats.items.map(function (i) { return ["<b>" + esc(i[0]) + "</b>", esc(i[1])]; }) }) +
+      "<h3>存在學術爭議之處</h3>" +
+      tableHTML({ head: ["議題", "爭議性質"], rows: CORE.caveats.disputes.map(function (d) { return [esc(d[0]), esc(d[1])]; }) }) +
+      "<p><b>本課程對上述爭議一律採平行陳述，不作單一裁定。</b></p></div>";
+
+    return h;
+  }
+  function stat(n, l) {
+    return '<div style="border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg)">' +
+      '<div style="font-size:26px;font-weight:700;line-height:1.2;color:var(--acc)">' + n + "</div>" +
+      '<div style="font-size:12px;color:var(--mut)">' + l + "</div></div>";
+  }
+
+  /* ---------------- 導覽列 ---------------- */
+  function navHTML() {
+    var h = '<button class="navitem" data-go="home"><span class="wn"><span>◎</span></span><span class="tx">課程總覽</span></button>';
+    h += '<button class="navitem" data-go="p-hires"><span class="wn"><span>HR</span></span><span class="tx">Hi-Res 挑選指南</span></button>';
+    h += '<button class="navitem" data-go="p-method"><span class="wn"><span>法</span></span><span class="tx">課程設計原則</span></button>';
+    h += '<button class="navitem" data-go="p-kkbox"><span class="wn"><span>K</span></span><span class="tx">KKBOX 操作實務</span></button>';
+    CORE.modules.forEach(function (m) {
+      h += '<div class="navmod"><span>' + esc(m.label) + "</span> " + esc(m.title) + "</div>";
+      m.weeks.forEach(function (n) {
+        var wk = WEEKS.filter(function (w) { return w.n === n; })[0];
+        if (!wk) return;
+        h += '<button class="navitem' + (S.done[n] ? " done" : "") + '" data-go="week-' + n + '" data-week="' + n + '">' +
+          '<span class="wn"><span>' + n + "</span></span>" +
+          '<span class="tx">' + esc(wk.title) + "</span></button>";
+      });
+    });
+    h += '<div class="navmod">附錄</div>';
+    h += '<button class="navitem" data-go="p-tiers"><span class="wn"><span>層</span></span><span class="tx">內容性質分類</span></button>';
+    h += '<button class="navitem" data-go="p-glossary"><span class="wn"><span>詞</span></span><span class="tx">名詞速查表</span></button>';
+    h += '<button class="navitem" data-go="p-caveats"><span class="wn"><span>限</span></span><span class="tx">限制與缺口</span></button>';
+    return h;
+  }
+
+  /* ---------------- 進度 ---------------- */
+  function updateProgress() {
+    var d = Object.keys(S.done).filter(function (k) { return S.done[k]; }).length;
+    $("#progTxt").textContent = "已完成 " + d + " / 24 週";
+    $("#progBar").style.width = (d / 24 * 100) + "%";
+  }
+
+  /* ---------------- 主渲染 ---------------- */
+  function render() {
+    $("#nav").innerHTML = navHTML();
+    $("#content").innerHTML = homeHTML() + WEEKS.map(weekHTML).join("") +
+      '<div class="foot">古典音樂系統聆聽課程 · ' + esc(CORE.meta.version) +
+      "<br>版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。</div>";
+    updateProgress();
+    applyFilter();
+  }
+
+  /* ---------------- 搜尋過濾 ---------------- */
+  function applyFilter() {
+    var q = ($("#q").value || "").trim().toLowerCase();
+    var cards = $$("#content .card");
+    if (!q) {
+      cards.forEach(function (c) { c.classList.remove("hidden"); });
+      $$("#content .work").forEach(function (w) { w.classList.remove("hidden", "open"); });
+      return;
+    }
+    cards.forEach(function (c) {
+      var works = $$(".work", c);
+      var anyWork = false;
+      works.forEach(function (w) {
+        var hit = (w.getAttribute("data-search") || "").indexOf(q) > -1;
+        w.classList.toggle("hidden", !hit);
+        w.classList.toggle("open", hit);
+        if (hit) anyWork = true;
+      });
+      var textHit = c.textContent.toLowerCase().indexOf(q) > -1;
+      c.classList.toggle("hidden", !(anyWork || (textHit && !works.length) || (textHit && anyWork)));
+      if (!works.length) c.classList.toggle("hidden", !textHit);
+    });
+  }
+
+  /* ---------------- 重聽區 ---------------- */
+  function favHTML() {
+    var ids = Object.keys(S.fav).filter(function (k) { return S.fav[k] && WORKS[k]; });
+    if (!ids.length) return '<p class="hint">還沒有收藏。點任一曲目左邊的 ☆ 就會加進來。<br><br>建議用法：課程進行中凡是聽了有感覺的曲目立即收藏，第 24 週統計哪個時期／作曲家佔比最高——那就是你的品味起點。</p>';
+    var lines = ids.map(function (id) {
+      var w = WORKS[id];
+      var top = sortVersions(w.versions || [])[0];
+      return { id: id, w: w, top: top };
+    });
+    var h = '<div class="rowbtns"><button class="iconbtn" id="favCopy">複製全部搜尋字串（' + ids.length + " 首）</button>" +
+      '<button class="iconbtn" id="favClear">清空</button></div><ul class="vlist" style="margin-top:14px">';
+    h += lines.map(function (L) {
+      return '<li class="v ' + (L.top ? L.top.qa : "hifi") + '"><div>' +
+        '<div class="p">' + esc(L.w.title) + "</div>" +
+        '<div class="sub">' + esc(L.w.composer) + (L.top ? " ｜ 推薦：" + esc(L.top.p) : "") + "</div></div>" +
+        '<div class="acts"><a class="play" href="' + esc(kk(L.top ? L.top.q : L.w.q)) + '" target="_blank" rel="noopener">開啟</a>' +
+        '<button class="copy" data-unfav="' + esc(L.id) + '">移除</button></div></li>';
+    }).join("") + "</ul>";
+    return h;
+  }
+  function favText() {
+    return Object.keys(S.fav).filter(function (k) { return S.fav[k] && WORKS[k]; }).map(function (k) {
+      var top = sortVersions(WORKS[k].versions || [])[0];
+      return (top ? top.q : WORKS[k].q);
+    }).join("\n");
+  }
+
+  /* ---------------- 設定面板 ---------------- */
+  function settingsHTML() {
+    var opt = function (v, cur, txt) { return '<option value="' + v + '"' + (v === cur ? " selected" : "") + ">" + txt + "</option>"; };
+    return "<h3>連結與顯示設定</h3>" +
+      '<div class="fld"><label>KKBOX 地區</label><select id="setRegion">' +
+        opt("tw", S.region, "台灣 tw") + opt("hk", S.region, "香港 hk") + opt("sg", S.region, "新加坡 sg") +
+        opt("my", S.region, "馬來西亞 my") + opt("jp", S.region, "日本 jp") + "</select></div>" +
+      '<div class="fld"><label>介面語言</label><select id="setLang">' +
+        opt("tc", S.lang, "繁體中文 tc") + opt("sc", S.lang, "簡體中文 sc") + opt("en", S.lang, "English en") + opt("ja", S.lang, "日本語 ja") + "</select></div>" +
+      '<div class="fld"><label>搜尋連結格式</label><select id="setScheme">' +
+        opt("word", S.scheme, "www.kkbox.com/…/search?word=（預設）") +
+        opt("path", S.scheme, "www.kkbox.com/…/search/all/…/1（舊格式）") +
+        opt("play", S.scheme, "play.kkbox.com/search/…（網頁播放器）") + "</select>" +
+        '<div class="hint">KKBOX 的搜尋網址格式可能隨網站改版變動。<b>若點擊連結後找不到結果，換一個格式試試。</b>另外，每個版本旁的「複製搜尋字串」按鈕永遠可用——貼進 KKBOX App 的搜尋列即可。</div></div>' +
+      "<h3>版本排序</h3>" +
+      '<div class="fld"><label><input type="checkbox" id="setHires"' + (S.hiresFirst ? " checked" : "") + '> 高解析優先排序（Hi-Res → Hi-Fi → 歷史錄音）</label>' +
+        '<div class="hint">關閉後改以編者推薦順序排列。</div></div>' +
+      '<div class="fld"><label><input type="checkbox" id="setHideH"' + (S.hideHistoric ? " checked" : "") + '> 隱藏歷史錄音（單聲道／早期立體聲）</label>' +
+        '<div class="hint">歷史錄音的音質先天受限，但多為詮釋史上的關鍵版本。若你只在意音質，可以關掉它們。</div></div>' +
+      "<h3>外觀</h3>" +
+      '<div class="fld"><label>主題</label><select id="setTheme">' +
+        opt("auto", S.theme, "跟隨系統") + opt("light", S.theme, "淺色") + opt("dark", S.theme, "深色") + "</select></div>" +
+      "<h3>資料</h3>" +
+      '<div class="rowbtns"><button class="iconbtn" id="setExport">匯出進度</button>' +
+      '<button class="iconbtn" id="setReset">清除全部進度</button></div>' +
+      '<div class="hint">進度、收藏與設定都存在這台裝置的瀏覽器裡（localStorage），不會上傳。換裝置或清除瀏覽器資料會遺失。</div>';
+  }
+
+  /* ---------------- 主題 ---------------- */
+  function applyTheme() {
+    var t = S.theme;
+    if (t === "auto") t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t);
+  }
+
+  /* ---------------- 抽屜 ---------------- */
+  function openDrawer(which) {
+    var d = $("#drawer");
+    d.innerHTML = which === "fav"
+      ? '<h3>★ 重聽區</h3><p class="hint">對應課程 §2.2 建議建立的 <code>古典課程｜重聽區</code> 播放清單。</p>' + favHTML()
+      : settingsHTML();
+    d.classList.add("open"); $("#scrim").classList.add("on");
+    d.setAttribute("data-which", which);
+  }
+  function closeDrawer() { $("#drawer").classList.remove("open"); $("#scrim").classList.remove("on"); }
+
+  /* ---------------- 事件 ---------------- */
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (!t || typeof t.closest !== "function") return;
+    var find = function (a) { return t.closest("[" + a + "]"); };
+
+    var go = find("data-go");
+    if (go) {
+      var id = go.getAttribute("data-go");
+      var el = id === "home" ? $("#content").firstElementChild : document.getElementById(id);
+      if (el) el.scrollIntoView({ block: "start" });
+      $$(".navitem").forEach(function (n) { n.classList.remove("active"); });
+      if (go.classList.contains("navitem")) go.classList.add("active");
+      $("#side").classList.remove("open");
+      return;
+    }
+    var cp = find("data-copy");
+    if (cp) { copyText(cp.getAttribute("data-copy"), cp.classList.contains("copy") ? cp : null);
+      if (!cp.classList.contains("copy")) toast("已複製搜尋字串"); return; }
+
+    var cw = find("data-copyweek");
+    if (cw) {
+      var n = +cw.getAttribute("data-copyweek");
+      var wk = WEEKS.filter(function (w) { return w.n === n; })[0];
+      var lines = (wk.works || []).concat(wk.extraWorks || []).map(function (id) {
+        var w = WORKS[id]; if (!w) return null;
+        var top = sortVersions(w.versions || [])[0];
+        return (top ? top.q : w.q);
+      }).filter(Boolean);
+      copyText(lines.join("\n")); toast("已複製 " + lines.length + " 組搜尋字串"); return;
+    }
+    var fv = find("data-fav");
+    if (fv) {
+      var fid = fv.getAttribute("data-fav");
+      S.fav[fid] = !S.fav[fid]; if (!S.fav[fid]) delete S.fav[fid];
+      save();
+      $$('[data-fav="' + fid + '"]').forEach(function (b) {
+        b.classList.toggle("on", !!S.fav[fid]); b.textContent = S.fav[fid] ? "★" : "☆"; });
+      $("#favBtn").textContent = "★ 重聽區 (" + Object.keys(S.fav).length + ")";
+      return;
+    }
+    var uf = find("data-unfav");
+    if (uf) { delete S.fav[uf.getAttribute("data-unfav")]; save(); openDrawer("fav");
+      $("#favBtn").textContent = "★ 重聽區 (" + Object.keys(S.fav).length + ")";
+      $$('[data-fav="' + uf.getAttribute("data-unfav") + '"]').forEach(function (b) { b.classList.remove("on"); b.textContent = "☆"; });
+      return; }
+
+    var dn = find("data-done");
+    if (dn) {
+      var wn = dn.getAttribute("data-done");
+      S.done[wn] = !S.done[wn]; if (!S.done[wn]) delete S.done[wn];
+      save();
+      dn.classList.toggle("on", !!S.done[wn]);
+      dn.textContent = S.done[wn] ? "✓ 本週已完成" : "標記本週完成";
+      var nav = $('.navitem[data-week="' + wn + '"]');
+      if (nav) nav.classList.toggle("done", !!S.done[wn]);
+      updateProgress();
+      return;
+    }
+    if (t.id === "favBtn") { openDrawer("fav"); return; }
+    if (t.closest('[data-open="settings"]') || t.id === "setBtn") { openDrawer("settings"); return; }
+    if (t.id === "scrim" || t.id === "drawerClose") { closeDrawer(); return; }
+    if (t.id === "menuBtn") { $("#side").classList.toggle("open"); return; }
+    if (t.id === "favCopy") { var txt = favText(); if (txt) { copyText(txt); toast("已複製，可直接貼進 KKBOX 逐首搜尋"); } return; }
+    if (t.id === "favClear") { if (confirm("清空重聽區？")) { S.fav = {}; save(); render(); openDrawer("fav");
+      $("#favBtn").textContent = "★ 重聽區 (0)"; } return; }
+    if (t.id === "setExport") {
+      var blob = new Blob([JSON.stringify(S, null, 2)], { type: "application/json" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = "classical-course-progress.json"; a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000); return;
+    }
+    if (t.id === "setReset") {
+      if (confirm("清除全部進度、收藏與設定？此動作無法復原。")) {
+        S = Object.assign({}, DEFAULTS, { done: {}, tasks: {}, checks: {}, fav: {} });
+        save(); applyTheme(); render(); closeDrawer();
+        $("#favBtn").textContent = "★ 重聽區 (0)";
+      }
+      return;
+    }
+    // 展開曲目
+    var hd = t.closest(".workhd");
+    if (hd && !t.closest(".star")) { hd.parentElement.classList.toggle("open"); return; }
+  });
+
+  document.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.hasAttribute && t.hasAttribute("data-task")) {
+      var k = t.getAttribute("data-task");
+      S.tasks[k] = t.checked; if (!t.checked) delete S.tasks[k]; save();
+      t.closest("li").classList.toggle("dn", t.checked); return;
+    }
+    if (t.hasAttribute && t.hasAttribute("data-check")) {
+      var k2 = t.getAttribute("data-check");
+      S.checks[k2] = t.checked; if (!t.checked) delete S.checks[k2]; save();
+      t.closest("li").classList.toggle("dn", t.checked); return;
+    }
+    var map = { setRegion: "region", setLang: "lang", setScheme: "scheme", setTheme: "theme" };
+    if (map[t.id]) { S[map[t.id]] = t.value; save(); if (t.id === "setTheme") applyTheme(); else render(); return; }
+    if (t.id === "setHires") { S.hiresFirst = t.checked; save(); render(); return; }
+    if (t.id === "setHideH") { S.hideHistoric = t.checked; save(); render(); return; }
+  });
+
+  $("#q").addEventListener("input", applyFilter);
+  $("#q").addEventListener("keydown", function (e) { if (e.key === "Escape") { this.value = ""; applyFilter(); } });
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    (mq.addEventListener ? mq.addEventListener.bind(mq, "change") : mq.addListener.bind(mq))(function () { if (S.theme === "auto") applyTheme(); });
+  }
+
+  // 捲動時同步導覽高亮
+  var spyT;
+  window.addEventListener("scroll", function () {
+    clearTimeout(spyT);
+    spyT = setTimeout(function () {
+      var best = null, bestD = Infinity;
+      $$("#content .card").forEach(function (c) {
+        if (c.classList.contains("hidden") || !c.id) return;
+        var d = Math.abs(c.getBoundingClientRect().top - 90);
+        if (d < bestD) { bestD = d; best = c.id; }
+      });
+      if (!best) return;
+      $$(".navitem").forEach(function (n) { n.classList.toggle("active", n.getAttribute("data-go") === best); });
+    }, 120);
+  }, { passive: true });
+
+  /* ---------------- 啟動 ---------------- */
+  applyTheme();
+  render();
+  $("#favBtn").textContent = "★ 重聽區 (" + Object.keys(S.fav).length + ")";
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>古典音樂系統聆聽課程｜24 週 · KKBOX 適配版</title>
+<meta name="description" content="24 週古典音樂自學課程，每首曲目附著名版本推薦，依 Hi-Res / Hi-Fi 音質優先排序，一鍵連往 KKBOX。">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="brand">古典音樂系統聆聽課程<small>24 週 · KKBOX 適配版</small></div>
+    <div class="prog"><span id="progTxt">已完成 0 / 24 週</span><div class="bar"><i id="progBar" style="width:0"></i></div></div>
+    <nav id="nav"></nav>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="iconbtn menubtn" id="menuBtn">☰</button>
+      <div class="search">
+        <span aria-hidden="true">🔍</span>
+        <input id="q" type="text" placeholder="搜尋曲目、作曲家、演奏家…（Esc 清除）" autocomplete="off">
+      </div>
+      <button class="iconbtn" id="favBtn">★ 重聽區 (0)</button>
+      <button class="iconbtn" id="setBtn">⚙ 設定</button>
+    </div>
+    <div id="content"></div>
+  </main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer"></div>
+<div class="toast" id="toast"></div>
+
+<script src="assets/data-core.js"></script>
+<script src="assets/data-works-a.js"></script>
+<script src="assets/data-works-b.js"></script>
+<script src="assets/data-weeks.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
