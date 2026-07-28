@@ -126,6 +126,8 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .v.hires{border-left:3px solid var(--hires)}
 .v.hifi{border-left:3px solid var(--hifi)}
 .v.historic{border-left:3px solid var(--hist);opacity:.92}
+.v.pinned{box-shadow:inset 0 0 0 1px var(--hires)}
+.pinTag{background:var(--hiresBg);color:var(--hires);font-weight:700}
 .v .p{font-weight:600;font-size:14px}
 .v .sub{font-size:12px;color:var(--mut);margin-top:1px}
 .v .why{font-size:12.5px;color:var(--mut);margin-top:5px;line-height:1.6}

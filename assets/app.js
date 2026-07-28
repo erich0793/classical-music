@@ -10,7 +10,10 @@
   var DEFAULTS = {
     region: "tw", lang: "tc", scheme: "path",
     hiresFirst: true, hideHistoric: false, theme: "auto",
-    done: {}, tasks: {}, checks: {}, fav: {}
+    done: {}, tasks: {}, checks: {}, fav: {},
+    // 使用者從 KKBOX App「分享 → 複製連結」貼回來的正式網址，key = 搜尋字串。
+    // 這種連結帶有專輯／歌曲 ID，手機上點擊會由 Universal Link 直接開啟 App。
+    links: {}
   };
   var S = load();
   function load() {
@@ -31,7 +34,21 @@
   };
   var SCHEME_ORDER = ["path", "q", "keyword", "word", "play"];
   var TESTQ = "Beethoven Symphony 5 Kleiber";
-  function kk(q) { return (SCHEMES[S.scheme] || SCHEMES.path).build(q, S.region, S.lang); }
+  // 已釘選的正式連結優先於搜尋連結
+  function kk(q) { return S.links[q] || (SCHEMES[S.scheme] || SCHEMES.path).build(q, S.region, S.lang); }
+  function pinned(q) { return !!S.links[q]; }
+
+  // 只接受看起來像 KKBOX 曲目／專輯／歌單的網址，避免把搜尋頁本身存進來
+  function parseKKLink(raw) {
+    var s = (raw || "").trim();
+    if (!s) return null;
+    var m = s.match(/https?:\/\/[^\s"']+/);
+    if (!m) return null;
+    var u = m[0].replace(/[)\]},.;]+$/, "");
+    if (!/^https?:\/\/([a-z0-9-]+\.)*(kkbox\.com|kkbox\.fm)(\/|$)/i.test(u)) return { err: "這不是 KKBOX 的連結" };
+    if (/\/search(\/|\?|$)/i.test(u)) return { err: "這是搜尋頁連結，沒有帶曲目 ID。請改用 App 裡專輯或歌曲頁的「分享 → 複製連結」" };
+    return { url: u };
+  }
 
   /* ---------------- 小工具 ---------------- */
   var toastT;
@@ -47,6 +64,12 @@
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(txt).then(done, function () { fallback(txt, done); });
     } else fallback(txt, done);
+  }
+  function download(obj, name) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" }));
+    a.download = name; a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
   }
   function fallback(txt, cb) {
     var ta = document.createElement("textarea");
@@ -81,16 +104,19 @@
   function versionHTML(v) {
     var q = CORE.quality[v.qa];
     var tags = (v.t || []).map(function (t) { return '<span class="tag">' + esc(TAGNAME[t] || t) + "</span>"; }).join("");
-    return '<li class="v ' + v.qa + '">' +
+    var pin = pinned(v.q);
+    return '<li class="v ' + v.qa + (pin ? " pinned" : "") + '">' +
       "<div>" +
-        '<div class="p">' + esc(v.p) + "</div>" +
+        '<div class="p">' + esc(v.p) + (pin ? ' <span class="tag pinTag" title="已釘選正式連結，手機上會直接開啟 KKBOX App">🔗 已釘選</span>' : "") + "</div>" +
         '<div class="sub"><span class="qbadge ' + v.qa + '" title="' + esc(q.desc) + '">' + esc(q.label) + "</span>" +
           esc(v.l) + (v.y ? " · " + v.y : "") + " " + tags + "</div>" +
         (v.w ? '<div class="why">' + esc(v.w) + "</div>" : "") +
       "</div>" +
       '<div class="acts">' +
-        '<a class="play" data-q="' + esc(v.q) + '" href="' + esc(kk(v.q)) + '" target="_blank" rel="noopener">在 KKBOX 開啟</a>' +
+        '<a class="play" data-q="' + esc(v.q) + '" href="' + esc(kk(v.q)) + '" target="_blank" rel="noopener">' +
+          (pin ? "▶ 開啟 App" : "在 KKBOX 開啟") + "</a>" +
         '<button class="copy" data-copy="' + esc(v.q) + '">複製搜尋字串</button>' +
+        '<button class="copy" data-pin="' + esc(v.q) + '">' + (pin ? "換／清除連結" : "🔗 貼上分享連結") + "</button>" +
       "</div></li>";
   }
 
@@ -425,8 +451,16 @@
       "<h3>外觀</h3>" +
       '<div class="fld"><label>主題</label><select id="setTheme">' +
         opt("auto", S.theme, "跟隨系統") + opt("light", S.theme, "淺色") + opt("dark", S.theme, "深色") + "</select></div>" +
+      "<h3>已釘選的 App 連結</h3>" +
+      '<div class="hint">目前 <b>' + Object.keys(S.links).length + "</b> / " + Object.keys(WORKS).reduce(function (a, k) { return a + WORKS[k].versions.length; }, 0) + " 個版本已釘選正式連結。" +
+        "釘選過的版本在手機上點「開啟 App」會由 Universal Link 直接跳進 KKBOX App，不再經過搜尋。<br>" +
+        "做法：KKBOX App 找到專輯 → 分享 → 複製連結 → 回到這裡按該版本的「🔗 貼上分享連結」。</div>" +
+      '<div class="rowbtns"><button class="iconbtn" id="linkExport">匯出連結</button>' +
+      '<button class="iconbtn" id="linkImport">匯入連結</button>' +
+      (Object.keys(S.links).length ? '<button class="iconbtn" id="linkClear">全部清除</button>' : "") + "</div>" +
       "<h3>資料</h3>" +
       '<div class="rowbtns"><button class="iconbtn" id="setExport">匯出進度</button>' +
+      '<button class="iconbtn" id="setImport">匯入進度</button>' +
       '<button class="iconbtn" id="setReset">清除全部進度</button></div>' +
       '<div class="hint">進度、收藏與設定都存在這台裝置的瀏覽器裡（localStorage），不會上傳。換裝置或清除瀏覽器資料會遺失。</div>';
   }
@@ -457,10 +491,26 @@
 
     // 開啟 KKBOX 時順手把關鍵字放進剪貼簿：萬一搜尋頁是空的，直接貼上即可
     var pl = t.closest("a.play");
-    if (pl && pl.getAttribute("data-q")) {
+    if (pl && pl.getAttribute("data-q") && !pinned(pl.getAttribute("data-q"))) {
       copyText(pl.getAttribute("data-q"));
       toast("已複製關鍵字——若 KKBOX 搜尋頁是空的，直接貼上");
       // 不 return，讓連結照常開啟
+    }
+    var pn = find("data-pin");
+    if (pn) {
+      var pq = pn.getAttribute("data-pin");
+      var cur = S.links[pq] || "";
+      var raw = prompt(
+        "在 KKBOX App 找到這張專輯 → 分享 → 複製連結 → 貼在這裡。\n" +
+        "之後點「開啟 App」就會直接跳到這張專輯。\n\n" +
+        "留白並確定＝清除已釘選的連結。\n\n關鍵字：" + pq, cur);
+      if (raw === null) return;
+      if (!raw.trim()) { delete S.links[pq]; save(); render(); toast("已清除釘選連結"); return; }
+      var r = parseKKLink(raw);
+      if (!r) { toast("沒有偵測到網址"); return; }
+      if (r.err) { toast(r.err); return; }
+      S.links[pq] = r.url; save(); render(); toast("已釘選——這一版現在會直接開啟 App");
+      return;
     }
     var st = find("data-setscheme");
     if (st) {
@@ -528,11 +578,40 @@
     if (t.id === "favCopy") { var txt = favText(); if (txt) { copyText(txt); toast("已複製，可直接貼進 KKBOX 逐首搜尋"); } return; }
     if (t.id === "favClear") { if (confirm("清空重聽區？")) { S.fav = {}; save(); render(); openDrawer("fav");
       $("#favBtn").textContent = "★ 重聽區 (0)"; } return; }
-    if (t.id === "setExport") {
-      var blob = new Blob([JSON.stringify(S, null, 2)], { type: "application/json" });
-      var a = document.createElement("a");
-      a.href = URL.createObjectURL(blob); a.download = "classical-course-progress.json"; a.click();
-      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000); return;
+    if (t.id === "setExport") { download(S, "classical-course-progress.json"); return; }
+    if (t.id === "linkExport") {
+      if (!Object.keys(S.links).length) { toast("還沒有釘選任何連結"); return; }
+      download(S.links, "kkbox-links.json"); return;
+    }
+    if (t.id === "linkImport" || t.id === "setImport") {
+      var isLinks = t.id === "linkImport";
+      var raw = prompt(isLinks
+        ? "貼上先前匯出的 kkbox-links.json 內容（會與現有的合併，同名覆蓋）："
+        : "貼上先前匯出的 classical-course-progress.json 內容（會覆蓋目前的進度）：", "");
+      if (raw === null || !raw.trim()) return;
+      var data;
+      try { data = JSON.parse(raw); } catch (err) { toast("JSON 格式不正確，沒有匯入"); return; }
+      if (!data || typeof data !== "object" || Array.isArray(data)) { toast("內容不是預期的格式"); return; }
+      if (isLinks) {
+        var n = 0;
+        Object.keys(data).forEach(function (k) {
+          var r = parseKKLink(data[k]);
+          if (r && r.url) { S.links[k] = r.url; n++; }
+        });
+        save(); render(); openDrawer("settings"); toast("已匯入 " + n + " 個連結");
+      } else {
+        S = Object.assign({}, DEFAULTS, data);
+        save(); applyTheme(); render(); openDrawer("settings");
+        $("#favBtn").textContent = "★ 重聽區 (" + Object.keys(S.fav).length + ")";
+        toast("已匯入進度");
+      }
+      return;
+    }
+    if (t.id === "linkClear") {
+      if (confirm("清除全部已釘選的 App 連結？（進度與收藏不受影響）")) {
+        S.links = {}; save(); render(); openDrawer("settings"); toast("已清除");
+      }
+      return;
     }
     if (t.id === "setReset") {
       if (confirm("清除全部進度、收藏與設定？此動作無法復原。")) {
