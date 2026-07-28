@@ -23,5 +23,14 @@ html = html.replace(
 fs.mkdirSync(path.join(root, "dist"), { recursive: true });
 fs.writeFileSync(path.join(root, "dist", "index.html"), html);
 
-const kb = (Buffer.byteLength(html) / 1024).toFixed(0);
-console.log(`dist/index.html  ${kb} KB`);
+/* Artifact 版本：託管平台會自行包上 <!doctype>/<html>/<head>/<body>，
+   故剝掉外層標籤，只留 <title> 與頁面內容。 */
+const artifact =
+  html.match(/<title>[\s\S]*?<\/title>/)[0] + "\n" +
+  html.match(/<style>[\s\S]*?<\/style>/)[0] + "\n" +
+  html.slice(html.indexOf("<body>") + 6, html.lastIndexOf("</body>")).trim();
+fs.writeFileSync(path.join(root, "dist", "artifact.html"), artifact);
+
+const kb = (s) => (Buffer.byteLength(s) / 1024).toFixed(0);
+console.log(`dist/index.html     ${kb(html)} KB`);
+console.log(`dist/artifact.html  ${kb(artifact)} KB`);
