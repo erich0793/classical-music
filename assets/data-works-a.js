@@ -267,6 +267,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "J.S. Bach",
     q: "Bach Cello Suite No 1 BWV 1007",
     pick: "只有一件樂器、一條線，卻透過分解和弦暗示出完整的和聲進行。",
+    life: "第 1 號的前奏曲是廣告、電影與典禮中最常出現的大提琴片段，辨識度僅次於《給愛麗絲》這一級的旋律。",
     versions: [
       { p: "Jean-Guihen Queyras", l: "Harmonia Mundi", y: 2007, qa: "hires", t: ["ref"], q: "Bach Cello Suites Queyras", w: "錄音極為自然，琴體共鳴與弓法細節都聽得到。高解析首選。" },
       { p: "Yo-Yo Ma（Six Evolutions, 第三次錄音）", l: "Sony", y: 2018, qa: "hires", t: ["ref", "entry"], q: "Bach Cello Suites Yo-Yo Ma Six Evolutions", w: "最新錄音規格，句法成熟，入門最好上手。" },
@@ -389,6 +390,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "W.A. Mozart",
     q: "Mozart Le nozze di Figaro",
     pick: "先聽序曲與〈Sull'aria〉二重唱。序曲是「用純器樂建立戲劇氣氛」的範例。",
+    life: "電影《刺激 1995》(The Shawshank Redemption) 中安迪播放給全獄囚犯聽的，就是本劇的〈Sull'aria〉二重唱——那一幕常被列為電影史上最著名的古典音樂場景之一。",
     versions: [
       { p: "Teodor Currentzis / MusicAeterna", l: "Sony", y: 2014, qa: "hires", t: ["period"], q: "Mozart Le nozze di Figaro Currentzis", w: "近年錄音規格最高的全曲版，宣敘調處理極為戲劇化。" },
       { p: "René Jacobs / Concerto Köln", l: "Harmonia Mundi", y: 2003, qa: "hires", t: ["period", "ref"], q: "Mozart Le nozze di Figaro Rene Jacobs", w: "古樂器版基準，錄音層次極佳。" },
@@ -434,6 +436,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Ludwig van Beethoven",
     q: "Beethoven Symphony No 9",
     period: "晚期",
+    life: "第四樂章的〈歡樂頌〉主題自 1972 年起被歐洲理事會採用、1985 年成為<b>歐盟盟歌</b>（僅用旋律，不含歌詞）。",
     versions: [
       { p: "Riccardo Chailly / Gewandhausorchester", l: "Decca", y: 2011, qa: "hires", t: ["modern", "ref"], q: "Beethoven Symphony 9 Chailly", w: "近年錄音，合唱與樂團平衡極好，高解析首選。" },
       { p: "Simon Rattle / Berlin Phil", l: "EMI／Warner", y: 2002, qa: "hires", t: ["modern"], q: "Beethoven Symphony 9 Rattle Berlin", w: "現場錄音，數位規格佳。" },

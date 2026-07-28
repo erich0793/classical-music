@@ -138,7 +138,7 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
   font-size:13px;line-height:1.7;margin:10px 0 4px;padding:9px 13px;
   background:var(--lifeBg);border-left:3px solid var(--life);border-radius:0 8px 8px 0;
 }
-.life b{display:block;font-size:11px;letter-spacing:.06em;color:var(--life);margin-bottom:3px}
+.life>b:first-child{display:block;font-size:11px;letter-spacing:.06em;color:var(--life);margin-bottom:3px}
 .wlink{
   font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:5px;
   background:var(--sel);color:var(--acc);white-space:nowrap;
@@ -225,6 +225,14 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
   .workbd{display:block!important}
   body{background:#fff}
 }
+
+/* ---------- 樂器軸 ---------- */
+.instrow{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0;background:var(--bg)}
+.instname{font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.instweeks{display:flex;gap:4px;flex-wrap:wrap}
+.instarc{font-size:13.5px;line-height:1.8;color:var(--mut);padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.insttask{font-size:13.5px;line-height:1.8;margin-top:10px}
+.insttask>b:first-child{display:block;font-size:11px;letter-spacing:.06em;color:var(--acc);margin-bottom:3px}
 
 </style>
 <div class="wrap">
@@ -371,6 +379,47 @@ window.CORE = {
       { city: "赫爾辛基 Helsinki", period: "浪漫（國民樂派）", who: "Sibelius", what: "《芬蘭頌》在俄國統治下寫成，一度被禁演", weeks: [17] },
       { city: "聖彼得堡／列寧格勒", period: "浪漫→20 世紀", who: "Rimsky-Korsakov、Tchaikovsky、Shostakovich", what: "從《天方夜譚》的東方想像，到 Shostakovich 在政治壓力下的雙重語言", weeks: [15, 17, 21] }
     ]
+  },
+
+  /* 樂器軸：三軸中的第三軸。
+     樂器不是固定的——同一件樂器在課程橫跨的 300 年間持續改變，
+     而許多「風格差異」其實是樂器差異造成的。此頁把這條線獨立拉出來。 */
+  instruments: {
+    title: "樂器的演變：為什麼同一件樂器在不同週聽起來不一樣",
+    intro: "課程橫跨約 300 年，這段期間<b>樂器本身一直在變</b>。很多被歸因於「時代風格」的聽感差異，其實是樂器構造改變的結果——大鍵琴做不出漸強，所以巴洛克音樂用「加減聲部」製造強弱；鑄鐵框架讓鋼琴能撐起整個音樂廳，蕭邦的織體才成為可能。<b>下面每一條都附一個可以立刻執行的對比聆聽</b>，全部使用課程既有曲目。",
+    rows: [
+      {
+        inst: "鍵盤樂器",
+        arc: "<b>大鍵琴</b>（撥弦，力度固定、無法漸強）→ <b>古鋼琴 fortepiano</b>（可控力度，但音量小、延音短）→ <b>現代鋼琴</b>（鑄鐵框架、交叉排弦，音量與延音大幅提升）",
+        weeks: [5, 6, 10, 12],
+        task: "聽 Pinnock 的<b>大鍵琴版</b>《郭德堡變奏曲》，再聽 Perahia 的<b>鋼琴版</b>（第 6 週兩者都有）。同一份樂譜、兩種樂器：大鍵琴按輕按重音量都一樣，所以強弱對比只能靠<b>增減聲部與換鍵盤</b>達成。聽出這件事之後，你對巴洛克鍵盤音樂的「為什麼這樣寫」會完全改觀。"
+      },
+      {
+        inst: "弦樂器",
+        arc: "<b>羊腸弦、巴洛克弓、揉音當裝飾</b>（音高約 A=415 Hz）→ <b>金屬弦、現代弓、持續揉音</b>（A=440 Hz 以上）。張力提高使音量變大，但也改變了音色與起音方式",
+        weeks: [5, 6, 23],
+        task: "第 23 週的指定比較就是這件事：Il Giardino Armonico（古樂器）vs. I Musici（現代樂器）的《四季》。另可比較第 6 週大提琴組曲的 Bylsma（古樂器）與 Rostropovich（現代）——<b>差異大到像兩首不同的曲子</b>。"
+      },
+      {
+        inst: "管弦樂團編制",
+        arc: "巴洛克 <b>10–20 人</b> → 古典 <b>30–40 人</b> → 浪漫 <b>80–100 人</b> → 二十世紀初可達 <b>100 人以上</b>。這不只是變大聲，而是讓「音色本身」成為可獨立操作的作曲素材",
+        weeks: [5, 9, 14, 19],
+        task: "依序聽這四首的<b>開頭各 60 秒</b>，只注意一件事——<b>聲音的體積</b>：布蘭登堡第 3 號（W5）→ 海頓第 94 號（W9）→ 幻想交響曲（W14）→ 春之祭（W19）。四首相隔約 200 年，這條線比任何文字說明都直接。"
+      },
+      {
+        inst: "木管與銅管",
+        arc: "早期<b>無按鍵的木管</b>與<b>無活塞的銅管</b>（只能吹出泛音列上的音）→ 十九世紀 <b>Boehm 按鍵系統</b>與<b>活塞（valve）</b>的發明，半音階演奏成為可能，銅管才從「號角」變成能演奏旋律的樂器",
+        weeks: [1, 14, 16],
+        task: "聽 Roth / Les Siècles 的《幻想交響曲》（W14，使用 1830 年代樂器），再聽任一現代樂團版。<b>銅管的粗糲感與英國管的鼻音</b>在時代樂器上明顯得多。這也解釋了為什麼巴洛克與古典時期的銅管多半只吹長音與和聲。"
+      },
+      {
+        inst: "人聲",
+        arc: "巴洛克的<b>閹伶（castrato）</b>與清晰輕盈的唱法 → 十九世紀 <b>bel canto</b> 的旋律美 → Wagner 要求能<b>穿透百人樂團</b>的戲劇性音量。「美聲」的定義隨樂團規模一起改變",
+        weeks: [7, 10, 16],
+        task: "對比《彌賽亞》的合唱（W7）與〈Nessun dorma〉（W16）。同樣是人聲，一個要與小型古樂合奏融合，一個要壓過整個浪漫派樂團——<b>發聲方式根本不同</b>。中間可插入《魔笛》夜后詠嘆調（W10）作為過渡。"
+      }
+    ],
+    note: "這條軸線與第 23 週的「歷史知情演奏」直接相關：HIP 運動主張回到創作年代的樂器，正是因為<b>樂器的改變已經改變了作品的聲響</b>。但該爭議尚未定論——反對意見認為歷史證據不完整，詮釋無可避免。"
   },
 
   glossary: [
@@ -698,6 +747,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "J.S. Bach",
     q: "Bach Cello Suite No 1 BWV 1007",
     pick: "只有一件樂器、一條線，卻透過分解和弦暗示出完整的和聲進行。",
+    life: "第 1 號的前奏曲是廣告、電影與典禮中最常出現的大提琴片段，辨識度僅次於《給愛麗絲》這一級的旋律。",
     versions: [
       { p: "Jean-Guihen Queyras", l: "Harmonia Mundi", y: 2007, qa: "hires", t: ["ref"], q: "Bach Cello Suites Queyras", w: "錄音極為自然，琴體共鳴與弓法細節都聽得到。高解析首選。" },
       { p: "Yo-Yo Ma（Six Evolutions, 第三次錄音）", l: "Sony", y: 2018, qa: "hires", t: ["ref", "entry"], q: "Bach Cello Suites Yo-Yo Ma Six Evolutions", w: "最新錄音規格，句法成熟，入門最好上手。" },
@@ -820,6 +870,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "W.A. Mozart",
     q: "Mozart Le nozze di Figaro",
     pick: "先聽序曲與〈Sull'aria〉二重唱。序曲是「用純器樂建立戲劇氣氛」的範例。",
+    life: "電影《刺激 1995》(The Shawshank Redemption) 中安迪播放給全獄囚犯聽的，就是本劇的〈Sull'aria〉二重唱——那一幕常被列為電影史上最著名的古典音樂場景之一。",
     versions: [
       { p: "Teodor Currentzis / MusicAeterna", l: "Sony", y: 2014, qa: "hires", t: ["period"], q: "Mozart Le nozze di Figaro Currentzis", w: "近年錄音規格最高的全曲版，宣敘調處理極為戲劇化。" },
       { p: "René Jacobs / Concerto Köln", l: "Harmonia Mundi", y: 2003, qa: "hires", t: ["period", "ref"], q: "Mozart Le nozze di Figaro Rene Jacobs", w: "古樂器版基準，錄音層次極佳。" },
@@ -865,6 +916,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Ludwig van Beethoven",
     q: "Beethoven Symphony No 9",
     period: "晚期",
+    life: "第四樂章的〈歡樂頌〉主題自 1972 年起被歐洲理事會採用、1985 年成為<b>歐盟盟歌</b>（僅用旋律，不含歌詞）。",
     versions: [
       { p: "Riccardo Chailly / Gewandhausorchester", l: "Decca", y: 2011, qa: "hires", t: ["modern", "ref"], q: "Beethoven Symphony 9 Chailly", w: "近年錄音，合唱與樂團平衡極好，高解析首選。" },
       { p: "Simon Rattle / Berlin Phil", l: "EMI／Warner", y: 2002, qa: "hires", t: ["modern"], q: "Beethoven Symphony 9 Rattle Berlin", w: "現場錄音，數位規格佳。" },
@@ -1018,6 +1070,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Berlioz Symphonie fantastique",
     fact: "作於 1830 年，副標為「一位藝術家生涯中的插曲」，作曲家為其撰寫了詳細的情節綱要。五樂章。",
     pick: "任務：記住第一樂章的 idée fixe（代表「摯愛」的主題），再跳到第五樂章找出同一旋律被扭曲成怪誕版本的段落。",
+    life: "第五樂章引用了葛利果聖歌〈震怒之日 Dies irae〉——就是第 2 週聽的那種單音織體。這段旋律自此成為西方配樂中代表「死亡」的固定符號，至今仍不斷出現在恐怖片配樂裡。",
     versions: [
       { p: "François-Xavier Roth / Les Siècles", l: "Harmonia Mundi", y: 2019, qa: "hires", t: ["period", "ref"], q: "Berlioz Symphonie fantastique Les Siecles Roth", w: "使用 1830 年代樂器，鐘、英國管、蛇形號的音色與現代樂團完全不同。近年高解析錄音。" },
       { p: "John Eliot Gardiner / ORR", l: "Philips", y: 1991, qa: "hifi", t: ["period", "ref"], q: "Berlioz Symphonie fantastique Gardiner", w: "古樂器版的先行者，第五樂章的怪誕感最強。" },
@@ -1134,6 +1187,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Giacomo Puccini",
     q: "Puccini La boheme",
     pick: "〈Che gelida manina〉、〈Sì, mi chiamano Mimì〉。若要挑戰完整歌劇，本劇約 110 分鐘、劇情單純，是最好的起點。",
+    life: "1996 年的百老匯音樂劇《吉屋出租 RENT》即以本劇為藍本改編，把十九世紀巴黎的貧病藝術家搬到 1990 年代的紐約東村。",
     versions: [
       { p: "Herbert von Karajan / Berlin Phil", l: "Decca", y: 1972, qa: "hires", t: ["ref"], q: "Puccini La boheme Karajan Pavarotti Freni", w: "公認的第一參考（Freni／Pavarotti）。Decca 有 24bit 重製，是本週最值得優先找 Hi-Res 的一張。" },
       { p: "Antonio Pappano / Santa Cecilia", l: "Warner", y: 2018, qa: "hires", t: [], q: "Puccini La boheme Pappano", w: "近年錄音，規格最新。" },
@@ -1192,6 +1246,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Smetana Ma Vlast Vltava",
     country: "捷克",
     pick: "描繪一條河流從源頭到入海的全程。閉眼聽，試著標記出：兩條溪流匯合、林中狩獵、鄉村婚禮、月光下的水仙女、急流、河流開闊入城。",
+    life: "〈莫爾道河〉的主題旋律與以色列國歌〈希望 Hatikvah〉高度相似——兩者被認為源自同一支流傳於歐洲的古老曲調（常追溯至〈La Mantovana〉）。",
     versions: [
       { p: "Jiří Bělohlávek / Czech Phil", l: "Decca", y: 2014, qa: "hires", t: ["ref"], q: "Smetana Ma Vlast Belohlavek", w: "近年錄音規格最高的捷克愛樂版本。" },
       { p: "Rafael Kubelík / Czech Phil（1990 布拉格之春實況）", l: "Supraphon", y: 1990, qa: "hifi", t: ["ref"], q: "Smetana Ma Vlast Kubelik Czech Philharmonic 1990", w: "流亡 42 年後返國的實況，象徵意義極重，是最常被推薦的一版。" },
@@ -1223,6 +1278,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Jean Sibelius",
     q: "Sibelius Finlandia",
     country: "芬蘭",
+    life: "曲中段落的聖詠旋律後來被填詞成〈Finlandia Hymn〉，並在英語世界成為著名聖詩〈Be Still, My Soul〉。",
     versions: [
       { p: "Osmo Vänskä / Lahti SO", l: "BIS", y: 1998, qa: "hires", t: ["ref"], q: "Sibelius Finlandia Vanska Lahti", w: "BIS 為高解析錄音代表廠牌，西貝流士曲目的權威。" },
       { p: "Paavo Berglund / Helsinki Phil", l: "EMI", y: 1985, qa: "hifi", t: ["ref"], q: "Sibelius Finlandia Berglund", w: "芬蘭傳統的代表詮釋。" },
@@ -1282,6 +1338,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Claude Debussy",
     q: "Debussy Clair de Lune",
     pick: "本模組中最容易親近的一首，可作為心理緩衝。",
+    life: "廣泛用於電影，最著名的包括《瞞天過海》(Ocean's Eleven) 的結尾噴泉場景。",
     versions: [
       { p: "Seong-Jin Cho", l: "DG", y: 2021, qa: "hires", t: [], q: "Debussy Clair de Lune Seong-Jin Cho", w: "近年錄音，高解析規格最穩。" },
       { p: "Jean-Yves Thibaudet", l: "Decca", y: 1996, qa: "hires", t: ["ref"], q: "Debussy Clair de Lune Thibaudet", w: "德布西鋼琴全集，音色控制細膩。" },
@@ -2271,6 +2328,24 @@ window.PINNED = {
     return h;
   }
 
+  function instrumentsHTML() {
+    var I = CORE.instruments;
+    var h = '<div class="card" id="p-inst"><h2>' + esc(I.title) + "</h2>" +
+      '<div class="enttl">樂器軸 — 為什麼「時代風格」有一半其實是樂器差異</div>' +
+      "<p>" + I.intro + "</p>";
+    h += I.rows.map(function (r) {
+      return '<div class="instrow">' +
+        '<div class="instname">' + esc(r.inst) +
+          '<span class="instweeks">' + r.weeks.map(function (n) {
+            return '<button class="wlink" data-go="week-' + n + '">W' + n + "</button>"; }).join(" ") + "</span></div>" +
+        '<div class="instarc">' + r.arc + "</div>" +
+        '<div class="insttask"><b>對比聆聽</b>' + r.task + "</div>" +
+      "</div>";
+    }).join("");
+    h += '<div class="note">' + I.note + " " + tierTags("析選") + "</div></div>";
+    return h;
+  }
+
   function periodHTML(p) {
     if (!p) return "";
     var h = "<h3>" + esc(p.title) + "</h3>";
@@ -2373,6 +2448,7 @@ window.PINNED = {
     h += '<button class="navitem" data-go="p-method"><span class="wn"><span>法</span></span><span class="tx">課程設計原則</span></button>';
     h += '<button class="navitem" data-go="p-kkbox"><span class="wn"><span>K</span></span><span class="tx">KKBOX 操作實務</span></button>';
     h += '<button class="navitem" data-go="p-geo"><span class="wn"><span>圖</span></span><span class="tx">音樂地圖（地理軸）</span></button>';
+    h += '<button class="navitem" data-go="p-inst"><span class="wn"><span>器</span></span><span class="tx">樂器的演變（樂器軸）</span></button>';
     CORE.modules.forEach(function (m) {
       h += '<div class="navmod"><span>' + esc(m.label) + "</span> " + esc(m.title) + "</div>";
       m.weeks.forEach(function (n) {
@@ -2400,7 +2476,7 @@ window.PINNED = {
   /* ---------------- 主渲染 ---------------- */
   function render() {
     $("#nav").innerHTML = navHTML();
-    $("#content").innerHTML = homeHTML() + geographyHTML() + WEEKS.map(weekHTML).join("") +
+    $("#content").innerHTML = homeHTML() + geographyHTML() + instrumentsHTML() + WEEKS.map(weekHTML).join("") +
       '<div class="foot">古典音樂系統聆聽課程 · ' + esc(CORE.meta.version) +
       "<br>版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。</div>";
     updateProgress();

@@ -295,6 +295,24 @@
     return h;
   }
 
+  function instrumentsHTML() {
+    var I = CORE.instruments;
+    var h = '<div class="card" id="p-inst"><h2>' + esc(I.title) + "</h2>" +
+      '<div class="enttl">樂器軸 — 為什麼「時代風格」有一半其實是樂器差異</div>' +
+      "<p>" + I.intro + "</p>";
+    h += I.rows.map(function (r) {
+      return '<div class="instrow">' +
+        '<div class="instname">' + esc(r.inst) +
+          '<span class="instweeks">' + r.weeks.map(function (n) {
+            return '<button class="wlink" data-go="week-' + n + '">W' + n + "</button>"; }).join(" ") + "</span></div>" +
+        '<div class="instarc">' + r.arc + "</div>" +
+        '<div class="insttask"><b>對比聆聽</b>' + r.task + "</div>" +
+      "</div>";
+    }).join("");
+    h += '<div class="note">' + I.note + " " + tierTags("析選") + "</div></div>";
+    return h;
+  }
+
   function periodHTML(p) {
     if (!p) return "";
     var h = "<h3>" + esc(p.title) + "</h3>";
@@ -397,6 +415,7 @@
     h += '<button class="navitem" data-go="p-method"><span class="wn"><span>法</span></span><span class="tx">課程設計原則</span></button>';
     h += '<button class="navitem" data-go="p-kkbox"><span class="wn"><span>K</span></span><span class="tx">KKBOX 操作實務</span></button>';
     h += '<button class="navitem" data-go="p-geo"><span class="wn"><span>圖</span></span><span class="tx">音樂地圖（地理軸）</span></button>';
+    h += '<button class="navitem" data-go="p-inst"><span class="wn"><span>器</span></span><span class="tx">樂器的演變（樂器軸）</span></button>';
     CORE.modules.forEach(function (m) {
       h += '<div class="navmod"><span>' + esc(m.label) + "</span> " + esc(m.title) + "</div>";
       m.weeks.forEach(function (n) {
@@ -424,7 +443,7 @@
   /* ---------------- 主渲染 ---------------- */
   function render() {
     $("#nav").innerHTML = navHTML();
-    $("#content").innerHTML = homeHTML() + geographyHTML() + WEEKS.map(weekHTML).join("") +
+    $("#content").innerHTML = homeHTML() + geographyHTML() + instrumentsHTML() + WEEKS.map(weekHTML).join("") +
       '<div class="foot">古典音樂系統聆聽課程 · ' + esc(CORE.meta.version) +
       "<br>版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。</div>";
     updateProgress();

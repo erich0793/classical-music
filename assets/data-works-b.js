@@ -108,6 +108,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Berlioz Symphonie fantastique",
     fact: "作於 1830 年，副標為「一位藝術家生涯中的插曲」，作曲家為其撰寫了詳細的情節綱要。五樂章。",
     pick: "任務：記住第一樂章的 idée fixe（代表「摯愛」的主題），再跳到第五樂章找出同一旋律被扭曲成怪誕版本的段落。",
+    life: "第五樂章引用了葛利果聖歌〈震怒之日 Dies irae〉——就是第 2 週聽的那種單音織體。這段旋律自此成為西方配樂中代表「死亡」的固定符號，至今仍不斷出現在恐怖片配樂裡。",
     versions: [
       { p: "François-Xavier Roth / Les Siècles", l: "Harmonia Mundi", y: 2019, qa: "hires", t: ["period", "ref"], q: "Berlioz Symphonie fantastique Les Siecles Roth", w: "使用 1830 年代樂器，鐘、英國管、蛇形號的音色與現代樂團完全不同。近年高解析錄音。" },
       { p: "John Eliot Gardiner / ORR", l: "Philips", y: 1991, qa: "hifi", t: ["period", "ref"], q: "Berlioz Symphonie fantastique Gardiner", w: "古樂器版的先行者，第五樂章的怪誕感最強。" },
@@ -224,6 +225,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Giacomo Puccini",
     q: "Puccini La boheme",
     pick: "〈Che gelida manina〉、〈Sì, mi chiamano Mimì〉。若要挑戰完整歌劇，本劇約 110 分鐘、劇情單純，是最好的起點。",
+    life: "1996 年的百老匯音樂劇《吉屋出租 RENT》即以本劇為藍本改編，把十九世紀巴黎的貧病藝術家搬到 1990 年代的紐約東村。",
     versions: [
       { p: "Herbert von Karajan / Berlin Phil", l: "Decca", y: 1972, qa: "hires", t: ["ref"], q: "Puccini La boheme Karajan Pavarotti Freni", w: "公認的第一參考（Freni／Pavarotti）。Decca 有 24bit 重製，是本週最值得優先找 Hi-Res 的一張。" },
       { p: "Antonio Pappano / Santa Cecilia", l: "Warner", y: 2018, qa: "hires", t: [], q: "Puccini La boheme Pappano", w: "近年錄音，規格最新。" },
@@ -282,6 +284,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Smetana Ma Vlast Vltava",
     country: "捷克",
     pick: "描繪一條河流從源頭到入海的全程。閉眼聽，試著標記出：兩條溪流匯合、林中狩獵、鄉村婚禮、月光下的水仙女、急流、河流開闊入城。",
+    life: "〈莫爾道河〉的主題旋律與以色列國歌〈希望 Hatikvah〉高度相似——兩者被認為源自同一支流傳於歐洲的古老曲調（常追溯至〈La Mantovana〉）。",
     versions: [
       { p: "Jiří Bělohlávek / Czech Phil", l: "Decca", y: 2014, qa: "hires", t: ["ref"], q: "Smetana Ma Vlast Belohlavek", w: "近年錄音規格最高的捷克愛樂版本。" },
       { p: "Rafael Kubelík / Czech Phil（1990 布拉格之春實況）", l: "Supraphon", y: 1990, qa: "hifi", t: ["ref"], q: "Smetana Ma Vlast Kubelik Czech Philharmonic 1990", w: "流亡 42 年後返國的實況，象徵意義極重，是最常被推薦的一版。" },
@@ -313,6 +316,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Jean Sibelius",
     q: "Sibelius Finlandia",
     country: "芬蘭",
+    life: "曲中段落的聖詠旋律後來被填詞成〈Finlandia Hymn〉，並在英語世界成為著名聖詩〈Be Still, My Soul〉。",
     versions: [
       { p: "Osmo Vänskä / Lahti SO", l: "BIS", y: 1998, qa: "hires", t: ["ref"], q: "Sibelius Finlandia Vanska Lahti", w: "BIS 為高解析錄音代表廠牌，西貝流士曲目的權威。" },
       { p: "Paavo Berglund / Helsinki Phil", l: "EMI", y: 1985, qa: "hifi", t: ["ref"], q: "Sibelius Finlandia Berglund", w: "芬蘭傳統的代表詮釋。" },
@@ -372,6 +376,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Claude Debussy",
     q: "Debussy Clair de Lune",
     pick: "本模組中最容易親近的一首，可作為心理緩衝。",
+    life: "廣泛用於電影，最著名的包括《瞞天過海》(Ocean's Eleven) 的結尾噴泉場景。",
     versions: [
       { p: "Seong-Jin Cho", l: "DG", y: 2021, qa: "hires", t: [], q: "Debussy Clair de Lune Seong-Jin Cho", w: "近年錄音，高解析規格最穩。" },
       { p: "Jean-Yves Thibaudet", l: "Decca", y: 1996, qa: "hires", t: ["ref"], q: "Debussy Clair de Lune Thibaudet", w: "德布西鋼琴全集，音色控制細膩。" },
