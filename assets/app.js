@@ -164,13 +164,37 @@
       "</div>" +
       '<div class="workbd">' +
         (metas.length ? '<div class="meta">' + metas.join(" ｜ ") + "</div>" : "") +
+        (w.bg ? '<div class="bg"><b>作品背景</b>' + tierTags("史析") + w.bg + "</div>" : "") +
         (w.fact ? '<div class="meta">' + tierTags("史") + esc(w.fact) + "</div>" : "") +
         (w.life ? '<div class="life"><b>你可能在哪裡聽過</b>' + w.life + "</div>" : "") +
         (w.pick ? '<div class="meta">' + tierTags("選") + esc(w.pick) + "</div>" : "") +
         (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
-        '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">複製通用搜尋字串：' + esc(w.q) + "</button></div>" +
+        taskBoxHTML(id, wk) +
+        '<div class="vhead">以下 <b>' + vs.length + "</b> 個都是<b>同一首曲子的不同演出</b>（皆為全曲，非片段）——" +
+          "<b>選一個聽就好</b>，不必每個都聽。" +
+          (S.hiresFirst ? "已依 Hi-Res 優先排序，最上面那個就是建議首選。" : "") + "</div>" +
         '<ul class="vlist">' + vs.map(versionHTML).join("") + "</ul>" +
+        '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">都找不到？複製通用搜尋字串：' + esc(w.q) + "</button></div>" +
       "</div></div>";
+  }
+
+  /* 把本週指派給這首曲目的聆聽任務，直接放在播放按鈕正上方。
+     原本任務統一放在週的最下方，使用者往往點了 KKBOX 就離開，
+     根本沒看到「這次要聽什麼」——那等於架空了本課程的核心方法。 */
+  function taskBoxHTML(workId, wk) {
+    if (!wk || !wk.tw) return "";
+    var hits = [];
+    wk.tw.forEach(function (ids, i) {
+      if (ids.indexOf(workId) > -1) hits.push(i);
+    });
+    if (!hits.length) return "";
+    return '<div class="taskbox"><b>▶ 播放前先讀：本週要用這首做什麼</b><ul class="chk">' +
+      hits.map(function (i) {
+        var k = wk.n + ":" + i, on = !!S.tasks[k];
+        return '<li class="' + (i === 0 ? "must " : "") + (on ? "dn" : "") + '">' +
+          '<input type="checkbox" data-task="' + k + '"' + (on ? " checked" : "") + ">" +
+          "<span>" + wk.tasks[i] + "</span></li>";
+      }).join("") + "</ul></div>";
   }
 
   /* ---------------- 渲染：週 ---------------- */
@@ -223,7 +247,9 @@
     }
     if (wk.yt) h += musecowHTML(wk.yt);
     if (wk.tasks && wk.tasks.length) {
-      h += "<h3>聆聽任務</h3><ul class=\"chk\">";
+      h += "<h3>聆聽任務總覽</h3>";
+      h += '<div class="hint" style="margin-bottom:8px">與各曲目下方的任務是<b>同一份</b>，勾選會同步。這裡列出全部，方便一次檢視本週要做的事。</div>';
+      h += '<ul class="chk">';
       h += wk.tasks.map(function (t, i) {
         var k = wk.n + ":" + i, on = !!S.tasks[k];
         return '<li class="' + (i === 0 ? "must " : "") + (on ? "dn" : "") + '">' +
@@ -732,7 +758,12 @@
     if (t.hasAttribute && t.hasAttribute("data-task")) {
       var k = t.getAttribute("data-task");
       S.tasks[k] = t.checked; if (!t.checked) delete S.tasks[k]; save();
-      t.closest("li").classList.toggle("dn", t.checked); return;
+      // 同一項任務同時出現在曲目下方與週末總覽，兩處都要同步
+      $$('[data-task="' + k + '"]').forEach(function (el) {
+        el.checked = t.checked;
+        el.closest("li").classList.toggle("dn", t.checked);
+      });
+      return;
     }
     if (t.hasAttribute && t.hasAttribute("data-check")) {
       var k2 = t.getAttribute("data-check");

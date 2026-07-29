@@ -52,6 +52,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "（中世紀單旋律聖歌）",
     q: "Gregorian Chant",
     texture: "單音織體 Monophony",
+    bg: "中世紀教會禮儀所用的單旋律拉丁文聖歌，因傳說由教宗額我略一世（Gregory I）整理而得名——<b>此歸屬為後世傳說，非史實</b>。它同時是西方記譜法的起點：為了讓各地修道院唱得一致，九世紀起發展出符號記譜，最終演化成今天的五線譜。沒有伴奏、沒有小節線，節奏跟著拉丁文歌詞的重音走——這也是為什麼它聽起來「沒有拍子」。",
     versions: [
       { p: "Coro de Monjes del Monasterio de Silos", l: "EMI", y: 1973, qa: "hifi", t: ["ref"], q: "Gregorian Chant Monks of Santo Domingo de Silos", w: "1994 年再發行後成為全球最暢銷的聖歌錄音，也是最容易在串流上找到的版本。" },
       { p: "Ensemble Organum / Marcel Pérès", l: "Harmonia Mundi", y: 1990, qa: "hires", t: [], q: "Ensemble Organum Chant Gregorien Peres", w: "學術性強、裝飾唱法還原度高；HM 曲庫多有高解析。" },
@@ -65,6 +66,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Frédéric Chopin",
     q: "Chopin Nocturne Op 9 No 2",
     texture: "主音織體 Homophony",
+    bg: "蕭邦二十歲左右出版的第一組夜曲之一，也是他流傳最廣的作品。<b>夜曲（nocturne）並非蕭邦所創</b>，而是愛爾蘭作曲家 John Field 的發明；蕭邦承接後把它推到極致——左手的分解和弦鋪出寬廣音域，右手則像歌劇詠嘆調一樣自由裝飾。主題反覆出現三次，每次的裝飾音都更繁複，這是他向義大利美聲唱法借來的手法。",
     versions: [
       { p: "Arthur Rubinstein", l: "RCA", y: 1965, qa: "hifi", t: ["ref"], q: "Chopin Nocturnes Rubinstein", w: "夜曲全集的長年基準版，句法自然不誇飾。" },
       { p: "Maria João Pires", l: "DG", y: 1996, qa: "hires", t: ["ref"], q: "Chopin Nocturnes Pires", w: "數位錄音時代的代表版，鋼琴音色捕捉極佳，高解析首選。" },
@@ -79,6 +81,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "J.S. Bach",
     q: "Bach Art of Fugue Contrapunctus 1",
     texture: "複音織體 Polyphony",
+    bg: "巴赫最後的作品之一，1740 年代晚期著手，未完成即逝世。全曲只用<b>一個 d 小調主題</b>，以各種對位技法寫成 14 首賦格與 4 首卡農。最特別的是巴赫<b>沒有指定樂器</b>——樂譜寫成四行開放總譜，所以大鍵琴、鋼琴、管風琴、弦樂四重奏、管樂合奏的版本都成立。最後一首賦格在他寫入 B-A-C-H（德式音名：降B-A-C-B，以自己的名字構成的動機）之後戛然而止。",
     versions: [
       { p: "Pierre-Laurent Aimard（鋼琴）", l: "DG", y: 2008, qa: "hires", t: ["ref"], q: "Bach Art of Fugue Aimard", w: "鋼琴版，聲部以觸鍵分層，最容易追蹤個別旋律線。高解析首選。" },
       { p: "Akademie für Alte Musik Berlin（合奏）", l: "Harmonia Mundi", y: 2019, qa: "hires", t: ["period"], q: "Bach Art of Fugue Akademie fur Alte Musik", w: "以不同樂器承擔各聲部，四條線分得最開，本週任務最好懂的版本。" },
@@ -108,6 +111,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "W.A. Mozart",
     q: "Mozart Eine kleine Nachtmusik K 525",
     form: "第一樂章＝奏鳴曲式（第 8 週深入）",
+    bg: "1787 年作於維也納，標題直譯就是「一首小夜曲」。莫札特在自己的作品目錄中記為<b>五個樂章</b>，但流傳至今只有四個——其中一個小步舞曲樂章失傳了。這是他最家喻戶曉的作品，但寫作目的與委託者至今不明。",
     versions: [
       { p: "Orpheus Chamber Orchestra", l: "DG", y: 1988, qa: "hires", t: ["ref"], q: "Mozart Eine kleine Nachtmusik Orpheus Chamber Orchestra", w: "無指揮室內樂團，聲部平衡極佳，結構聽得最清楚。" },
       { p: "Neville Marriner / Academy of St Martin in the Fields", l: "Philips", y: 1985, qa: "hifi", t: ["entry"], q: "Mozart Eine kleine Nachtmusik Marriner", w: "最普及的版本，速度與句法都很標準。" },
@@ -135,6 +139,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "W.A. Mozart",
     q: "Mozart Symphony No 40 K 550",
     key: "g 小調 — 小調的緊張感",
+    bg: "1788 年夏天，莫札特在約六到八週內連續完成第 39、40、41 三首交響曲——這是他最後三首，而且<b>沒有證據顯示曾在他生前演出</b>。第 40 號是他僅有的兩首小調交響曲之一（另一首是第 25 號，同為 g 小調）。全曲由一個簡單的下行二度動機貫穿；開頭幾乎沒有前奏就直接切入主題，在當時極不尋常。",
     versions: [
       { p: "Karl Böhm / Berlin Phil", l: "DG", y: 1962, qa: "hifi", t: ["ref", "modern"], q: "Mozart Symphony 40 Bohm", w: "課程指定版之一。速度穩、結構清楚，最適合第 8 週找再現部。" },
       { p: "Nikolaus Harnoncourt / Concentus Musicus Wien", l: "Sony", y: 2014, qa: "hires", t: ["period", "ref"], q: "Mozart Symphony 40 Harnoncourt", w: "課程指定版之一。重音與articulation 極為刻意，主題輪廓最鮮明。近年錄音，高解析首選。" },
@@ -149,6 +154,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "W.A. Mozart",
     q: "Mozart Symphony No 41 Jupiter",
     key: "C 大調 — 大調的開闊感；末樂章五主題對位疊置",
+    bg: "「朱庇特」這個別名<b>並非莫札特所取</b>，一般認為出自倫敦的演出經紀人 Johann Peter Salomon——也就是邀請海頓赴倫敦的那位。末樂章的尾聲把五個主題同時疊在一起做對位，被視為十八世紀器樂寫作的技術頂點。這是莫札特最後一首交響曲，完成後三年他即去世。",
     versions: [
       { p: "Charles Mackerras / Scottish Chamber Orchestra", l: "Linn", y: 2007, qa: "hires", t: ["ref"], q: "Mozart Symphony 41 Jupiter Mackerras", w: "Linn Records 以高解析發行著稱，本版是「錄音規格 + 詮釋」兼顧的最佳解。末樂章五條線分得極清楚。" },
       { p: "Karl Böhm / Berlin Phil", l: "DG", y: 1962, qa: "hifi", t: ["modern"], q: "Mozart Symphony 41 Jupiter Bohm", w: "與第 40 號同一套錄音，便於做大小調的直接對比。" },
@@ -223,6 +229,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Arcangelo Corelli",
     q: "Corelli Concerti Grossi Op 6",
     extra: true,
+    bg: "1714 年於阿姆斯特丹出版（Corelli 逝世後一年），是<b>「大協奏曲 concerto grosso」這個曲類的奠基之作</b>——由一小組獨奏者（concertino）與全體合奏（ripieno）交替對答。第 8 首附有「為聖誕夜而作」的標註，其中的田園樂章長年是聖誕音樂的固定曲目。韓德爾與巴赫的協奏曲寫作都直接受其影響。",
     versions: [
       { p: "Trevor Pinnock / The English Concert", l: "DG Archiv", y: 1988, qa: "hifi", t: ["period", "ref"], q: "Corelli Concerti Grossi Op 6 Pinnock", w: "古樂器基準版。" },
       { p: "Rinaldo Alessandrini / Concerto Italiano", l: "Naïve", y: 2015, qa: "hires", t: ["period"], q: "Corelli Concerti Grossi Concerto Italiano", w: "近年錄音，高解析機率高。" }
@@ -301,6 +308,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "J.S. Bach",
     q: "Bach Mass in B minor BWV 232",
     pick: "先聽開頭 Kyrie。",
+    bg: "巴赫身為路德派教徒，卻寫下這部完整的<b>天主教拉丁彌撒</b>——這件事本身就是個謎。全曲並非一氣呵成，而是他在生命最後幾年，把橫跨數十年的舊作重新編修拼接而成；其中 Kyrie 與 Gloria 早在 1733 年就已完成並獻給薩克森選帝侯。<b>他生前從未聽過全曲演出。</b>",
     versions: [
       { p: "Masaaki Suzuki / Bach Collegium Japan", l: "BIS", y: 2007, qa: "hires", t: ["period", "ref"], q: "Bach Mass in B minor Suzuki", w: "BIS 為 SACD／高解析錄音代表廠牌，本版是「音質 + 詮釋」的最佳交集。" },
       { p: "Philippe Herreweghe / Collegium Vocale Gent", l: "Harmonia Mundi", y: 2011, qa: "hires", t: ["period", "ref"], q: "Bach Mass in B minor Herreweghe", w: "合唱線條極為內斂，Kyrie 的懇求性格最鮮明。" },
@@ -315,6 +323,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "J.S. Bach",
     q: "Bach St Matthew Passion BWV 244",
     pick: "先聽開頭合唱與〈Erbarme dich〉（女中音詠嘆調 + 小提琴獨奏）。",
+    bg: "1727 年（或 1729 年）於萊比錫聖多馬教堂首演，是西方音樂中規模最大的受難曲。編制包含<b>雙合唱團、雙管弦樂團</b>與獨立的兒童合唱，兩組人馬在空間上分開，形成問答與環繞的效果。巴赫死後此曲幾乎被遺忘，直到 1829 年<b>二十歲的孟德爾頌在柏林重新演出</b>，才引發十九世紀的巴赫復興運動。",
     versions: [
       { p: "Masaaki Suzuki / Bach Collegium Japan", l: "BIS", y: 2019, qa: "hires", t: ["period", "ref"], q: "Bach St Matthew Passion Suzuki", w: "近年錄音規格最高的完整版，雙合唱團的空間分離感清楚。" },
       { p: "Philippe Herreweghe / Collegium Vocale Gent", l: "Harmonia Mundi", y: 1998, qa: "hires", t: ["period", "ref"], q: "Bach St Matthew Passion Herreweghe", w: "〈Erbarme dich〉由 Andreas Scholl 演唱，是最常被推薦的一版。" },
@@ -362,6 +371,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "W.A. Mozart",
     q: "Mozart Piano Concerto No 20 K 466",
     pick: "d 小調，戲劇性強。本週任務是找出裝飾奏（cadenza）的位置。",
+    bg: "1785 年首演，莫札特自己擔任獨奏。這是他<b>第一首小調鋼琴協奏曲</b>，戲劇性與不安感遠超當時協奏曲的慣例。貝多芬極為推崇此曲，並為它寫下裝飾奏——至今仍是最常被採用的版本。第一樂章開頭樂團的切分低音營造出一種不祥的脈動，與古典協奏曲慣有的明亮開場截然不同。",
     versions: [
       { p: "Mitsuko Uchida / Cleveland Orchestra", l: "Decca", y: 2010, qa: "hires", t: ["ref"], q: "Mozart Piano Concerto 20 Uchida Cleveland", w: "近年錄音，鋼琴與樂團的層次極清楚，裝飾奏進出點一聽就知道。高解析首選。" },
       { p: "Murray Perahia / English Chamber Orchestra", l: "Sony", y: 1980, qa: "hifi", t: ["ref"], q: "Mozart Piano Concerto 20 Perahia", w: "身兼指揮與獨奏，句法統一，全集長年被視為基準。" },
@@ -406,6 +416,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "W.A. Mozart",
     q: "Mozart Die Zauberflote",
     pick: "先聽〈Der Hölle Rache〉（夜后詠嘆調）。注意人聲被當作器樂化的技巧展示工具使用。",
+    bg: "1791 年首演，莫札特去世前兩個月。與《費加洛》《唐喬凡尼》不同，這是一部<b>德語的 Singspiel（歌唱劇）</b>——有口白、有喜劇也有莊嚴儀式，寫給維也納市郊的平民劇院而非宮廷。劇中有大量共濟會（Freemasonry）象徵，莫札特本人是會員。夜后的詠嘆調要求連續唱到高音 F，是花腔女高音的技術極限。",
     versions: [
       { p: "René Jacobs / Akademie für Alte Musik Berlin", l: "Harmonia Mundi", y: 2010, qa: "hires", t: ["period", "ref"], q: "Mozart Die Zauberflote Rene Jacobs", w: "近年錄音規格最高，戲劇節奏鮮活。" },
       { p: "Otto Klemperer / Philharmonia", l: "EMI", y: 1964, qa: "hifi", t: ["ref"], q: "Mozart Die Zauberflote Klemperer", w: "夜后由 Lucia Popp 演唱，是這首詠嘆調最著名的錄音之一。" },
@@ -452,6 +463,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Ludwig van Beethoven",
     q: "Beethoven Moonlight Sonata Op 27",
     period: "早／中期之交",
+    bg: "<b>「月光」不是貝多芬取的名字</b>，而是他死後由詩人 Ludwig Rellstab 比喻為「琉森湖上的月光」才流傳開來。貝多芬自己的標題是「幻想曲風的奏鳴曲」（Sonata quasi una fantasia）——關鍵在他刻意打破慣例：<b>把慢速樂章放在第一、最激烈的樂章放在最後</b>，整首曲子的重心因此落在結尾而非開頭。多數人只聽過第一樂章，等於只聽了他設計的前三分之一。",
     versions: [
       { p: "Igor Levit", l: "Sony", y: 2019, qa: "hires", t: ["ref"], q: "Beethoven Piano Sonatas Igor Levit", w: "全集錄音，24bit 發行，鋼琴音色捕捉極佳。" },
       { p: "Wilhelm Kempff", l: "DG", y: 1965, qa: "hifi", t: ["ref"], q: "Beethoven Moonlight Sonata Kempff", w: "句法質樸、不誇飾，長年基準版。" },
@@ -467,6 +479,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Beethoven String Quartet Op 131",
     period: "晚期",
     pick: "與《月光》連續對比聽，兩者相隔約 25 年。不需分析，只需感受「可親近程度」的落差。",
+    bg: "作於 1826 年，貝多芬生命的最後一年。全曲<b>七個樂章不間斷連續演奏</b>，這在當時完全無先例。舒伯特在臨終前要求聽此曲；華格納曾為它寫下長篇分析。貝多芬被問到自己最滿意哪一首四重奏時，據稱指的就是這首。<b>此時他已完全失聰，這些作品他從未親耳聽過。</b>",
     versions: [
       { p: "Belcea Quartet", l: "Alpha", y: 2012, qa: "hires", t: ["ref"], q: "Beethoven String Quartets Belcea Quartet", w: "近年全集，錄音規格最高，晚期四重奏的內聲部細節清楚。" },
       { p: "Takács Quartet", l: "Decca", y: 2004, qa: "hires", t: ["ref"], q: "Beethoven Late String Quartets Takacs", w: "晚期四重奏的現行首選之一，獲獎無數。" },
