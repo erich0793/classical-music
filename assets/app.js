@@ -8,7 +8,7 @@
   /* ---------------- 設定與狀態（localStorage） ---------------- */
   var LS = "cmc.v1";
   var DEFAULTS = {
-    region: "tw", lang: "tc", scheme: "q",
+    region: "tw", lang: "tc",
     hiresFirst: true, hideHistoric: false, theme: "auto",
     done: {}, tasks: {}, checks: {}, fav: {},
     // 使用者從 KKBOX App「分享 → 複製連結」貼回來的正式網址，key = 搜尋字串。
@@ -23,32 +23,20 @@
   function save() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} }
 
   /* ---------------- KKBOX 連結 ---------------- */
-  // KKBOX 的搜尋網址格式可能隨網站改版變動，故做成可切換。
-  // 若某一格式失效，使用者可在「設定」中改用另一種，或直接用「複製」把字串貼進 App。
-  /* 已由實測排除：
-     /search/all/{q}/1  → 404，路徑不存在
-     /search?word={q}   → 搜尋頁有開但關鍵字為空，參數名不對
-     兩者共同確認：/search 這個路徑正確，問題只在查詢參數的名稱。 */
-  var SCHEMES = {
-    q:       { label: "?q=",       build: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search?q=" + encodeURIComponent(q); } },
-    keyword: { label: "?keyword=", build: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search?keyword=" + encodeURIComponent(q); } },
-    query:   { label: "?query=",   build: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search?query=" + encodeURIComponent(q); } },
-    term:    { label: "?term=",    build: function (q, r, l) { return "https://www.kkbox.com/" + r + "/" + l + "/search?term=" + encodeURIComponent(q); } },
-    play:    { label: "play.kkbox.com（網頁播放器）", build: function (q) { return "https://play.kkbox.com/search/" + encodeURIComponent(q); } }
-  };
-  var SCHEME_ORDER = ["q", "keyword", "query", "term", "play"];
-  var RULED_OUT = [
-    ["/search/all/…/1", "404，路徑不存在"],
-    ["/search?word=", "搜尋頁有開但關鍵字是空的"]
-  ];
-  var TESTQ = "Beethoven Symphony 5 Kleiber";
+  /* 搜尋網址格式經使用者實測確認：/{region}/{lang}/search?q={關鍵字}
+     曾測試並排除：/search/all/{q}/1（404）、/search?word={q}（關鍵字傳不進去）。
+     若 KKBOX 日後改版導致連結失效，只需改這一個函式。 */
+  function searchUrl(q) {
+    return "https://www.kkbox.com/" + S.region + "/" + S.lang + "/search?q=" + encodeURIComponent(q);
+  }
+
   /* 連結解析順序：本機釘選 → 內建（data-links.js，隨網站部署，跨裝置共用）→ 搜尋連結。
      localStorage 綁定單一裝置＋單一瀏覽器，所以電腦上釘的連結手機看不到；
      要跨裝置共用必須放進 data-links.js。 */
   var REPO = window.PINNED || {};
   function pinnedUrl(q) { return S.links[q] || REPO[q] || null; }
   function pinned(q) { return S.links[q] ? "local" : (REPO[q] ? "repo" : false); }
-  function kk(q) { return pinnedUrl(q) || (SCHEMES[S.scheme] || SCHEMES.q).build(q, S.region, S.lang); }
+  function kk(q) { return pinnedUrl(q) || searchUrl(q); }
 
   // 只接受看起來像 KKBOX 曲目／專輯／歌單的網址，避免把搜尋頁本身存進來
   function parseKKLink(raw) {
@@ -361,16 +349,14 @@
       '<div class="grid2" style="margin:16px 0">' +
         stat("24", "週單元") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本推薦") + stat(String(hires), "個 Hi-Res 優先版本") +
       "</div>" +
-      '<div class="banner"><b>連結格式尚未確認，第一次使用請先做這件事（約 20 秒）：</b><br>' +
-        '到 <b>⚙ 設定 → 搜尋連結格式</b>，把清單裡的候選逐一點「測試」，' +
-        '哪一個真的跑出 Kleiber 的貝五，就按它旁邊的「設為預設」。之後全站連結都會改用它，只需做一次。<br><br>' +
-        'KKBOX 擋掉了自動化存取，所以這件事我沒辦法自己驗證。目前已排除 ' +
-        '<code>/search/all/…/1</code>（404）與 <code>?word=</code>（關鍵字傳不進去）。<br><br>' +
-        '<b>就算全部都不行也不會卡住：</b>點「在 KKBOX 開啟」時會自動複製關鍵字，' +
-        '在 KKBOX 搜尋框貼上即可；或用「🔗 貼上分享連結」把 App 的正式連結釘上去，之後直接開 App。</div>' +
+      '<div class="banner"><b>每一週怎麼用（三步驟）</b><br>' +
+        "1. 點左側週次 → 展開曲目 → <b>先讀「播放前先讀」那一格</b>，知道這次要聽什麼<br>" +
+        "2. 版本清單<b>選一個就好</b>（最上面那個是建議首選），點「在 KKBOX 開啟」<br>" +
+        "3. 聽完回來勾掉任務。時間不夠就<b>只做每首的第一項「必做」</b>，然後前進到下一週——" +
+        "<b>課程的連續性比單週的完整性重要。</b></div>" +
       '<div class="rowbtns"><button class="iconbtn on" data-go="week-1">從第 1 週開始</button>' +
-      '<button class="iconbtn" data-go="p-hires">先看 Hi-Res 設定說明</button>' +
-      '<button class="iconbtn" data-open="settings">測試連結格式</button></div></div>';
+      '<button class="iconbtn" data-go="p-hires">先開好 Hi-Res 音質設定</button>' +
+      '<button class="iconbtn" data-go="p-method">課程設計原則</button></div></div>';
 
     h += '<div class="card" id="p-hires"><h2>Hi-Res / Hi-Fi 版本怎麼挑</h2>' +
       '<div class="enttl">本站所有版本清單都預設把高解析排在最前面</div>' +
@@ -536,23 +522,9 @@
         opt("my", S.region, "馬來西亞 my") + opt("jp", S.region, "日本 jp") + "</select></div>" +
       '<div class="fld"><label>介面語言</label><select id="setLang">' +
         opt("tc", S.lang, "繁體中文 tc") + opt("sc", S.lang, "簡體中文 sc") + opt("en", S.lang, "English en") + opt("ja", S.lang, "日本語 ja") + "</select></div>" +
-      '<div class="fld"><label>搜尋連結格式（目前：' + esc(SCHEMES[S.scheme].label) + "）</label>" +
-        '<div class="hint" style="margin-bottom:8px">下面每一個都用同一組關鍵字 <code>' + esc(TESTQ) + '</code> 測試。<b>逐一點開，哪一個真的跑出搜尋結果，就按它旁邊的「設為預設」</b>，之後全站連結都會改用那個格式。這只需要做一次。</div>' +
-        '<ul class="vlist">' + SCHEME_ORDER.map(function (k) {
-          var cur = k === S.scheme;
-          return '<li class="v ' + (cur ? "hires" : "hifi") + '"><div><div class="p">' + esc(SCHEMES[k].label) + (cur ? "　← 目前使用" : "") + "</div>" +
-            '<div class="sub" style="word-break:break-all">' + esc(SCHEMES[k].build(TESTQ, S.region, S.lang)) + "</div></div>" +
-            '<div class="acts"><a class="play" href="' + esc(SCHEMES[k].build(TESTQ, S.region, S.lang)) + '" target="_blank" rel="noopener">測試</a>' +
-            '<button class="copy" data-setscheme="' + k + '"' + (cur ? " disabled style=\"opacity:.45\"" : "") + ">設為預設</button></div></li>";
-        }).join("") + "</ul>" +
-        '<div class="hint"><b>怎麼判讀：</b><br>' +
-          "· 出現搜尋結果 → 就是它，按「設為預設」<br>" +
-          "· 「請輸入一些關鍵字」→ 參數名不對，換下一個<br>" +
-          "· 「抱歉，找不到你要的頁面」→ 路徑不對，換下一個</div>" +
-        '<div class="hint" style="margin-top:8px"><b>已由實測排除，不必再試：</b><br>' +
-          RULED_OUT.map(function (r) { return "· <code>" + esc(r[0]) + "</code> — " + esc(r[1]); }).join("<br>") + "</div>" +
-        '<div class="hint" style="margin-top:8px">全部都失敗也不影響使用：每個版本旁的「複製搜尋字串」永遠可用，' +
-          "而「🔗 貼上分享連結」釘選過的版本會完全跳過搜尋、直接開啟 App。</div></div>" +
+      '<div class="fld"><label>搜尋連結格式</label>' +
+        '<div class="hint">已固定為 <code>www.kkbox.com/' + esc(S.region) + "/" + esc(S.lang) + '/search?q=…</code>（經實測確認可用）。<br>' +
+        "若日後 KKBOX 改版導致連結失效，仍可用每個版本旁的「複製搜尋字串」，或用「🔗 貼上分享連結」把 App 的正式網址釘上去。</div></div>" +
       "<h3>版本排序</h3>" +
       '<div class="fld"><label><input type="checkbox" id="setHires"' + (S.hiresFirst ? " checked" : "") + '> 高解析優先排序（Hi-Res → Hi-Fi → 歷史錄音）</label>' +
         '<div class="hint">關閉後改以編者推薦順序排列。</div></div>' +
@@ -610,12 +582,6 @@
     var find = function (a) { return t.closest("[" + a + "]"); };
 
     // 開啟 KKBOX 時順手把關鍵字放進剪貼簿：萬一搜尋頁是空的，直接貼上即可
-    var pl = t.closest("a.play");
-    if (pl && pl.getAttribute("data-q") && !pinned(pl.getAttribute("data-q"))) {
-      copyText(pl.getAttribute("data-q"));
-      toast("已複製關鍵字——若 KKBOX 搜尋頁是空的，直接貼上");
-      // 不 return，讓連結照常開啟
-    }
     var pn = find("data-pin");
     if (pn) {
       var pq = pn.getAttribute("data-pin");
@@ -632,12 +598,6 @@
       S.links[pq] = r.url; save(); render(); toast("已釘選——這一版現在會直接開啟 App");
       return;
     }
-    var st = find("data-setscheme");
-    if (st) {
-      S.scheme = st.getAttribute("data-setscheme"); save(); render(); openDrawer("settings");
-      toast("已設為預設：" + SCHEMES[S.scheme].label); return;
-    }
-
     var go = find("data-go");
     if (go) {
       var id = go.getAttribute("data-go");
