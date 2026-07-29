@@ -101,7 +101,27 @@ assets/data-weeks.js    24 週單元內容
 assets/data-links.js    內建的 KKBOX 正式連結（跨裝置共用）
 assets/app.js           渲染與互動邏輯
 build.js                產生單檔版本
+tools/resolve-kkbox.mjs 用 KKBOX Open API 批次解析正式連結（需自備憑證）
+HANDOFF.md              上述工作的交接說明與限制
 ```
+
+### 批次解析正式連結
+
+手動釘選之外，也可用 KKBOX Open API 一次解析全部 305 個版本：
+
+```bash
+export KKBOX_CLIENT_ID=...      # https://developer.kkbox.com/ 免費申請
+export KKBOX_CLIENT_SECRET=...
+node tools/resolve-kkbox.mjs --dry-run --limit=10   # 先試跑
+node tools/resolve-kkbox.mjs                        # 正式執行
+node build.js
+```
+
+高信心的結果寫入 `assets/data-links.js`；比對不確定的改列入
+`tools/review-needed.json` 附前三名候選供人工挑選——**寧可攔截也不寫錯**，
+錯誤的連結會把使用者導到錯誤的錄音，比留白更糟。
+
+腳本無外部相依，API 契約取自 KKBOX 官方 Python SDK。詳見 [HANDOFF.md](HANDOFF.md)。
 
 ### 產生單檔版本
 
