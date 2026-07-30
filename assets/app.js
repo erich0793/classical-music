@@ -11,6 +11,9 @@
     region: "tw", lang: "tc",
     hiresFirst: true, hideHistoric: false, theme: "auto",
     done: {}, tasks: {}, checks: {}, fav: {},
+    // 每週的概念區塊是否收起（{ 週次: false } = 已收起）。預設展開，
+    // 因為第一次讀概念是課程設計的一部分；重聽時可自行收起。
+    theory: {},
     // 使用者從 KKBOX App「分享 → 複製連結」貼回來的正式網址，key = 搜尋字串。
     // 這種連結帶有專輯／歌曲 ID，手機上點擊會由 Universal Link 直接開啟 App。
     links: {}
@@ -134,7 +137,7 @@
   /* ---------------- 渲染：曲目 ---------------- */
   function workHTML(id, wk) {
     var w = WORKS[id];
-    if (!w) return '<div class="work"><div class="workhd"><div class="ttl"><b>（缺少資料：' + esc(id) + "）</b></div></div></div>";
+    if (!w) return '<div class="work"><div class="workhd"><button class="ttl" aria-expanded="false"><b>（缺少資料：' + esc(id) + "）</b></button></div></div>";
     var vs = sortVersions(w.versions || []);
     var open = false;
     var fav = !!S.fav[id];
@@ -151,7 +154,9 @@
         esc((w.title + " " + (w.en || "") + " " + w.composer + " " + w.q + " " + (w.versions || []).map(function (v) { return v.p; }).join(" ")).toLowerCase()) + '">' +
       '<div class="workhd">' +
         '<button class="star' + (fav ? " on" : "") + '" data-fav="' + esc(id) + '" title="加入／移出重聽區">' + (fav ? "★" : "☆") + "</button>" +
-        '<div class="ttl"><b>' + esc(w.title) + "</b><em>" + esc(w.en || "") + " · " + esc(w.composer) + "</em></div>" +
+        /* .ttl 必須是 button：原本的 <div> 無法聚焦，鍵盤使用者根本展不開曲目，
+           也就拿不到任務與播放連結。不把整個 .workhd 變成 button，否則會嵌套 .star。 */
+        '<button class="ttl" aria-expanded="' + (open ? "true" : "false") + '"><b>' + esc(w.title) + "</b><em>" + esc(w.en || "") + " · " + esc(w.composer) + "</em></button>" +
         '<span class="chev">▶</span>' +
       "</div>" +
       '<div class="workbd">' +
@@ -205,18 +210,27 @@
     h += "<h2>第 " + wk.n + " 週｜" + esc(wk.title) + (wk.flag ? '<span class="flag">' + esc(wk.flag) + "</span>" : "") + "</h2>";
     h += '<div class="enttl">' + esc(wk.en || "") + "</div>";
 
+    /* 概念與背景放進可摺疊區。課程要求每首曲目重複聽 4–6 次，同一週會回訪多次，
+       概念只在第一次要讀；不摺疊的話每次都得滑過最多 1,365px 才看到播放鈕。
+       用原生 <details> 而非自製摺疊，因為 <summary> 本身就可聚焦、可用 Enter/Space 開合。 */
+    var thy = "";
     // 時期概覽（模組首週）
-    if (mod.period && mod.weeks[0] === wk.n) h += periodHTML(CORE.periods[mod.period]);
-    if (mod.goal && mod.weeks[0] === wk.n) h += '<div class="banner"><b>本模組目標：</b>' + esc(mod.goal) + "</div>";
-    if (wk.banner) h += '<div class="banner">' + wk.banner + "</div>";
+    if (mod.period && mod.weeks[0] === wk.n) thy += periodHTML(CORE.periods[mod.period]);
+    if (mod.goal && mod.weeks[0] === wk.n) thy += '<div class="banner"><b>本模組目標：</b>' + esc(mod.goal) + "</div>";
+    if (wk.banner) thy += '<div class="banner">' + wk.banner + "</div>";
 
     if (wk.concept && wk.concept.length) {
-      h += "<h3>本週核心概念</h3>";
-      wk.concept.forEach(function (c) { h += "<p>" + tierTags(c.tier) + c.t + "</p>"; });
+      thy += "<h3>本週核心概念</h3>";
+      wk.concept.forEach(function (c) { thy += "<p>" + tierTags(c.tier) + c.t + "</p>"; });
     }
-    if (wk.table) h += tableHTML(wk.table);
-    if (wk.key) h += '<div class="banner">' + wk.key + "</div>";
-    if (wk.note) h += '<div class="note">' + tierTags(wk.note.tier) + wk.note.t + "</div>";
+    if (wk.table) thy += tableHTML(wk.table);
+    if (wk.key) thy += '<div class="banner">' + wk.key + "</div>";
+    if (wk.note) thy += '<div class="note">' + tierTags(wk.note.tier) + wk.note.t + "</div>";
+    if (thy) {
+      h += '<details class="theory" data-theory="' + wk.n + '"' + (S.theory[wk.n] === false ? "" : " open") + ">" +
+        "<summary>本週概念與背景<span class=\"hint\">（重聽時可收起，直接跳到曲目）</span></summary>" +
+        thy + "</details>";
+    }
 
     if (wk.works && wk.works.length) {
       h += "<h3>必聽曲目與版本建議 " + tierTags("選") + "</h3>";
@@ -863,8 +877,11 @@
       updateProgress();
       return;
     }
-    if (t.id === "favBtn" || t.id === "favBtn2") { openDrawer("fav"); return; }
-    if (t.closest('[data-open="settings"]') || t.id === "setBtn") { openDrawer("settings"); return; }
+    /* 用 closest 而非 t.id：★／⚙ 兩顆按鈕內含 <span class="lbl">，
+       點在「重聽區」「設定」這幾個字上時 e.target 會是那個 span，id 為空，
+       按鈕就沒反應——只有點到圖示才有用。 */
+    if (t.closest("#favBtn") || t.closest("#favBtn2")) { openDrawer("fav"); return; }
+    if (t.closest('[data-open="settings"]') || t.closest("#setBtn")) { openDrawer("settings"); return; }
     if (t.id === "scrim" || t.id === "drawerClose") { closeDrawer(); return; }
     if (t.id === "menuBtn") { $("#side").classList.toggle("open"); return; }
     if (t.id === "favCopy") { var txt = favText(); if (txt) { copyText(txt); toast("已複製，可直接貼進 KKBOX 逐首搜尋"); } return; }
@@ -922,7 +939,26 @@
     }
     // 展開曲目
     var hd = t.closest(".workhd");
-    if (hd && !t.closest(".star")) { hd.parentElement.classList.toggle("open"); return; }
+    if (hd && !t.closest(".star")) {
+      var on = hd.parentElement.classList.toggle("open");
+      var ttl = hd.querySelector(".ttl");
+      if (ttl) ttl.setAttribute("aria-expanded", on ? "true" : "false");
+      return;
+    }
+  });
+
+  /* <details> 的 toggle 不會冒泡，必須用捕獲階段監聽 */
+  document.addEventListener("toggle", function (e) {
+    var d = e.target;
+    if (!d.hasAttribute || !d.hasAttribute("data-theory")) return;
+    var n = d.getAttribute("data-theory");
+    if (d.open) delete S.theory[n]; else S.theory[n] = false;
+    save();
+  }, true);
+
+  /* 收起的 <details> 內容不會列印，列印前先全部展開 */
+  window.addEventListener("beforeprint", function () {
+    $$("details").forEach(function (d) { d.open = true; });
   });
 
   document.addEventListener("change", function (e) {
