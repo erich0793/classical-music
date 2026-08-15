@@ -6,7 +6,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Nocturnes",
     composer: "Frédéric Chopin",
     q: "Chopin Nocturnes",
-    pick: "課程指定 Arthur Rubinstein。第 22 週會用夜曲做獨奏曲的版本比較——獨奏曲的版本差異通常比管弦樂更容易察覺。",
+    pick: "課程指定 Arthur Rubinstein。第 22 週會用夜曲做版本比較，<b>建議先熟悉 Op. 9 No. 2 這一首</b>。",
     bg: "蕭邦一生寫了 21 首夜曲，橫跨整個創作生涯，因此這一套等於<b>他風格演變的縮影</b>——從早期承襲 John Field 的優雅小品，到晚期結構更複雜、和聲更大膽的作品。共同特徵是「左手鋪底、右手歌唱」，而右手那條線的自由伸縮（rubato）正是浪漫派演奏美學的核心。蕭邦自己的說法是：<b>左手像指揮，必須維持穩定；右手才可以自由。</b>",
     versions: [
       { p: "Maria João Pires", l: "DG", y: 1996, qa: "hires", t: ["ref"], q: "Chopin Nocturnes Pires", w: "數位時代的代表全集，rubato 自然不做作。高解析首選。" },
@@ -22,7 +22,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Ballade No. 1 in G minor",
     composer: "Frédéric Chopin",
     q: "Chopin Ballade No 1 Op 23",
-    pick: "課程指定 Krystian Zimerman。此曲無標準曲式標籤，結構由敘事邏輯而非形式範本決定。",
+    pick: "課程指定 Krystian Zimerman。全曲約 9 分鐘，<b>不要只聽開頭</b>——這首的重量全在後半。",
     bg: "蕭邦<b>首次把「敘事曲 ballade」這個原屬文學與聲樂的名稱用在鋼琴獨奏曲上</b>，一共寫了四首，都沒有標示具體故事。舒曼曾記述蕭邦提到這些作品與波蘭詩人 Mickiewicz 的敘事詩有關，但兩者的對應關係從未被確認，屬長期未決的問題。此曲最著名的是最後一分多鐘的尾聲：速度突然加倍，像失控般衝向結尾。",
     versions: [
       { p: "Krystian Zimerman", l: "DG", y: 1987, qa: "hires", t: ["ref"], q: "Chopin Ballades Zimerman", w: "課程指定版，也是公認第一參考。DG 有 24bit 重製。" },
@@ -51,7 +51,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Kinderszenen",
     composer: "Robert Schumann",
     q: "Schumann Kinderszenen Op 15",
-    pick: "含著名的〈夢幻曲 Träumerei〉。全套 13 首約 18 分鐘，觀察「一組短曲如何構成一個整體」。",
+    pick: "含著名的〈夢幻曲 Träumerei〉。全套 13 首約 18 分鐘，<b>建議一次聽完</b>而不是單曲播放。",
     bg: "1838 年作。舒曼原本寫了 30 首小品，最後只選出 13 首出版，而且<b>所有標題都是寫完之後才加上的</b>——他自己說那是「給演奏者的提示，不是描寫」。關鍵在於：這不是寫給小孩彈的曲子，而是<b>成年人回望童年</b>的作品。最後一首〈詩人的話〉突然轉為旁白視角，整組曲子的敘事者才現身。",
     versions: [
       { p: "Arcadi Volodos", l: "Sony", y: 2017, qa: "hires", t: ["ref"], q: "Schumann Kinderszenen Volodos", w: "近年錄音，弱奏控制驚人，高解析首選。" },
@@ -66,7 +66,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Erlkönig",
     composer: "Franz Schubert",
     q: "Schubert Erlkonig D 328",
-    pick: "課程指定 Dietrich Fischer-Dieskau / Gerald Moore。一名歌手需扮演四個角色，鋼琴的三連音持續模擬奔馳的馬蹄。先查閱歌詞中文翻譯再聽。",
+    pick: "課程指定 Dietrich Fischer-Dieskau / Gerald Moore。此曲有男聲與女聲版本，<b>先聽男中音版</b>——四個角色的音區差異最清楚。",
     bg: "舒伯特 18 歲時所作，取材自歌德的同名敘事詩。鋼琴右手的<b>連續三連音從頭貫穿到尾</b>——技術上極為累人，模擬的是馬蹄，也是孩子的心跳。四個角色以音區區分：敘述者中音域、父親低音域、孩子高音域且一次比一次高、魔王則刻意甜美。最後一句「孩子已經死了」是幾乎無伴奏的宣敘——音樂在此突然停止假裝。",
     answer: {
       label: "📖 歌詞大意與角色對照",
@@ -114,7 +114,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Franz Schubert",
     q: "Schubert Winterreise",
     fact: "Schubert（1797–1828）創作藝術歌曲逾 600 首。《冬之旅》為 24 首連篇歌曲集，詩作出自 Wilhelm Müller。",
-    pick: "先聽第一首〈Gute Nacht〉與最後一首〈Der Leiermann〉，感受起點與終點的情緒落差。",
+    pick: "全套 24 首約 70 分鐘。入門階段<b>只聽第一首與最後一首</b>即可，不必全聽。",
     versions: [
       { p: "Jonas Kaufmann / Helmut Deutsch", l: "Sony", y: 2014, qa: "hires", t: ["ref"], q: "Schubert Winterreise Jonas Kaufmann", w: "近年錄音規格最高，男高音音色使絕望感更外顯。" },
       { p: "Matthias Goerne / Christoph Eschenbach", l: "Harmonia Mundi", y: 2011, qa: "hires", t: ["ref"], q: "Schubert Winterreise Goerne Eschenbach", w: "當代最受推崇的版本之一，錄音層次極佳。" },
@@ -145,7 +145,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Hector Berlioz",
     q: "Berlioz Symphonie fantastique",
     fact: "作於 1830 年，副標為「一位藝術家生涯中的插曲」，作曲家為其撰寫了詳細的情節綱要。五樂章。",
-    pick: "任務：記住第一樂章的 idée fixe（代表「摯愛」的主題），再跳到第五樂章找出同一旋律被扭曲成怪誕版本的段落。",
+    pick: "全曲約 50 分鐘。時間有限的話，<b>只聽第一樂章與第五樂章</b>就能完成本週任務。",
     life: "第五樂章引用了葛利果聖歌〈震怒之日 Dies irae〉——就是第 2 週聽的那種單音織體。這段旋律自此成為西方配樂中代表「死亡」的固定符號，至今仍不斷出現在恐怖片配樂裡。",
     answer: {
       intro: "<b>idée fixe（固定樂思）＝代表「摯愛」的同一段旋律，在五個樂章各變形一次。</b>" +
@@ -190,7 +190,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Pictures at an Exhibition",
     composer: "Modest Mussorgsky（Ravel 管弦樂版）",
     q: "Mussorgsky Pictures at an Exhibition Ravel",
-    pick: "各曲之間穿插的〈漫步 Promenade〉代表參觀者在畫作之間行走。任務：數出〈漫步〉出現幾次。",
+    bg: "1874 年為悼念早逝的好友、建築師兼畫家 Viktor Hartmann 而作，取材自他的遺作展。<b>Hartmann 的原畫多數已散佚</b>，今日能與樂曲對應的僅存約六幅——也就是說，大部分樂章描繪的畫作已無從查證。原作為鋼琴獨奏；1922 年 Ravel 受指揮 Koussevitzky 委託改編為管弦樂，此版本的流傳遠廣於原曲，多數人聽到的其實是 Ravel 的配器。",
+    pick: "<b>先決定要聽鋼琴原版還是 Ravel 管弦樂版</b>——兩者的段落數不同（見對照表）。想聽配器選 Ravel 版，想聽結構選鋼琴版。",
     life: "1971 年英國前衛搖滾樂團 Emerson, Lake &amp; Palmer 把全曲改編成搖滾版本並發行專輯，是古典作品進入流行樂界最著名的案例之一。",
     answer: {
       intro: "<b>注意：答案取決於你聽的是哪個版本。</b>鋼琴原版有 <b>5 次</b>獨立的〈漫步〉，" +
@@ -247,7 +248,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Symphony No. 4 in E minor",
     composer: "Johannes Brahms",
     q: "Brahms Symphony No 4 Op 98",
-    pick: "末樂章為帕薩卡里亞（passacaglia），建立於一段反覆的低音主題之上，主題共出現 30 餘次——這是巴洛克技術在十九世紀末的復歸。",
+    pick: "<b>重點在末樂章</b>（第四樂章，約 10 分鐘），不必從頭聽完整首。",
     bg: "布拉姆斯最後一首交響曲，1885 年首演。末樂章是<b>帕薩卡里亞（passacaglia）</b>：一段八小節的低音主題重複三十餘次，上面不斷更換織體——這個形式來自巴洛克，主題本身取自巴赫的一首清唱劇。在浪漫派晚期用這種古老形式寫終樂章是刻意的宣示。首演時連他的支持者都覺得過於嚴峻。",
     versions: [
       { p: "Carlos Kleiber / Vienna Phil", l: "DG", y: 1981, qa: "hires", t: ["ref"], q: "Brahms Symphony 4 Kleiber", w: "公認的第一參考。DG 有 24bit 重製，優先找 Hi-Res 標記。" },
@@ -262,7 +263,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Symphony No. 6 'Pathétique'",
     composer: "Pyotr Ilyich Tchaikovsky",
     q: "Tchaikovsky Symphony No 6 Pathetique",
-    pick: "傳統交響曲末樂章多為快速、外向、收束於強奏；此曲末樂章為緩慢的哀歌，且以極弱的消散作結。",
+    pick: "<b>重點在末樂章</b>。若只有 15 分鐘，直接聽第四樂章。",
     bg: "1893 年 10 月首演，<b>九天後柴可夫斯基去世</b>，死因至今有霍亂與自殺兩說並存。「悲愴」的副標由其弟 Modest 建議。首演反應冷淡，第二次演出（在他去世之後）才引發轟動。<b>第三樂章是一場氣勢磅礴的進行曲，聽起來完全像終樂章</b>——現場常有觀眾在此鼓掌，而真正的末樂章接著以極弱的消散作結。",
     versions: [
       { p: "Teodor Currentzis / MusicAeterna", l: "Sony", y: 2017, qa: "hires", t: [], q: "Tchaikovsky Symphony 6 Currentzis", w: "近年錄音規格最高，末樂章的消散處理極端，動態範圍很考驗設備。" },
@@ -309,6 +310,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "La bohème",
     composer: "Giacomo Puccini",
     q: "Puccini La boheme",
+    bg: "1896 年首演，改編自 Murger 的小說《波希米亞人的生活情景》。<b>Puccini 與同輩作曲家 Leoncavallo 幾乎同時著手同一題材並公開翻臉</b>，兩人各自完成一部《波希米亞人》。Puccini 的版本由當時仍年輕的 Toscanini 指揮首演，最終完全取代了對方的版本——今日幾乎沒有人記得還有另一部。",
     pick: "〈Che gelida manina〉、〈Sì, mi chiamano Mimì〉。若要挑戰完整歌劇，本劇約 110 分鐘、劇情單純，是最好的起點。",
     life: "1996 年的百老匯音樂劇《吉屋出租 RENT》即以本劇為藍本改編，把十九世紀巴黎的貧病藝術家搬到 1990 年代的紐約東村。",
     answer: {
@@ -343,6 +345,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Turandot",
     composer: "Giacomo Puccini",
     q: "Puccini Turandot",
+    bg: "Puccini 因喉癌病逝時<b>此劇尚未完成</b>，總譜停在柳兒之死。1926 年首演由 Toscanini 指揮，演到柳兒死後他放下指揮棒轉身對觀眾說「歌劇到此結束，因為大師在此擱筆」，全場在沉默中散場。現行常用的結尾由 Franco Alfano 依 Puccini 遺留的草稿續寫，另有 Luciano Berio 於 2001 年完成的版本——<b>沒有一個是 Puccini 自己的</b>。",
     pick: "〈Nessun dorma〉。",
     life: "〈Nessun dorma〉因帕華洛帝的演唱、以及 1990 年義大利世界盃採用為主題曲，成為當代最廣為人知的詠嘆調。",
     versions: [
@@ -358,6 +361,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Die Walküre – Ride of the Valkyries",
     composer: "Richard Wagner",
     q: "Wagner Die Walkure Ride of the Valkyries",
+    bg: "出自四聯劇《尼伯龍指環》的第二部（1870 年首演）。全套四部總長約 15 小時，Wagner 為此在拜魯特<b>蓋了一座專屬劇院</b>，並藉此重新定義了劇場形式：樂池下沉到看不見、演出時觀眾席全暗——這兩件今日視為理所當然的事，都是從那裡開始的。〈女武神的騎行〉常被單獨抽出演奏，也因 1979 年電影《現代啟示錄》而廣為人知，但那是後人的挪用，與劇情無關。",
     life: "〈女武神的騎行〉因電影《現代啟示錄》(1979) 的直升機空襲場景而深植大眾記憶。",
     versions: [
       { p: "Georg Solti / Vienna Phil", l: "Decca", y: 1965, qa: "hires", t: ["ref"], q: "Wagner Die Walkure Solti", w: "Decca《指環》全集，錄音史上的里程碑，有 24bit 重製。" },
@@ -372,7 +376,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Tristan und Isolde – Prelude",
     composer: "Richard Wagner",
     q: "Wagner Tristan und Isolde Prelude",
-    pick: "開頭數小節的和聲（俗稱「崔斯坦和弦」）長時間不解決至穩定終止。任務：感受那種「一直想要落地卻始終落不下來」的懸置感。",
+    pick: "<b>只聽前奏曲</b>（約 10 分鐘）即可，不需要碰完整歌劇（約 4 小時）。",
     bg: "1865 年首演，此前曾經歷多次排練後被判定「<b>無法演出</b>」而放棄。開頭那個和弦（「崔斯坦和弦」）的功能歸屬至今在理論界沒有定論——它同時可被解釋成多種和聲，而華格納讓它<b>遲遲不解決</b>，把「渴望」寫成了結構本身。此作與他和 Mathilde Wesendonck 的關係有關，但關聯程度屬未定之論。",
     versions: [
       { p: "Christian Thielemann / Vienna Phil", l: "DG", y: 2004, qa: "hires", t: [], q: "Wagner Tristan und Isolde Prelude Thielemann", w: "近年錄音，弱奏起始的細節最清楚，高解析首選。" },
@@ -387,8 +391,9 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Má vlast – Vltava",
     composer: "Bedřich Smetana",
     q: "Smetana Ma Vlast Vltava",
+    bg: "出自交響詩套曲《我的祖國》（1874–79）的第二首。<b>Smetana 開始寫這套曲子時已經完全失聰</b>——〈莫爾道河〉是在他聽不見任何聲音的狀態下寫成的。整套《我的祖國》共六首，寫作橫跨五年，是十九世紀「用音樂建立民族認同」最完整的一次實踐。",
     country: "捷克",
-    pick: "描繪一條河流從源頭到入海的全程。閉眼聽，試著標記出：兩條溪流匯合、林中狩獵、鄉村婚禮、月光下的水仙女、急流、河流開闊入城。",
+    pick: "單曲約 12 分鐘，是整套《我的祖國》中<b>最適合單獨聽的一首</b>。搜尋時用 Má vlast 或 Vltava 皆可。",
     life: "〈莫爾道河〉的主題旋律與以色列國歌〈希望 Hatikvah〉高度相似——兩者被認為源自同一支流傳於歐洲的古老曲調（常追溯至〈La Mantovana〉）。",
     answer: {
       intro: "Smetana 自己寫下了這首的解說，所以段落有標準答案。順序如下（約 12 分鐘）。",
@@ -421,6 +426,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Symphony No. 9 'From the New World'",
     composer: "Antonín Dvořák",
     q: "Dvorak Symphony No 9 New World",
+    bg: "1893 年作於 Dvořák 受聘擔任紐約國家音樂學院院長期間。他公開主張美國作曲家應從黑人靈歌與原住民音樂中尋找自己的素材，此曲即為示範——但<b>他明言曲中並無任何直接引用的既有旋律</b>，而是「用那些音樂的精神寫的」。這個區分很重要：它是<b>模仿一種語法</b>，不是拼貼素材。",
     country: "捷克（作於美國時期）",
     pick: "第二樂章（Largo）的主要旋律極為著名。",
     life: "第二樂章的旋律後來被填詞成歌曲〈Goin' Home〉，在台灣以〈念故鄉〉之名廣為傳唱——很多人是先會唱這首歌，多年後才知道它出自一首交響曲。",
@@ -438,6 +444,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Finlandia",
     composer: "Jean Sibelius",
     q: "Sibelius Finlandia",
+    bg: "1899 年作於俄國強化對芬蘭統治、實施新聞審查的時期，原是一場<b>抗議審查的募款演出</b>所用的配樂終曲。當時的政治意涵極為明確，此曲一度必須改用無關的名稱（例如〈即興曲〉）才能規避演出禁令。中段的聖詠式旋律後來被填詞成〈芬蘭頌讚歌〉，成為芬蘭的非官方國歌——<b>但它是 Sibelius 為此曲原創的，不是既有民謠</b>。",
     country: "芬蘭",
     life: "曲中段落的聖詠旋律後來被填詞成〈Finlandia Hymn〉，並在英語世界成為著名聖詩〈Be Still, My Soul〉。",
     versions: [
@@ -454,8 +461,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Nikolai Rimsky-Korsakov",
     q: "Rimsky-Korsakov Scheherazade",
     country: "俄國",
-    pick: "小提琴獨奏代表說故事的 Scheherazade，與代表蘇丹的低音銅管主題交替出現——主導動機技術的另一應用。",
-    bg: "1888 年作。四個樂章各對應《一千零一夜》的片段，但 Rimsky-Korsakov <b>後來刻意刪去了原本的樂章標題</b>——他不希望聽眾把它當成情節音樂，說那些標題只是「引導想像的方向」。小提琴獨奏代表說故事的 Scheherazade，是全曲唯一貫穿四個樂章的角色。他同時是俄國最重要的配器法教師，此曲長年被當作配器教材。",
+    pick: "全曲約 45 分鐘，<b>先聽第一樂章</b>即可。小提琴獨奏的音色是版本之間差最多的地方。",
+    bg: "1888 年作。四個樂章各對應《一千零一夜》的片段，但 <b>Rimsky-Korsakov 後來刻意刪去了原本的樂章標題</b>——他不希望聽眾把它當成情節音樂，說那些標題只是「引導想像的方向」。他同時是俄國最重要的配器法教師（Stravinsky 即其學生），此曲長年被當作配器教材使用。",
     versions: [
       { p: "Valery Gergiev / Kirov Orchestra", l: "Philips", y: 2001, qa: "hires", t: [], q: "Rimsky-Korsakov Scheherazade Gergiev", w: "近年數位錄音，配器細節豐富。" },
       { p: "Fritz Reiner / Chicago SO", l: "RCA", y: 1960, qa: "hifi", t: ["ref"], q: "Rimsky-Korsakov Scheherazade Reiner", w: "Living Stereo 名盤，長年公認第一參考，有 24bit 重製。" },
@@ -469,6 +476,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Peer Gynt Suites",
     composer: "Edvard Grieg",
     q: "Grieg Peer Gynt Suite",
+    bg: "原為 Ibsen 同名詩劇（1876）所寫的劇場配樂，共二十餘段，Grieg 後來抽出 8 段編成兩套組曲。<b>他自己並不喜歡這份委託</b>，寫信抱怨〈山魔王的宮殿〉「充滿牛糞味、極端的挪威味與自滿，我簡直受不了」。另一個常見的誤會：〈晨曲〉常被當成描寫挪威的清晨，<b>它在劇中其實是摩洛哥沙漠的日出</b>。",
     country: "挪威",
     life: "〈山魔王的宮殿〉與〈清晨〉是廣告、卡通與電玩配樂的常客，辨識度極高。",
     versions: [
@@ -485,7 +493,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Claude Debussy",
     q: "Debussy Prelude a l'apres-midi d'un faune",
     fact: "1894 年首演。",
-    pick: "注意此曲沒有明確的節拍感，也沒有傳統意義的「主題呈示」。與 Mozart K. 550 開頭做直接對比。",
+    pick: "全曲僅約 10 分鐘，<b>建議完整聽完</b>——這首短到不需要挑段落。",
     versions: [
       { p: "François-Xavier Roth / Les Siècles", l: "Harmonia Mundi", y: 2017, qa: "hires", t: ["period"], q: "Debussy Prelude a l'apres-midi Les Siecles Roth", w: "使用世紀之交的法國樂器，長笛音色與現代完全不同。近年高解析錄音。" },
       { p: "Pierre Boulez / Cleveland Orchestra", l: "DG", y: 1991, qa: "hires", t: ["ref"], q: "Debussy Prelude a l'apres-midi Boulez Cleveland", w: "結構最透明的讀法，數位錄音。" },
@@ -499,7 +507,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Clair de Lune（出自《貝加馬斯克組曲》）",
     composer: "Claude Debussy",
     q: "Debussy Clair de Lune",
-    pick: "本模組中最容易親近的一首，可作為心理緩衝。",
+    bg: "出自《貝加馬斯克組曲》，1890 年動筆但直到 1905 年才出版，屬 Debussy 的<b>早期作品</b>——寫作時他還沒發展出後來被稱為印象派的語言。標題取自 Verlaine 的同名詩。順帶一提，<b>Debussy 本人強烈反對「印象派」這個標籤</b>，稱那是「蠢批評家在用的詞」；這個分類是外界貼上去的，不是他的自我認同。",
+    pick: "約 5 分鐘，是本模組中<b>最容易親近的一首</b>，適合排在較難的曲目之後當緩衝。",
     life: "廣泛用於電影，最著名的包括《瞞天過海》(Ocean's Eleven) 的結尾噴泉場景。",
     versions: [
       { p: "Seong-Jin Cho", l: "DG", y: 2021, qa: "hires", t: [], q: "Debussy Clair de Lune Seong-Jin Cho", w: "近年錄音，高解析規格最穩。" },
@@ -529,7 +538,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Boléro",
     composer: "Maurice Ravel",
     q: "Ravel Bolero",
-    pick: "全曲旋律與和聲幾乎不變，只有配器與音量持續累積。任務：記錄每一次旋律重複時新加入的樂器。這是最好的配器法教材。",
+    bg: "1928 年受舞者 Ida Rubinstein 委託的芭蕾配樂。Ravel 把它設計成一個<b>純粹的實驗</b>：旋律、節奏、和聲十五分鐘不變，只讓配器與音量單向累積——他自己形容這是「一首沒有音樂的管弦樂曲」。此曲後來成為他最常被演出、也最賺錢的作品，而他本人認為它被過度重視。",
+    pick: "<b>必須一次聽完</b>（約 15 分鐘）——這首的全部意義都在累積過程，跳著聽等於沒聽。動態範圍極大，Hi-Res 版的差別在此特別明顯。",
     life: "1984 年冬季奧運，英國冰舞選手 Torvill &amp; Dean 以此曲的節目拿下滿分金牌，使它再次成為全球流行話題。",
     answer: {
       intro: "全曲＝<b>同一段旋律重複 18 次</b>（A 段 9 次、B 段 9 次交替），小鼓的節奏型從頭到尾不變，" +
@@ -555,8 +565,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
         ["18", "B", "全體最強奏；<b>結尾突然轉到 E 大調</b>，再摔回 C 大調，以崩塌式的下滑收場"]
       ],
       note: "<b>全曲只有一次和聲事件</b>：最後那次轉到 E 大調。在此之前十五分鐘完全沒有轉調——" +
-        "所以那個轉調聽起來才會像地板突然塌掉。Ravel 自己說這首「沒有音樂，只有管弦樂法」。" +
-        "把它當第 18 週的配器法教材聽，比當音樂聽更接近作曲家的原意。"
+        "所以那個轉調聽起來才會像地板突然塌掉。把它當<b>配器法教材</b>聽，比當音樂聽更接近作曲家的原意。"
     },
     versions: [
       { p: "Charles Dutoit / Montréal SO", l: "Decca", y: 1981, qa: "hifi", t: ["ref"], q: "Ravel Bolero Dutoit", w: "公認的第一參考，每件樂器的進入都聽得一清二楚——正好是本週任務所需。" },
@@ -585,7 +594,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Igor Stravinsky",
     q: "Stravinsky Rite of Spring",
     fact: "1913 年於巴黎香榭麗舍劇院首演，首演當晚觀眾席發生嚴重騷動。",
-    pick: "聽第一部分〈春之預兆〉時試著跟著打拍子——你會失敗。此段使用不規則的重音配置，刻意破壞穩定的節拍預期。",
+    pick: "全曲約 33 分鐘，<b>先聽第一部分</b>（約 15 分鐘）即可。",
     life: "迪士尼 1940 年的《幻想曲 Fantasia》用這首曲子配上地球生命演化與恐龍滅絕的動畫段落。",
     versions: [
       { p: "François-Xavier Roth / Les Siècles", l: "Harmonia Mundi", y: 2013, qa: "hires", t: ["period", "ref"], q: "Stravinsky Rite of Spring Les Siecles Roth", w: "使用 1913 年首演時期的樂器，音色粗糲，近年高解析錄音。極受好評。" },
@@ -631,7 +640,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Music for Strings, Percussion and Celesta, Sz. 106",
     composer: "Béla Bartók",
     q: "Bartok Music for Strings Percussion and Celesta",
-    pick: "第一樂章為賦格——可直接對照第 6 週的 Bach。同一種形式，相隔 200 年，聲響完全不同。",
+    pick: "<b>重點在第一樂章</b>（賦格，約 8 分鐘）。",
     bg: "1936 年受瑞士指揮 Paul Sacher 委託而作。編制刻意分成<b>兩組弦樂團，左右對稱擺放</b>，中間放打擊樂與鋼片琴——聲音會在左右之間來回穿梭。第一樂章的賦格主題從中音 A 出發，以半音向兩側擴張，各聲部的進入依五度循環排列，結構精密到近乎數學。庫柏力克在電影《鬼店》中使用了第三樂章。",
     versions: [
       { p: "Iván Fischer / Budapest Festival Orchestra", l: "Channel Classics", y: 2004, qa: "hires", t: ["ref"], q: "Bartok Music for Strings Percussion Celesta Ivan Fischer", w: "Channel Classics 高解析錄音，匈牙利樂團的語法最道地。" },
@@ -646,9 +655,9 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Verklärte Nacht",
     composer: "Arnold Schoenberg",
     q: "Schoenberg Verklarte Nacht Op 4",
+    bg: "1899 年作，取材自 Richard Dehmel 的同名詩：一對男女在月夜的林中行走，女子坦承自己懷了別人的孩子，男子回應說這個孩子將因他們的愛而成為他的。<b>當年被維也納的音樂家協會退件</b>，理由之一是曲中出現了一個「和聲學教科書上沒有編號的和弦」——退件意見流傳下來的說法是：「它無法演出，因為你無法演出不存在的東西。」此曲屬 Schoenberg 的<b>早期調性作品</b>，聽感接近晚期浪漫派。",
     diff: "低",
-    fact: "作於 1899 年，屬 Schoenberg 早期調性作品，聽感接近晚期浪漫派。",
-    pick: "這證明了：他有能力寫「好聽」的音樂，後來的轉向是選擇而非能力不足。這個認知對接受後續作品至關重要。",
+    pick: "有<b>弦樂六重奏原版與弦樂團版</b>兩種，聽感差異明顯——先聽六重奏原版，聲部線條比較清楚。",
     versions: [
       { p: "Herbert von Karajan / Berlin Phil", l: "DG", y: 1974, qa: "hifi", t: ["ref"], q: "Schoenberg Verklarte Nacht Karajan", w: "弦樂團版的公認名盤，音色極美，是本週最好的入口。" },
       { p: "Pierre Boulez / Ensemble InterContemporain", l: "Sony／DG", y: 1996, qa: "hires", t: [], q: "Schoenberg Verklarte Nacht Boulez", w: "六重奏原始編制版，線條最清楚。" },
@@ -661,8 +670,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Violin Concerto 'To the Memory of an Angel'",
     composer: "Alban Berg",
     q: "Berg Violin Concerto",
+    bg: "1935 年受小提琴家 Louis Krasner 委託。Berg 原本正在寫歌劇《Lulu》，因為 <b>Manon Gropius</b>（Alma Mahler 與建築師 Walter Gropius 的女兒，年僅 18 歲）病逝而中斷創作，改寫此曲並題獻「<b>紀念一位天使</b>」。曲末引用 Bach 的聖詠〈Es ist genug〉（夠了）——十二音列的最後四音恰好與該聖詠的開頭相符，Berg 就此把調性素材接了進來。他在完成後數月即因敗血症去世，此曲成為他<b>最後完成的作品</b>，也成了他自己的安魂曲。",
     diff: "中",
-    fact: "此曲題獻「紀念一位天使」。曲中引用了 Bach 的聖詠——十二音技法與調性素材在此共存。",
     versions: [
       { p: "Isabelle Faust / Claudio Abbado", l: "Harmonia Mundi", y: 2012, qa: "hires", t: ["ref"], q: "Berg Violin Concerto Isabelle Faust", w: "近年最受好評的版本，錄音規格最高。" },
       { p: "Anne-Sophie Mutter / James Levine", l: "DG", y: 1992, qa: "hifi", t: ["ref"], q: "Berg Violin Concerto Mutter", w: "音色最豐潤，情感面最外顯。" },
@@ -691,7 +700,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Anton Webern",
     q: "Webern Five Pieces for Orchestra Op 10",
     diff: "高",
-    pick: "全套五首總長度不到 5 分鐘。任務：只需注意「每個聲音都被單獨對待」的密度與寂靜的使用。",
+    pick: "全套五首總長不到 5 分鐘，<b>建議連聽三次</b>——它短到聽一次來不及留下印象。",
     bg: "1911–13 年作，五首總長不到五分鐘，<b>最短的一首只有六小節</b>。魏本把音樂壓縮到極限：每個音都被單獨配器，同一條旋律線可能由三種樂器輪流承擔（稱為 Klangfarbenmelodie，<b>音色旋律</b>）。力度大量集中在極弱的範圍——所以這首特別需要好的音質與安靜的環境。這種極度濃縮的寫法對戰後的序列主義影響深遠。",
     versions: [
       { p: "Pierre Boulez / Berlin Phil（Webern 全集）", l: "DG", y: 1995, qa: "hires", t: ["ref"], q: "Webern Complete Works Boulez", w: "全集錄音，數位規格佳。極弱奏的細節需要好的音質才聽得到——本曲特別值得找 Hi-Res。" },
@@ -705,7 +714,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Dmitri Shostakovich",
     line: "政治壓力下的交響傳統",
     q: "Shostakovich Symphony No 5",
-    pick: "末樂章結尾究竟是真誠的勝利宣示或反諷，長期為評論者所爭議。任務：形成你自己的判斷。",
+    pick: "<b>重點在末樂章</b>。不同指揮對結尾速度的處理差很多，正好是第 22 週版本比較的好素材。",
     bg: "1937 年作。前一年他的歌劇《穆森斯克郡的馬克白夫人》遭《真理報》點名批判，處境極度危險。此曲首演後被官方接受，並被冠上「<b>一個蘇聯藝術家對於正義批評的實際回應</b>」這句話——<b>但這句話是否出自他本人、是否出於真心，至今爭議不休</b>。據記載首演時觀眾在第三樂章就已落淚，終場掌聲持續半小時。",
     versions: [
       { p: "Andris Nelsons / Boston SO", l: "DG", y: 2015, qa: "hires", t: ["ref"], q: "Shostakovich Symphony 5 Nelsons Boston", w: "近年錄音規格最高，動態極大，獲葛萊美獎。" },
@@ -752,7 +761,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Arvo Pärt",
     line: "神聖極簡主義",
     q: "Arvo Part Spiegel im Spiegel",
-    pick: "約 9 分鐘，極簡至僅有鋼琴與一件獨奏樂器。這是本模組中最容易接受的作品，可作為進入當代音樂的入口。",
+    pick: "約 9 分鐘。有小提琴版與大提琴版，兩者都常見，<b>先聽小提琴版</b>。",
     bg: "1978 年作，是佩爾特離開序列主義、發展出「<b>鐘鳴風格 tintinnabuli</b>」之後的代表作。手法極簡到一句話可以說完：一個聲部走音階，另一個聲部只彈主和弦的三個音——兩者交織產生的效果卻遠遠超過其技術複雜度。標題意為「鏡中之鏡」，指的是兩面鏡子相對時產生的無限反射。",
     versions: [
       { p: "Vladimir Spivakov / Sergej Bezrodny（收於《Alina》）", l: "ECM New Series", y: 1999, qa: "hires", t: ["ref"], q: "Arvo Part Alina ECM", w: "ECM 的《Alina》專輯是此曲的標準版本，錄音空間感極佳，高解析首選。" },
@@ -781,7 +790,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Steve Reich",
     line: "過程性極簡主義 Process Minimalism",
     q: "Steve Reich Music for 18 Musicians",
-    pick: "重點不在旋律，而在細微變化的漸進累積——注意你何時察覺「事情變了」，以及變化實際上是何時開始的。兩者的落差即為此類音樂的核心體驗。",
+    pick: "全曲約 60 分鐘，<b>先聽開頭 10 分鐘</b>即可。",
     bg: "1974–76 年作，全長約一小時。全曲建立在<b>十一個和弦的循環</b>上，而每個和弦持續的長度<b>由演奏者的一次呼吸決定</b>——所以每一場演出的長度都不一樣。沒有指揮，樂手靠彼此的聽覺同步，段落轉換由鐵琴發出信號。首演於紐約市政廳，門票兩美元，觀眾約一百人。",
     versions: [
       { p: "Steve Reich and Musicians", l: "ECM New Series", y: 1978, qa: "hires", t: ["ref"], q: "Steve Reich Music for 18 Musicians ECM", w: "作曲家本人參與的首錄，公認的標準版本。ECM 錄音品質極高。" },

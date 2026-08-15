@@ -52,7 +52,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Peter and the Wolf",
     composer: "Sergei Prokofiev",
     q: "Prokofiev Peter and the Wolf",
-    pick: "任意版本皆可；此曲刻意將「角色—樂器」一對一綁定，是最有效的記憶錨點。",
+    bg: "1936 年受莫斯科中央兒童劇院委託而作，目的明確就是<b>教兒童認識管弦樂器</b>。Prokofiev 當時剛從西方返回蘇聯不久，連故事與旁白台詞都自己寫，總譜在極短時間內完成。全曲把「角色—樂器」一對一綁死，是音樂教育史上最成功的設計之一——結尾鴨子被狼整隻吞下、卻還在肚子裡叫的細節，也是他自己加的。",
+    pick: "任意版本皆可，但<b>旁白版與無旁白版的用途不同</b>：練習辨識時用無旁白版（或先忽略旁白），複習時再聽旁白版當作驗證。",
     life: "長年作為全世界兒童音樂教育的標準教材——很多人第一次認識管弦樂團的樂器就是靠這首。",
     answer: {
       intro: "旁白版會直接報出答案，所以<b>先聽無旁白版或忽略旁白</b>再對照，練習效果才成立。共 <b>7 個</b>角色。",
@@ -80,6 +81,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Le Carnaval des animaux",
     composer: "Camille Saint-Saëns",
     q: "Saint-Saens Carnival of the Animals",
+    bg: "1886 年為朋友的私人音樂會寫的餘興節目。<b>Saint-Saëns 生前禁止此曲出版與公開演出</b>（只准〈天鵝〉單獨演出），因為他認為這種音樂玩笑會損害自己嚴肅作曲家的名聲——全曲直到他死後隔年（1922）才正式問世，結果成為他最廣為人知的作品。曲中大量引用他人與自己的音樂：〈烏龜〉把 Offenbach《天堂與地獄》的康康舞放到極慢，〈化石〉引用自己的《死之舞》與多首法國童謠。",
     pick: "任意版本。每段各以不同樂器組合描繪一種動物，是樂器辨識的絕佳補充教材。",
     answer: {
       intro: "全曲 14 段。編制為<b>兩架鋼琴＋小型室內樂團</b>，所以鋼琴幾乎無所不在；" +
@@ -101,7 +103,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
         ["13", "天鵝", "大提琴獨奏 + 雙鋼琴", "全曲最有名的一段，大提琴長線條"],
         ["14", "終曲", "全體", "前面各段主題輪番再現"]
       ],
-      note: "Saint-Saëns 生前禁止此曲公開出版與演出（只准〈天鵝〉單獨演出），因為他認為這種音樂玩笑會損害自己嚴肅作曲家的名聲——全曲直到他死後隔年（1922）才正式問世。"
+      note: "全曲只有〈天鵝〉是<b>認真寫的抒情曲</b>，其餘十三段幾乎都在開玩笑——這也是為什麼 Saint-Saëns 只肯讓〈天鵝〉單獨演出。聽的時候可以留意：<b>你聽得出哪幾段在引用別人的音樂嗎？</b>（第 4、12 段最明顯）"
     },
     life: "其中的〈天鵝〉是芭蕾獨舞《垂死的天鵝》所用的音樂，也是大提琴最常被單獨演奏的小品之一。",
     versions: [
@@ -204,6 +206,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Für Elise, WoO 59",
     composer: "Ludwig van Beethoven",
     q: "Beethoven Fur Elise",
+    bg: "1810 年寫成，但 <b>Beethoven 生前從未出版</b>。直到 1867 年——他過世 40 年後——才由學者 Ludwig Nohl 依一份手稿發表，而<b>那份手稿此後下落不明</b>，無人再見過。標題上的「Elise」是誰至今沒有定論：常見說法包括 Therese Malfatti（Nohl 可能誤讀了 Beethoven 潦草的字跡）、Elisabeth Röckel 等，皆屬推測。作品存在是【史】，題獻對象是【析】。",
     form: "迴旋曲式 Rondo（主題回歸三次）",
     life: "<b>台灣垃圾車的旋律之一</b>（另一首是巴達捷芙斯卡的《少女的祈禱》）。你大概已經聽過它幾千次了——這週請把它當一首曲子聽，而不是當作要倒垃圾的信號。",
     versions: [
@@ -268,6 +271,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Well-Tempered Clavier Book 1, Prelude in C major",
     composer: "J.S. Bach",
     q: "Bach Well-Tempered Clavier Book 1 Prelude C major",
+    bg: "《平均律鍵盤曲集》第一冊（1722）是<b>示範用的教學曲集</b>：以 24 個大小調依半音順序各寫一組前奏曲與賦格，證明某種調律法可以讓全部調性都能使用。第一首前奏曲全曲只有分解和弦、沒有旋律線——140 年後 Gounod 直接在上面疊了一條旋律，成為著名的《聖母頌》。<b>附帶一提，中文譯名「平均律」並不精確</b>：原題 <i>wohltemperiert</i> 意為「良好調律」，與現代的十二平均律未必相同，Bach 實際使用哪一種調律法學界仍有爭論。",
     key: "無旋律，只有分解和弦——純粹的和聲流動",
     life: "古諾（Gounod）把這首前奏曲原封不動當成伴奏，在上面加了一條新旋律，就成了家喻戶曉的《聖母頌 Ave Maria》。這是「和聲本身就足以撐起一首曲子」最直接的證明。",
     versions: [
@@ -433,7 +437,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Cello Suite No. 1 in G major",
     composer: "J.S. Bach",
     q: "Bach Cello Suite No 1 BWV 1007",
-    pick: "只有一件樂器、一條線，卻透過分解和弦暗示出完整的和聲進行。",
+    bg: "約作於 1717–23 年任職 Köthen 宮廷期間。此後<b>近兩百年間被視為單純的技巧練習曲</b>，沒有人在音樂會上演奏。轉折點是 13 歲的 Pablo Casals 在巴塞隆納一家舊書店偶然翻到樂譜——他練了 12 年才敢首次公開演出，並於 1936–39 年錄下全集。這套曲子從教材變成大提琴的聖經，幾乎完全歸功於這一件事。",
+    pick: "課程只用第 1 號的<b>前奏曲</b>（約 2 分半）即可。古樂器與現代樂器的差異在此曲上非常明顯，第 23 週可回頭拿它做版本比較。",
     life: "第 1 號的前奏曲是廣告、電影與典禮中最常出現的大提琴片段，辨識度僅次於《給愛麗絲》這一級的旋律。",
     versions: [
       { p: "Jean-Guihen Queyras", l: "Harmonia Mundi", y: 2007, qa: "hires", t: ["ref"], q: "Bach Cello Suites Queyras", w: "錄音極為自然，琴體共鳴與弓法細節都聽得到。高解析首選。" },
@@ -498,6 +503,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Symphony No. 5 in C minor",
     composer: "Ludwig van Beethoven",
     q: "Beethoven Symphony No 5",
+    bg: "1808 年 12 月 22 日在維也納首演。那場音樂會長達四小時、在沒有暖氣的劇院裡舉行，同場還首演了第 6 號交響曲、第 4 號鋼琴協奏曲與《合唱幻想曲》，據記載演出品質相當糟糕。開頭「三短一長」的動機是全曲的建構單位，四個樂章都由它衍生。<b>「命運交響曲」這個標題並非 Beethoven 所取</b>——「命運如此敲門」一語出自其秘書 Schindler 的記述，而 Schindler 的傳記已被證實多處造假，此說不可盡信。",
     pick: "課程指定 Carlos Kleiber / Wiener Philharmoniker。第 22 週會用此曲做三版本比較。",
     note: "第三樂章至第四樂章不間斷，以一段極長的漸強由 c 小調轉入 C 大調。",
     life: "開頭的「三短一長」在摩斯電碼中是字母 V（Victory）。二戰期間 BBC 對歐洲廣播即以此節奏作為開場呼號。",
@@ -545,6 +551,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Piano Concerto No. 21 in C major",
     composer: "W.A. Mozart",
     q: "Mozart Piano Concerto No 21 K 467",
+    bg: "1785 年作於 Mozart 在維也納自辦訂閱音樂會的高峰期，<b>與第 20 號 K. 466 只相隔約四週</b>——兩首性格幾乎相反（一暗一明），可直接對照聽。兩首性格幾乎相反（一暗一明），是觀察 Mozart 如何在同一段時間內走兩條路的最佳對照。",
     pick: "第二樂章極為著名。",
     life: "第二樂章因 1967 年瑞典電影《Elvira Madigan》廣為流傳，這首協奏曲因此常被直接稱為「Elvira Madigan 協奏曲」。",
     versions: [
@@ -559,7 +566,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Le nozze di Figaro",
     composer: "W.A. Mozart",
     q: "Mozart Le nozze di Figaro",
-    pick: "先聽序曲與〈Sull'aria〉二重唱。序曲是「用純器樂建立戲劇氣氛」的範例。",
+    bg: "1786 年首演，改編自 Beaumarchais 的舞台劇——<b>該劇因描寫僕人智取貴族，當時在維也納是禁演的</b>。劇本作者 Da Ponte 說服約瑟夫二世刪去政治敏感段落後，歌劇版才獲准製作。維也納首演反應普通，但同年在布拉格造成轟動，Mozart 寫道「這裡的人談的全是費加洛」，並因此拿到《唐喬望尼》的委託。",
+    pick: "<b>先聽序曲</b>（約 4 分鐘）與〈Sull'aria〉二重唱即可；完整歌劇約 3 小時，入門階段不必全聽。",
     life: "電影《刺激 1995》(The Shawshank Redemption) 中安迪播放給全獄囚犯聽的，就是本劇的〈Sull'aria〉二重唱——那一幕常被列為電影史上最著名的古典音樂場景之一。",
     versions: [
       { p: "Teodor Currentzis / MusicAeterna", l: "Sony", y: 2014, qa: "hires", t: ["period"], q: "Mozart Le nozze di Figaro Currentzis", w: "近年錄音規格最高的全曲版，宣敘調處理極為戲劇化。" },
@@ -575,7 +583,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Die Zauberflöte",
     composer: "W.A. Mozart",
     q: "Mozart Die Zauberflote",
-    pick: "先聽〈Der Hölle Rache〉（夜后詠嘆調）。注意人聲被當作器樂化的技巧展示工具使用。",
+    pick: "<b>先聽〈Der Hölle Rache〉（夜后詠嘆調）</b>，約 3 分鐘。此曲對音域的要求極端，不同女高音的差異非常明顯。",
     bg: "1791 年首演，莫札特去世前兩個月。與《費加洛》《唐喬凡尼》不同，這是一部<b>德語的 Singspiel（歌唱劇）</b>——有口白、有喜劇也有莊嚴儀式，寫給維也納市郊的平民劇院而非宮廷。劇中有大量共濟會（Freemasonry）象徵，莫札特本人是會員。夜后的詠嘆調要求連續唱到高音 F，是花腔女高音的技術極限。",
     versions: [
       { p: "René Jacobs / Akademie für Alte Musik Berlin", l: "Harmonia Mundi", y: 2010, qa: "hires", t: ["period", "ref"], q: "Mozart Die Zauberflote Rene Jacobs", w: "近年錄音規格最高，戲劇節奏鮮活。" },
@@ -591,8 +599,8 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Symphony No. 3 'Eroica'",
     composer: "Ludwig van Beethoven",
     q: "Beethoven Symphony No 3 Eroica",
+    bg: "1804 年完成。<b>Beethoven 原本把此曲題獻給拿破崙</b>，總譜封面寫著「Bonaparte」；聽聞拿破崙自立為皇帝後，他勃然大怒把封面上的名字劃掉——維也納現存的那份抄本上，<b>刮除的痕跡重到把紙刮破了一個洞</b>。出版時改題為「為紀念一位偉人而作」。此曲長度約為當時交響曲慣例的兩倍，第二樂章是一首送葬進行曲——把「英雄之死」寫進交響曲，在 1804 年是前所未見的。",
     period: "中期",
-    fact: "此曲規模顯著超越當時交響曲慣例。",
     versions: [
       { p: "Riccardo Chailly / Gewandhausorchester", l: "Decca", y: 2009, qa: "hires", t: ["modern", "ref"], q: "Beethoven Symphony 3 Eroica Chailly", w: "近年數位錄音，速度快、結構緊，高解析首選。" },
       { p: "John Eliot Gardiner / ORR", l: "DG Archiv", y: 1993, qa: "hifi", t: ["period", "ref"], q: "Beethoven Symphony 3 Eroica Gardiner", w: "古樂器，銅管的粗糲感讓「英雄」的衝擊力更直接。" },
@@ -606,6 +614,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     en: "Symphony No. 9 in D minor",
     composer: "Ludwig van Beethoven",
     q: "Beethoven Symphony No 9",
+    bg: "1824 年首演時 <b>Beethoven 已幾乎全聾</b>：他站在指揮旁邊比劃速度，樂曲結束後仍背對觀眾，由女低音扶他轉身，他才看見全場起立鼓掌。末樂章引入獨唱與合唱（Schiller 的〈歡樂頌〉），是交響曲史上第一次——當時被視為破壞曲類界線的越界之舉。〈歡樂頌〉旋律於 1972 年被歐洲委員會採為〈歐洲之歌〉，後成為歐盟盟歌。",
     period: "晚期",
     life: "第四樂章的〈歡樂頌〉主題自 1972 年起被歐洲理事會採用、1985 年成為<b>歐盟盟歌</b>（僅用旋律，不含歌詞）。",
     versions: [
@@ -638,7 +647,7 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Ludwig van Beethoven",
     q: "Beethoven String Quartet Op 131",
     period: "晚期",
-    pick: "與《月光》連續對比聽，兩者相隔約 25 年。不需分析，只需感受「可親近程度」的落差。",
+    pick: "<b>先聽第一樂章</b>（賦格，約 7 分鐘）即可。全曲七樂章不間斷，約 40 分鐘。",
     bg: "作於 1826 年，貝多芬生命的最後一年。全曲<b>七個樂章不間斷連續演奏</b>，這在當時完全無先例。舒伯特在臨終前要求聽此曲；華格納曾為它寫下長篇分析。貝多芬被問到自己最滿意哪一首四重奏時，據稱指的就是這首。<b>此時他已完全失聰，這些作品他從未親耳聽過。</b>",
     versions: [
       { p: "Belcea Quartet", l: "Alpha", y: 2012, qa: "hires", t: ["ref"], q: "Beethoven String Quartets Belcea Quartet", w: "近年全集，錄音規格最高，晚期四重奏的內聲部細節清楚。" },

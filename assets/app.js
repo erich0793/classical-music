@@ -220,6 +220,31 @@
       }).join("") + "</tbody></table></div>";
   }
 
+  /* 表格在窄螢幕一定被切掉，但原本看不出來還有內容——像是資料漏了。
+     實際量到溢出時才掛上 .scrollable 並補一行提示；桌機夠寬時兩者都不出現。
+     提示由 JS 補而非寫進 HTML，因為地理軸、時期概覽等表格是各自手工組的。 */
+  function markScrollables() {
+    $$(".tw").forEach(function (el) {
+      var over = el.scrollWidth > el.clientWidth + 2;
+      el.classList.toggle("scrollable", over);
+      // 提示放在表格「上方」——放下面的話，還沒捲到底就看不到了
+      var hint = el.previousElementSibling;
+      var has = hint && hint.classList.contains("twhint");
+      if (over && !has) {
+        hint = document.createElement("div");
+        hint.className = "twhint";
+        hint.textContent = "← 表格可左右滑動 →";
+        el.parentNode.insertBefore(hint, el);
+      } else if (!over && has) {
+        hint.parentNode.removeChild(hint);
+      }
+    });
+  }
+  var rzT;
+  window.addEventListener("resize", function () {
+    clearTimeout(rzT); rzT = setTimeout(markScrollables, 150);
+  });
+
   function weekHTML(wk) {
     var mod = CORE.modules.filter(function (m) { return m.id === wk.m; })[0];
     var h = "";
@@ -644,6 +669,7 @@
     $$(".navitem").forEach(function (el) {
       el.classList.toggle("active", el.getAttribute("data-go") === view);
     });
+    markScrollables();
   }
 
   /* ---------------- 搜尋 ----------------
@@ -961,6 +987,7 @@
       var on = hd.parentElement.classList.toggle("open");
       var ttl = hd.querySelector(".ttl");
       if (ttl) ttl.setAttribute("aria-expanded", on ? "true" : "false");
+      if (on) markScrollables();
       return;
     }
   });
@@ -968,7 +995,10 @@
   /* <details> 的 toggle 不會冒泡，必須用捕獲階段監聽 */
   document.addEventListener("toggle", function (e) {
     var d = e.target;
-    if (!d.hasAttribute || !d.hasAttribute("data-theory")) return;
+    if (!d.tagName || d.tagName !== "DETAILS") return;
+    // 摺疊區裡的表格在收起時量不到寬度，展開後才能判斷是否需要捲動提示
+    if (d.open) markScrollables();
+    if (!d.hasAttribute("data-theory")) return;
     var n = d.getAttribute("data-theory");
     if (d.open) delete S.theory[n]; else S.theory[n] = false;
     save();
@@ -1007,6 +1037,15 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && $("#drawer").classList.contains("open")) closeDrawer();
   });
+  /* 手機上完整的提示文字塞不下，會被 ★ 按鈕蓋住一半，看起來像壞掉。
+     Esc 清除本來就只有實體鍵盤用得到，窄螢幕直接拿掉那段。 */
+  (function () {
+    var el = $("#q"), full = el.getAttribute("placeholder");
+    function fit() { el.setAttribute("placeholder", innerWidth < 560 ? "搜尋曲目、作曲家…" : full); }
+    fit();
+    window.addEventListener("resize", fit);
+  })();
+
   $("#q").addEventListener("input", onSearchInput);
   $("#q").addEventListener("keydown", function (e) {
     if (e.key === "Escape") { this.value = ""; onSearchInput(); }
