@@ -181,11 +181,16 @@
      預設收起：先看到答案就沒有練習效果了。 */
   function answerHTML(a) {
     if (!a) return "";
-    return '<details class="ans"><summary>🔒 對照表（答案）<span class="hint">聽完再打開</span></summary>' +
-      (a.intro ? '<div class="hint" style="margin:10px 0">' + a.intro + "</div>" : "") +
-      tableHTML({ head: a.head, rows: a.rows }) +
-      (a.note ? '<div class="note">' + a.note + "</div>" : "") +
-      "</details>";
+    function block(x) {
+      return (x.sub ? "<h4>" + esc(x.sub) + "</h4>" : "") +
+        (x.intro ? '<div class="hint" style="margin:10px 0">' + x.intro + "</div>" : "") +
+        (x.rows ? tableHTML({ head: x.head, rows: x.rows }) : "") +
+        (x.text ? "<p>" + x.text + "</p>" : "") +
+        (x.note ? '<div class="note">' + x.note + "</div>" : "");
+    }
+    return '<details class="ans"><summary>' + (a.label || "🔒 對照表（答案）") +
+      '<span class="hint">' + (a.hint || "聽完再打開") + "</span></summary>" +
+      (a.parts ? a.parts.map(block).join("") : block(a)) + "</details>";
   }
 
   /* 把本週指派給這首曲目的聆聽任務，直接放在播放按鈕正上方。

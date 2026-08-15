@@ -199,6 +199,9 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .ans[open]>summary{border-bottom:1px dashed var(--line);color:var(--fg)}
 .ans>summary .hint{font-weight:400}
 .ans>*:last-child{margin-bottom:14px}
+.ans h4{font-size:13.5px;margin:16px 0 0;padding-left:9px;border-left:3px solid var(--acc)}
+.ans h4:first-of-type{margin-top:12px}
+.ans p{font-size:13.5px;line-height:1.85}
 
 /* ---------- 鍵盤焦點 ---------- */
 /* 原本全檔唯一的 outline 規則是 .search input{outline:none}，等於移除瀏覽器
