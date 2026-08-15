@@ -189,6 +189,17 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .theory[open]>summary{border-bottom:1px solid var(--line)}
 .theory>*:last-child{margin-bottom:14px}
 
+/* 對照表（答案）：預設收起的劇透區，用虛線與概念區區分 */
+.ans{border:1px dashed var(--line);border-radius:10px;background:var(--bg);margin:14px 0;padding:0 14px}
+.ans>summary{
+  cursor:pointer;font-size:13.5px;font-weight:650;padding:10px 14px;margin:0 -14px;
+  list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;color:var(--mut);
+}
+.ans>summary::-webkit-details-marker{display:none}
+.ans[open]>summary{border-bottom:1px dashed var(--line);color:var(--fg)}
+.ans>summary .hint{font-weight:400}
+.ans>*:last-child{margin-bottom:14px}
+
 /* ---------- 鍵盤焦點 ---------- */
 /* 原本全檔唯一的 outline 規則是 .search input{outline:none}，等於移除瀏覽器
    預設焦點框而未補回，鍵盤使用者看不見自己在哪裡。用 :focus-visible 讓滑鼠

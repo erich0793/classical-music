@@ -191,6 +191,17 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .theory[open]>summary{border-bottom:1px solid var(--line)}
 .theory>*:last-child{margin-bottom:14px}
 
+/* 對照表（答案）：預設收起的劇透區，用虛線與概念區區分 */
+.ans{border:1px dashed var(--line);border-radius:10px;background:var(--bg);margin:14px 0;padding:0 14px}
+.ans>summary{
+  cursor:pointer;font-size:13.5px;font-weight:650;padding:10px 14px;margin:0 -14px;
+  list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;color:var(--mut);
+}
+.ans>summary::-webkit-details-marker{display:none}
+.ans[open]>summary{border-bottom:1px dashed var(--line);color:var(--fg)}
+.ans>summary .hint{font-weight:400}
+.ans>*:last-child{margin-bottom:14px}
+
 /* ---------- 鍵盤焦點 ---------- */
 /* 原本全檔唯一的 outline 規則是 .search input{outline:none}，等於移除瀏覽器
    預設焦點框而未補回，鍵盤使用者看不見自己在哪裡。用 :focus-visible 讓滑鼠
@@ -589,6 +600,35 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Britten Young Person's Guide to the Orchestra",
     fact: "作於 1946 年，原為英國教育影片配樂，全曲以 Purcell 之主題為基礎，依序展示管弦樂團各樂器組，其設計目的即為樂器辨識教學。",
     pick: "附旁白版（narrated）優先，若無則任何版本皆可。",
+    answer: {
+      intro: "全曲＝<b>主題（6 次）→ 變奏 A–M（13 段）→ 賦格</b>。判斷點共 <b>19 個</b>（6 + 13），" +
+        "答對數 ÷ 19 就是正確率。<b>各版本演奏時間不同，所以這裡列順序與聽覺線索，不列時間碼。</b>",
+      head: ["段落", "樂器", "家族", "聽覺線索"],
+      rows: [
+        ["主題 1", "全體合奏", "—", "Purcell 的原主題，莊嚴、齊奏"],
+        ["主題 2", "木管組", "木管", "同一段旋律，變得輕盈、有點鼻音"],
+        ["主題 3", "銅管組", "銅管", "同一段旋律，變得明亮而有金屬光澤"],
+        ["主題 4", "弦樂組", "弦樂", "同一段旋律，線條最連貫、可拉長"],
+        ["主題 5", "打擊組", "打擊", "旋律感最弱，靠節奏與音高打擊樂器撐起"],
+        ["主題 6", "全體合奏", "—", "回到齊奏收尾，接著進入變奏"],
+        ["變奏 A", "長笛與短笛", "木管", "最高、最快，像鳥鳴般的碎音"],
+        ["變奏 B", "雙簧管", "木管", "鼻音明顯，哀愁的長線條，速度慢下來"],
+        ["變奏 C", "單簧管", "木管", "圓潤無鼻音，上下大跳的流暢快速音群"],
+        ["變奏 D", "低音管", "木管", "低沉帶詼諧感，進行曲式的頓挫"],
+        ["變奏 E", "小提琴", "弦樂", "波蘭舞曲風格，華麗而有稜角"],
+        ["變奏 F", "中提琴", "弦樂", "比小提琴低一截、音色偏暗偏鈍"],
+        ["變奏 G", "大提琴", "弦樂", "全曲最歌唱性的抒情段，接近人聲中低音"],
+        ["變奏 H", "低音提琴", "弦樂", "最低沉笨重，略帶滑稽"],
+        ["變奏 I", "豎琴", "弦樂（撥奏）", "琶音與滑奏，一聽就分辨得出來"],
+        ["變奏 J", "法國號", "銅管", "圓潤帶回音感的狩獵號角"],
+        ["變奏 K", "小號", "銅管", "明亮尖銳，快速斷奏"],
+        ["變奏 L", "長號與低音號", "銅管", "厚重；長號有滑音，低音號最沉"],
+        ["變奏 M", "打擊組", "打擊", "依序：定音鼓 → 大鼓與鈸 → 鈴鼓與三角鐵 → 小鼓與木魚 → 木琴 → 響板與鑼 → 鞭子 → 全體打擊"]
+      ],
+      note: "<b>賦格</b>：樂器依<b>與變奏完全相同的順序</b>逐一進入（短笛先進）。結尾處銅管會在賦格之上" +
+        "<b>重新奏出 Purcell 的原主題</b>——聽到「開頭那段旋律回來了、疊在一堆聲部上面」的瞬間，就是全曲終點。" +
+        "這也是第 3 週「曲式＝辨識主題的回歸」的第一次預習。"
+    },
     versions: [
       { p: "Simon Rattle / City of Birmingham SO", l: "EMI／Warner", y: 1990, qa: "hires", t: ["ref"], q: "Britten Young Person's Guide Rattle", w: "數位錄音、聲部分離清晰，最適合本週的「聽出樂器」任務。" },
       { p: "Marin Alsop / Bournemouth SO", l: "Naxos", y: 2004, qa: "hires", t: ["entry"], q: "Britten Young Person's Guide Alsop", w: "近年錄音，動態自然，Naxos 曲庫在 KKBOX 上通常齊全。" },
@@ -604,6 +644,20 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     q: "Prokofiev Peter and the Wolf",
     pick: "任意版本皆可；此曲刻意將「角色—樂器」一對一綁定，是最有效的記憶錨點。",
     life: "長年作為全世界兒童音樂教育的標準教材——很多人第一次認識管弦樂團的樂器就是靠這首。",
+    answer: {
+      intro: "旁白版會直接報出答案，所以<b>先聽無旁白版或忽略旁白</b>再對照，練習效果才成立。共 <b>7 個</b>角色。",
+      head: ["角色", "樂器", "家族", "聽覺線索"],
+      rows: [
+        ["彼得", "弦樂群", "弦樂", "明朗的大調進行曲式主題，全曲的「主角音色」"],
+        ["小鳥", "長笛", "木管", "最高音域的快速顫動音型"],
+        ["鴨子", "雙簧管", "木管", "鼻音、搖擺的中音域旋律"],
+        ["貓", "單簧管", "木管", "低音域的斷奏（staccato），躡手躡腳感"],
+        ["爺爺", "低音管", "木管", "低沉、嘮叨、帶頓挫感"],
+        ["狼", "三支法國號", "銅管", "三聲部疊在一起的不協和長音，威脅感"],
+        ["獵人", "木管群 + 定音鼓與大鼓", "木管／打擊", "行進主題；<b>槍聲</b>是定音鼓與大鼓"]
+      ],
+      note: "這七個對應是 Prokofiev 親自設定並寫在總譜上的，不是後人詮釋——所以它可以當標準答案用。"
+    },
     versions: [
       { p: "Claudio Abbado / Chamber Orch of Europe（旁白：Sting）", l: "DG", y: 1990, qa: "hires", t: ["ref", "narrated"], q: "Prokofiev Peter and the Wolf Abbado Sting", w: "DG 數位錄音 + Sting 旁白，錄音與演奏皆為現行首選。" },
       { p: "Eugene Ormandy / Philadelphia（旁白：David Bowie）", l: "RCA", y: 1978, qa: "hifi", t: ["narrated"], q: "Prokofiev Peter and the Wolf David Bowie", w: "最著名的旁白版之一，Bowie 的敘事節奏極佳。" },
@@ -617,6 +671,28 @@ window.WORKS = Object.assign(window.WORKS || {}, {
     composer: "Camille Saint-Saëns",
     q: "Saint-Saens Carnival of the Animals",
     pick: "任意版本。每段各以不同樂器組合描繪一種動物，是樂器辨識的絕佳補充教材。",
+    answer: {
+      intro: "全曲 14 段。編制為<b>兩架鋼琴＋小型室內樂團</b>，所以鋼琴幾乎無所不在；" +
+        "練習時請聽<b>鋼琴以外</b>那件擔任主角的樂器。",
+      head: ["段", "標題", "主角樂器", "聽覺線索"],
+      rows: [
+        ["1", "序奏與獅王進行曲", "弦樂 + 雙鋼琴", "鋼琴的半音階咆哮＝獅吼"],
+        ["2", "母雞與公雞", "單簧管、弦樂、鋼琴", "重複的啄食式短音"],
+        ["3", "野驢", "雙鋼琴", "極快的同音階齊奏，無其他樂器"],
+        ["4", "烏龜", "弦樂 + 鋼琴", "把《天堂與地獄》康康舞放到極慢——笑點在此"],
+        ["5", "大象", "低音提琴獨奏", "全曲唯一的低音提琴獨奏，笨重的圓舞曲"],
+        ["6", "袋鼠", "雙鋼琴", "跳躍的頓音，忽快忽停"],
+        ["7", "水族館", "長笛、鋼片琴（或玻璃琴）、弦樂、雙鋼琴", "鋼片琴的水滴聲最好認"],
+        ["8", "長耳人物", "兩把小提琴", "極高與極低的來回大跳＝驢叫"],
+        ["9", "林中杜鵑", "單簧管（常置於幕後）+ 雙鋼琴", "反覆出現的兩音下行＝布穀"],
+        ["10", "大鳥籠", "長笛 + 弦樂 + 鋼琴", "長笛的華彩顫音，弦樂做背景振翅"],
+        ["11", "鋼琴家", "雙鋼琴", "故意彈得像在練音階的學生——這是玩笑"],
+        ["12", "化石", "木琴 + 單簧管、弦樂、鋼琴", "木琴的乾硬敲擊＝骨頭；旋律取自作曲家自己的《死之舞》"],
+        ["13", "天鵝", "大提琴獨奏 + 雙鋼琴", "全曲最有名的一段，大提琴長線條"],
+        ["14", "終曲", "全體", "前面各段主題輪番再現"]
+      ],
+      note: "Saint-Saëns 生前禁止此曲公開出版與演出（只准〈天鵝〉單獨演出），因為他認為這種音樂玩笑會損害自己嚴肅作曲家的名聲——全曲直到他死後隔年（1922）才正式問世。"
+    },
     life: "其中的〈天鵝〉是芭蕾獨舞《垂死的天鵝》所用的音樂，也是大提琴最常被單獨演奏的小品之一。",
     versions: [
       { p: "Charles Dutoit / London Sinfonietta（Rogé & Ortiz 雙鋼琴）", l: "Decca", y: 1980, qa: "hifi", t: ["ref"], q: "Saint-Saens Carnival of the Animals Dutoit Roge", w: "Decca 錄音平衡，樂器線條乾淨。" },
@@ -1742,8 +1818,8 @@ window.WEEKS = [
   ],
   works: ["britten-ypg", "prokofiev-peter", "saintsaens-carnival"],
   tasks: [
-    "聽 Britten Op. 34。<b>不看曲目說明</b>，準備紙筆，每一段變奏開始時寫下你判斷的樂器家族（弦／木管／銅管／打擊）。全曲結束後對照曲目說明，計算正確率。",
-    "聽《彼得與狼》，記下每個角色對應的樂器。此曲刻意將「角色—樂器」一對一綁定，是最有效的記憶錨點。",
+    "聽 Britten Op. 34。<b>先不要打開下面的「🔒 對照表（答案）」</b>，準備紙筆，每一段開始時寫下你判斷的樂器家族（弦／木管／銅管／打擊）。全曲結束後展開對照表，答對數 ÷ 19 就是正確率。",
+    "聽《彼得與狼》，記下每個角色對應的樂器，再展開下面的<b>「🔒 對照表（答案）」</b>核對。此曲刻意將「角色—樂器」一對一綁定，是最有效的記憶錨點；旁白版會直接報答案，練習時可先忽略旁白。",
     "挑出三種你<b>最容易混淆</b>的樂器（常見組合：雙簧管 oboe vs. 單簧管 clarinet；小號 trumpet vs. 法國號 horn；中提琴 viola vs. 大提琴 cello），單獨搜尋該樂器的獨奏曲各聽 2 分鐘。"
   ],
   checks: [
@@ -2362,12 +2438,25 @@ window.PINNED = {
         (w.pick ? '<div class="meta">' + tierTags("選") + esc(w.pick) + "</div>" : "") +
         (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
         taskBoxHTML(id, wk) +
+        answerHTML(w.answer) +
         '<div class="vhead">以下 <b>' + vs.length + "</b> 個都是<b>同一首曲子的不同演出</b>（皆為全曲，非片段）——" +
           "<b>選一個聽就好</b>，不必每個都聽。" +
           (S.hiresFirst ? "已依 Hi-Res 優先排序，最上面那個就是建議首選。" : "") + "</div>" +
         '<ul class="vlist">' + vs.map(versionHTML).join("") + "</ul>" +
         '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">都找不到？複製通用搜尋字串：' + esc(w.q) + "</button></div>" +
       "</div></div>";
+  }
+
+  /* 對照表（答案）。第 1 週的任務要求「不看曲目說明作答，聽完後對照計算正確率」，
+     但這份對照表原本站上根本沒有——任務等於做不完。
+     預設收起：先看到答案就沒有練習效果了。 */
+  function answerHTML(a) {
+    if (!a) return "";
+    return '<details class="ans"><summary>🔒 對照表（答案）<span class="hint">聽完再打開</span></summary>' +
+      (a.intro ? '<div class="hint" style="margin:10px 0">' + a.intro + "</div>" : "") +
+      tableHTML({ head: a.head, rows: a.rows }) +
+      (a.note ? '<div class="note">' + a.note + "</div>" : "") +
+      "</details>";
   }
 
   /* 把本週指派給這首曲目的聆聽任務，直接放在播放按鈕正上方。
@@ -3151,9 +3240,11 @@ window.PINNED = {
     save();
   }, true);
 
-  /* 收起的 <details> 內容不會列印，列印前先全部展開 */
+  /* 收起的 <details> 內容不會列印，列印前先全部展開。
+     .ans（答案）除外——任務本身就要求準備紙筆，把週次印出來作答時
+     不該連答案一起印在同一張紙上。已手動展開的則尊重使用者的選擇。 */
   window.addEventListener("beforeprint", function () {
-    $$("details").forEach(function (d) { d.open = true; });
+    $$("details:not(.ans)").forEach(function (d) { d.open = true; });
   });
 
   document.addEventListener("change", function (e) {

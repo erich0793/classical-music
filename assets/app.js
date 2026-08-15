@@ -167,12 +167,25 @@
         (w.pick ? '<div class="meta">' + tierTags("選") + esc(w.pick) + "</div>" : "") +
         (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
         taskBoxHTML(id, wk) +
+        answerHTML(w.answer) +
         '<div class="vhead">以下 <b>' + vs.length + "</b> 個都是<b>同一首曲子的不同演出</b>（皆為全曲，非片段）——" +
           "<b>選一個聽就好</b>，不必每個都聽。" +
           (S.hiresFirst ? "已依 Hi-Res 優先排序，最上面那個就是建議首選。" : "") + "</div>" +
         '<ul class="vlist">' + vs.map(versionHTML).join("") + "</ul>" +
         '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">都找不到？複製通用搜尋字串：' + esc(w.q) + "</button></div>" +
       "</div></div>";
+  }
+
+  /* 對照表（答案）。第 1 週的任務要求「不看曲目說明作答，聽完後對照計算正確率」，
+     但這份對照表原本站上根本沒有——任務等於做不完。
+     預設收起：先看到答案就沒有練習效果了。 */
+  function answerHTML(a) {
+    if (!a) return "";
+    return '<details class="ans"><summary>🔒 對照表（答案）<span class="hint">聽完再打開</span></summary>' +
+      (a.intro ? '<div class="hint" style="margin:10px 0">' + a.intro + "</div>" : "") +
+      tableHTML({ head: a.head, rows: a.rows }) +
+      (a.note ? '<div class="note">' + a.note + "</div>" : "") +
+      "</details>";
   }
 
   /* 把本週指派給這首曲目的聆聽任務，直接放在播放按鈕正上方。
@@ -956,9 +969,11 @@
     save();
   }, true);
 
-  /* 收起的 <details> 內容不會列印，列印前先全部展開 */
+  /* 收起的 <details> 內容不會列印，列印前先全部展開。
+     .ans（答案）除外——任務本身就要求準備紙筆，把週次印出來作答時
+     不該連答案一起印在同一張紙上。已手動展開的則尊重使用者的選擇。 */
   window.addEventListener("beforeprint", function () {
-    $$("details").forEach(function (d) { d.open = true; });
+    $$("details:not(.ans)").forEach(function (d) { d.open = true; });
   });
 
   document.addEventListener("change", function (e) {
