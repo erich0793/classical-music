@@ -151,6 +151,12 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .v.yt{border-left:3px solid var(--yt)}
 .play.yt{background:var(--yt)}
 .play.yt:hover{background:var(--yt2)}
+/* .alt = 次要播放平台。用外框樣式而非實心，讓「主要平台」一眼可辨，
+   但兩個連結都保持一樣的點擊面積——它不是次等選項，只是預設不是它。 */
+.play.alt{background:none;border:1px solid var(--acc);color:var(--acc)}
+.play.alt:hover{background:var(--sel);color:var(--acc)}
+.play.yt.alt{border-color:var(--yt);color:var(--yt)}
+.play.yt.alt:hover{background:var(--sel);color:var(--yt)}
 .life{
   font-size:13px;line-height:1.7;margin:10px 0 4px;padding:9px 13px;
   background:var(--lifeBg);border-left:3px solid var(--life);border-radius:0 8px 8px 0;
@@ -176,7 +182,9 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .tag{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:5px;background:var(--sel);color:var(--mut);margin-right:4px}
 .play{
   display:block;text-align:center;background:var(--acc);color:#fff;font-size:12.5px;font-weight:600;
-  padding:6px 14px;border-radius:7px;white-space:nowrap;transition:background-color .15s,color .15s;
+  /* 透明外框：讓實心與 .alt 外框兩種按鈕的高度完全一致，不會差那 2px */
+  padding:6px 14px;border:1px solid transparent;border-radius:7px;white-space:nowrap;
+  transition:background-color .15s,color .15s;
 }
 .play:hover{background:var(--acc2);text-decoration:none;color:#fff}
 .copy{border:1px solid var(--line);border-radius:7px;padding:5px 14px;font-size:12px;color:var(--mut);background:var(--bg)}
@@ -2631,6 +2639,9 @@ window.PINNED = {
   var DEFAULTS = {
     region: "tw", lang: "tc",
     hiresFirst: true, hideHistoric: false, theme: "auto",
+    // 主要播放平台："kkbox" 或 "youtube"。兩個按鈕永遠都在，這裡只決定
+    // 哪一個排在前面、用實心樣式。沒有 KKBOX 的人可以改成 youtube。
+    platform: "kkbox",
     done: {}, tasks: {}, checks: {}, fav: {},
     // 每週的概念區塊是否收起（{ 週次: false } = 已收起）。預設展開，
     // 因為第一次讀概念是課程設計的一部分；重聽時可自行收起。
@@ -2661,6 +2672,32 @@ window.PINNED = {
   function pinnedUrl(q) { return S.links[q] || REPO[q] || null; }
   function pinned(q) { return S.links[q] ? "local" : (REPO[q] ? "repo" : false); }
   function kk(q) { return pinnedUrl(q) || searchUrl(q); }
+
+  /* ---------------- YouTube 連結 ----------------
+     沒有 KKBOX 的人原本完全用不了這個網站。YouTube 不需要帳號、不需要訂閱，
+     而且古典音樂的完整錄音在上面覆蓋率相當高——尤其是 KKBOX 沒有的歷史錄音。
+     用搜尋連結而非影片 ID：影片會被下架、會被版權封鎖，搜尋頁不會失效。
+     手機上點擊會由 Universal Link 直接開啟 YouTube App。 */
+  function ytUrl(q) {
+    return "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
+  }
+
+  /* 兩個平台的播放按鈕。主要平台排在前面並使用實心樣式，次要的用外框樣式。
+     哪個是主要由 S.platform 決定（設定裡可切換），預設 KKBOX。 */
+  function playLinksHTML(q, opts) {
+    opts = opts || {};
+    var pin = pinned(q);
+    var kkLabel = opts.short ? (pin ? "▶ KKBOX App" : "KKBOX")
+                             : (pin ? "▶ 開啟 KKBOX App" : "在 KKBOX 開啟");
+    var ytLabel = opts.short ? "YouTube" : "在 YouTube 開啟";
+    var yt = S.platform === "youtube";
+    // .alt = 次要平台，用外框樣式。不包 wrapper 元素，否則會打斷外層的 flex／grid。
+    var kkBtn = '<a class="play kkbox' + (yt ? " alt" : "") + '" data-q="' + esc(q) + '" href="' + esc(kk(q)) +
+      '" target="_blank" rel="noopener">' + kkLabel + "</a>";
+    var ytBtn = '<a class="play yt' + (yt ? "" : " alt") + '" data-q="' + esc(q) + '" href="' + esc(ytUrl(q)) +
+      '" target="_blank" rel="noopener">▶ ' + ytLabel + "</a>";
+    return yt ? ytBtn + kkBtn : kkBtn + ytBtn;
+  }
 
   // 只接受看起來像 KKBOX 曲目／專輯／歌單的網址，避免把搜尋頁本身存進來
   function parseKKLink(raw) {
@@ -2744,12 +2781,11 @@ window.PINNED = {
           esc(v.l) + (v.y ? " · " + v.y : "") + " " + tags + "</div>" +
         (v.w ? '<div class="why">' + esc(v.w) + "</div>" : "") +
         '<div class="qline' + (pin ? " muted" : "") + '">' +
-          (pin ? "🔗 直接開啟已釘選連結，不經過搜尋　｜　搜尋字串：" : "🔍 ") +
+          (pin ? "🔗 KKBOX 直接開啟已釘選連結，不經過搜尋　｜　搜尋字串：" : "🔍 ") +
           "<code>" + esc(v.q) + "</code></div>" +
       "</div>" +
       '<div class="acts">' +
-        '<a class="play" data-q="' + esc(v.q) + '" href="' + esc(kk(v.q)) + '" target="_blank" rel="noopener">' +
-          (pin ? "▶ 開啟 App" : "在 KKBOX 開啟") + "</a>" +
+        playLinksHTML(v.q) +
         '<button class="copy" data-copy="' + esc(v.q) + '">複製搜尋字串</button>' +
         '<button class="copy" data-pin="' + esc(v.q) + '">' + (pin === "local" ? "換／清除連結" : "🔗 貼上分享連結") + "</button>" +
       "</div></li>";
@@ -2908,7 +2944,7 @@ window.PINNED = {
       h += wk.compare.picks.map(function (p) {
         return '<li class="v ' + p.qa + '"><div><div class="p">' + esc(p.label) + "</div>" +
           '<div class="sub"><span class="qbadge ' + p.qa + '">' + esc(CORE.quality[p.qa].label) + "</span><code>" + esc(p.q) + "</code></div></div>" +
-          '<div class="acts"><a class="play" data-q="' + esc(p.q) + '" href="' + esc(kk(p.q)) + '" target="_blank" rel="noopener">在 KKBOX 開啟</a>' +
+          '<div class="acts">' + playLinksHTML(p.q) +
           '<button class="copy" data-copy="' + esc(p.q) + '">複製</button></div></li>';
       }).join("") + "</ul>";
     }
@@ -3059,8 +3095,7 @@ window.PINNED = {
             "<span>" + next.tasks[0] + "</span></label></li></ul>"
           : "") +
         '<div class="rowbtns">' +
-          (top ? '<a class="play" data-q="' + esc(top.q) + '" href="' + esc(kk(top.q)) +
-            '" target="_blank" rel="noopener">' + (pinned(top.q) ? "▶ 開啟 App" : "在 KKBOX 開啟") + "</a>" : "") +
+          (top ? playLinksHTML(top.q) : "") +
           '<button class="iconbtn on" data-go="week-' + next.n + '">進入第 ' + next.n + " 週（全部曲目與任務）</button>" +
         "</div></div>";
     } else {
@@ -3132,6 +3167,12 @@ window.PINNED = {
       "<h3>搜尋策略 " + tierTags("選") + "</h3><ol>" + CORE.practice.search.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ol>" +
       "<h3>播放清單管理</h3><p><b>建議建立 24 個播放清單</b>，命名為 <code>古典課程 W01</code>～<code>W24</code>，每週開始時先建好當週清單。此舉的價值不在整理，而在於<b>課程結束後，你會擁有一份自己的、有結構的個人曲庫</b>。</p>" +
       "<p>另建一份 <code>古典課程｜重聽區</code>，凡是聽了有感覺的曲目立即丟進去。本站右上角的 <b>★ 重聽區</b> 即對應此用途，可一鍵匯出全部搜尋字串。</p>" +
+      "<h3>沒有 KKBOX 怎麼辦 " + tierTags("選") + "</h3>" +
+      "<p><b>本課程不需要 KKBOX 也能完整走完。</b>每個版本旁邊都有一個 <b>▶ 在 YouTube 開啟</b> 的連結，用同一組搜尋字串，不需要帳號、不需要訂閱。到 <b>⚙ 設定 → 播放平台</b> 把主要平台改成 YouTube，YouTube 的按鈕就會排到前面。</p>" +
+      "<p>兩者的差別只有兩點：</p><ul>" +
+      "<li><b>音質標記只對 KKBOX 有意義。</b>YouTube 不提供無損或高解析串流，本站的 Hi-Res／Hi-Fi 標示在那邊無法對應。</li>" +
+      "<li><b>曲庫互有長短。</b>KKBOX 的正式發行版本較齊全；但 KKBOX 沒有的歷史錄音（單聲道、早期立體聲）反而常常只有 YouTube 找得到——第 22、23 週的版本比較尤其明顯。</li>" +
+      "</ul><p>其餘功能（進度、任務、★ 重聽區、複製搜尋字串）與平台無關，兩邊都能用。</p>" +
       "<h3>音質與設備 " + tierTags("選") + "</h3>" +
       "<p>古典音樂的動態範圍（dynamic range）遠大於流行音樂——最弱與最強的音量差距可達 60 dB 以上。實務影響：</p>" +
       "<ul>" + CORE.practice.audio.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul></div>";
@@ -3390,7 +3431,7 @@ window.PINNED = {
       return '<li class="v ' + (L.top ? L.top.qa : "hifi") + '"><div>' +
         '<div class="p">' + esc(L.w.title) + "</div>" +
         '<div class="sub">' + esc(L.w.composer) + (L.top ? " ｜ 推薦：" + esc(L.top.p) : "") + "</div></div>" +
-        '<div class="acts"><a class="play" data-q="' + esc(L.top ? L.top.q : L.w.q) + '" href="' + esc(kk(L.top ? L.top.q : L.w.q)) + '" target="_blank" rel="noopener">開啟</a>' +
+        '<div class="acts">' + playLinksHTML(L.top ? L.top.q : L.w.q, { short: true }) +
         '<button class="copy" data-unfav="' + esc(L.id) + '">移除</button></div></li>';
     }).join("") + "</ul>";
     return h;
@@ -3405,7 +3446,14 @@ window.PINNED = {
   /* ---------------- 設定面板 ---------------- */
   function settingsHTML() {
     var opt = function (v, cur, txt) { return '<option value="' + v + '"' + (v === cur ? " selected" : "") + ">" + txt + "</option>"; };
-    return "<h3>連結與顯示設定</h3>" +
+    return "<h3>播放平台</h3>" +
+      '<div class="fld"><label>主要平台</label><select id="setPlatform">' +
+        opt("kkbox", S.platform, "KKBOX") + opt("youtube", S.platform, "YouTube") + "</select>" +
+        '<div class="hint"><b>兩個平台的連結永遠都在</b>，這裡只決定哪一個排在前面、用明顯的按鈕樣式。<br>' +
+        "沒有 KKBOX 訂閱的話選 YouTube——不需要帳號就能聽，古典音樂的完整錄音覆蓋率相當高，" +
+        "<b>KKBOX 沒有的歷史錄音反而常常只有 YouTube 有</b>。<br>" +
+        "代價是 YouTube 沒有音質標記，本站的 Hi-Res／Hi-Fi 標示只對 KKBOX 有意義。</div></div>" +
+      "<h3>連結與顯示設定</h3>" +
       '<div class="fld"><label>KKBOX 地區</label><select id="setRegion">' +
         opt("tw", S.region, "台灣 tw") + opt("hk", S.region, "香港 hk") + opt("sg", S.region, "新加坡 sg") +
         opt("my", S.region, "馬來西亞 my") + opt("jp", S.region, "日本 jp") + "</select></div>" +
@@ -3549,7 +3597,7 @@ window.PINNED = {
     if (t.closest('[data-open="settings"]') || t.closest("#setBtn")) { openDrawer("settings"); return; }
     if (t.id === "scrim" || t.id === "drawerClose") { closeDrawer(); return; }
     if (t.id === "menuBtn") { $("#side").classList.toggle("open"); return; }
-    if (t.id === "favCopy") { var txt = favText(); if (txt) { copyText(txt); toast("已複製，可直接貼進 KKBOX 逐首搜尋"); } return; }
+    if (t.id === "favCopy") { var txt = favText(); if (txt) { copyText(txt); toast("已複製，可貼進 KKBOX 或 YouTube 逐首搜尋"); } return; }
     if (t.id === "favClear") { if (confirm("清空重聽區？")) { S.fav = {}; save(); render(); openDrawer("fav");
       setFavCount(); } return; }
     if (t.id === "setExport") { download(S, "classical-course-progress.json"); return; }
@@ -3649,8 +3697,14 @@ window.PINNED = {
       S.checks[k2] = t.checked; if (!t.checked) delete S.checks[k2]; save();
       t.closest("li").classList.toggle("dn", t.checked); return;
     }
-    var map = { setRegion: "region", setLang: "lang", setTheme: "theme" };
-    if (map[t.id]) { S[map[t.id]] = t.value; save(); if (t.id === "setTheme") applyTheme(); else render(); return; }
+    var map = { setRegion: "region", setLang: "lang", setTheme: "theme", setPlatform: "platform" };
+    if (map[t.id]) {
+      S[map[t.id]] = t.value; save();
+      if (t.id === "setTheme") applyTheme(); else render();
+      // 設定面板本身也含播放連結說明，切換後要一起重畫
+      if (t.id === "setPlatform") { openDrawer("settings"); toast("主要平台已切換為 " + (t.value === "youtube" ? "YouTube" : "KKBOX")); }
+      return;
+    }
     if (t.id === "setHires") { S.hiresFirst = t.checked; save(); render(); return; }
     if (t.id === "setHideH") { S.hideHistoric = t.checked; save(); render(); return; }
   });
