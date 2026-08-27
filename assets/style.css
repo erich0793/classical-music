@@ -61,6 +61,17 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .iconbtn:hover{border-color:var(--acc);color:var(--acc)}
 .iconbtn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
 
+/* ---------- 課程切換器 ----------
+   一次只顯示一門課的單元，側邊欄才不會被兩門課灌爆。 */
+.cswitch{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:0 0 14px;
+  background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px}
+.cbtn{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 6px;
+  border-radius:7px;font-size:12.5px;font-weight:600;color:var(--mut);
+  transition:background-color .15s,color .15s;min-height:40px;line-height:1.25}
+.cbtn:hover{color:var(--acc)}
+.cbtn.on{background:var(--acc);color:#fff}
+.cbtn .ci{font-size:13px}
+
 /* ---------- nav ---------- */
 .navmod{margin:16px 0 6px;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--mut);text-transform:uppercase}
 .navmod span{color:var(--acc)}

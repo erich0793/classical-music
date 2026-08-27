@@ -46,6 +46,53 @@ let html = read("index.html");
       seen.set(q, v.p);
     }
   }
+
+  // 台灣傳統音樂課程：多數曲目沒有個人作者，所以「搜尋字串含作曲家姓氏」的規則
+  // 不適用。改為驗證：每個版本要有搜尋字串、同一曲目下不得重複、且必須包含
+  // 樂種關鍵字之一——否則「將軍令」之類的曲牌名會搜到完全不同的音樂。
+  {
+    const tw = { window: { COURSES: {} } };
+    for (const f of ["data-tw-core.js", "data-tw-works.js", "data-tw-units.js", "data-tw-pages.js"]) {
+      new Function("window", read("assets/tw/" + f))(tw.window);
+    }
+    const T = tw.window.COURSES.taiwan;
+    if (!T || !T.works || !T.weeks || !T.pages) {
+      console.error("台灣傳統音樂課程資料不完整");
+      process.exit(1);
+    }
+    const GENRE = ["南管", "北管", "陳達", "恆春", "歌仔戲", "客家", "布農", "阿美", "排灣", "泰雅", "卑南",
+                   "口簧", "鼻笛", "月琴", "八音", "漢唐樂府", "王心心", "民族樂手", "黑澤隆朝", "郭英男",
+                   "Difang", "Pasibutbut", "陸森寶", "賴碧霞", "邱火榮", "楊麗花", "明華園", "唐美雲", "美濃", "陳家班"];
+    for (const [id, w] of Object.entries(T.works)) {
+      const seen = new Map();
+      if (!w.versions || !w.versions.length) problems.push(`taiwan/${id}：沒有任何版本`);
+      for (const v of w.versions || []) {
+        if (!v.q) { problems.push(`taiwan/${id} / ${v.p}：缺搜尋字串`); continue; }
+        if (!GENRE.some((g) => v.q.includes(g)))
+          problems.push(`taiwan/${id} / ${v.p}：搜尋字串缺樂種／人名關鍵字 → "${v.q}"`);
+        if (seen.has(v.q)) problems.push(`taiwan/${id}：兩個版本的搜尋字串相同 → "${v.q}"`);
+        seen.set(v.q, v.p);
+      }
+    }
+    // 單元引用的曲目必須存在
+    for (const u of T.weeks) {
+      for (const id of [].concat(u.works || [], u.extraWorks || [])) {
+        if (!T.works[id]) problems.push(`taiwan/單元 ${u.n}：引用了不存在的曲目 "${id}"`);
+      }
+      // tw（任務→曲目對應）的長度要與 tasks 一致，否則就地任務會錯位
+      if (u.tw && u.tw.length !== (u.tasks || []).length)
+        problems.push(`taiwan/單元 ${u.n}：tw 長度 ${u.tw.length} 與 tasks 長度 ${(u.tasks || []).length} 不符`);
+      for (const ids of u.tw || []) for (const id of ids) {
+        if (!T.works[id]) problems.push(`taiwan/單元 ${u.n}：tw 指向不存在的曲目 "${id}"`);
+      }
+    }
+    for (const pg of T.pages) {
+      for (const b of pg.blocks || []) for (const id of b.works || []) {
+        if (!T.works[id]) problems.push(`taiwan/${pg.id}：引用了不存在的曲目 "${id}"`);
+      }
+    }
+  }
+
   if (problems.length) {
     console.error("搜尋字串檢查未通過：");
     problems.forEach((x) => console.error("  " + x));

@@ -1,6 +1,42 @@
 (function () {
   "use strict";
-  var CORE = window.CORE, WORKS = window.WORKS, WEEKS = window.WEEKS;
+  /* ---------------- 課程註冊 ----------------
+     兩門課共用同一套機制（版本清單、音質分級、雙平台連結、進度、★ 重聽區、
+     搜尋、鍵盤操作、摺疊、對照表）。放在同一個網站而非分成兩站，真正的理由
+     不是省工，而是內容會互相加值：古典課教的四項聆聽工具（音色／織體／曲式／
+     調性）正好就是聽台灣傳統音樂的工具，而 Pasibutbut、七字調、哭調又反過來
+     是那些概念最好的例子。分成兩站，這些連結就斷了。 */
+  var COURSES = window.COURSES = window.COURSES || {};
+  COURSES.classical = {
+    id: "classical", label: "古典音樂", short: "古", icon: "♪",
+    unitWord: "週", brand: "古典音樂系統聆聽課程", brandSub: "24 週 · KKBOX 適配版",
+    core: window.CORE, works: window.WORKS, weeks: window.WEEKS,
+    defaults: { platform: "kkbox", hiresFirst: true },
+    foot: "版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。"
+  };
+  var ORDER = ["classical", "taiwan"];
+  function courseList() { return ORDER.filter(function (id) { return COURSES[id]; }); }
+
+  // 目前作用中的課程。CORE / WORKS / WEEKS 隨之切換，其餘程式碼照舊使用它們。
+  var COURSE, CORE, WORKS, WEEKS;
+  function useCourse(id) {
+    COURSE = COURSES[id] || COURSES.classical;
+    CORE = COURSE.core; WORKS = COURSE.works; WEEKS = COURSE.weeks;
+    buildWorkWeeks();
+  }
+
+  /* 進度／勾選／摺疊的儲存鍵必須分課程，否則兩門課的「第 3 單元」會互相覆蓋。
+     古典課維持原本的鍵（純數字），既有使用者的進度不會因為新增課程而消失。 */
+  function ck(n) { return COURSE.id === "classical" ? String(n) : COURSE.id + ":" + n; }
+
+  // ★ 重聽區跨課程共用（曲目 id 兩門課不重複），所以查詢也要跨課程
+  function findWork(id) {
+    for (var i = 0; i < ORDER.length; i++) {
+      var c = COURSES[ORDER[i]];
+      if (c && c.works[id]) return { work: c.works[id], course: c };
+    }
+    return null;
+  }
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); };
@@ -14,6 +50,8 @@
     // 哪一個排在前面、用實心樣式。沒有 KKBOX 的人可以改成 youtube。
     platform: "kkbox",
     done: {}, tasks: {}, checks: {}, fav: {},
+    // 使用者手動改過哪些設定。改過的就不再被「切換課程時套用該課預設」覆蓋。
+    touched: {},
     // 每週的概念區塊是否收起（{ 週次: false } = 已收起）。預設展開，
     // 因為第一次讀概念是課程設計的一部分；重聽時可自行收起。
     theory: {},
@@ -192,7 +230,9 @@
         (w.bg ? '<div class="bg"><b>作品背景</b>' + tierTags("史析") + w.bg + "</div>" : "") +
         (w.fact ? '<div class="meta">' + tierTags("史") + esc(w.fact) + "</div>" : "") +
         (w.life ? '<div class="life"><b>你可能在哪裡聽過</b>' + w.life + "</div>" : "") +
-        (w.pick ? '<div class="meta">' + tierTags("選") + esc(w.pick) + "</div>" : "") +
+        // pick 與 bg／life 一樣允許內嵌 HTML（資料由編者撰寫，非使用者輸入）。
+        // 先前用 esc() 包住，導致改寫後的 <b> 標籤被當成文字顯示出來。
+        (w.pick ? '<div class="meta">' + tierTags("選") + w.pick + "</div>" : "") +
         (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
         taskBoxHTML(id, wk) +
         answerHTML(w.answer) +
@@ -231,9 +271,9 @@
       if (ids.indexOf(workId) > -1) hits.push(i);
     });
     if (!hits.length) return "";
-    return '<div class="taskbox"><b>▶ 播放前先讀：本週要用這首做什麼</b><ul class="chk">' +
+    return '<div class="taskbox"><b>▶ 播放前先讀：本' + COURSE.unitWord + '要用這首做什麼</b><ul class="chk">' +
       hits.map(function (i) {
-        var k = wk.n + ":" + i, on = !!S.tasks[k];
+        var k = ck(wk.n) + ":" + i, on = !!S.tasks[k];
         return '<li class="' + (i === 0 ? "must " : "") + (on ? "dn" : "") + '">' +
           '<label><input type="checkbox" data-task="' + k + '"' + (on ? " checked" : "") + ">" +
           "<span>" + wk.tasks[i] + "</span></label></li>";
@@ -278,7 +318,7 @@
     var h = "";
     h += '<div class="card" id="week-' + wk.n + '">';
     h += '<div class="eyebrow">' + esc(mod.label) + " · " + esc(mod.title) + "</div>";
-    h += "<h2>第 " + wk.n + " 週｜" + esc(wk.title) + (wk.flag ? '<span class="flag">' + esc(wk.flag) + "</span>" : "") + "</h2>";
+    h += "<h2>第 " + wk.n + " " + COURSE.unitWord + "｜" + esc(wk.title) + (wk.flag ? '<span class="flag">' + esc(wk.flag) + "</span>" : "") + "</h2>";
     h += '<div class="enttl">' + esc(wk.en || "") + "</div>";
 
     /* 概念與背景放進可摺疊區。課程要求每首曲目重複聽 4–6 次，同一週會回訪多次，
@@ -291,15 +331,15 @@
     if (wk.banner) thy += '<div class="banner">' + wk.banner + "</div>";
 
     if (wk.concept && wk.concept.length) {
-      thy += "<h3>本週核心概念</h3>";
+      thy += "<h3>本" + COURSE.unitWord + "核心概念</h3>";
       wk.concept.forEach(function (c) { thy += "<p>" + tierTags(c.tier) + c.t + "</p>"; });
     }
     if (wk.table) thy += tableHTML(wk.table);
     if (wk.key) thy += '<div class="banner">' + wk.key + "</div>";
     if (wk.note) thy += '<div class="note">' + tierTags(wk.note.tier) + wk.note.t + "</div>";
     if (thy) {
-      h += '<details class="theory" data-theory="' + wk.n + '"' + (S.theory[wk.n] === false ? "" : " open") + ">" +
-        "<summary>本週概念與背景<span class=\"hint\">（重聽時可收起，直接跳到曲目）</span></summary>" +
+      h += '<details class="theory" data-theory="' + ck(wk.n) + '"' + (S.theory[ck(wk.n)] === false ? "" : " open") + ">" +
+        "<summary>本" + COURSE.unitWord + "概念與背景<span class=\"hint\">（重聽時可收起，直接跳到曲目）</span></summary>" +
         thy + "</details>";
     }
 
@@ -325,10 +365,10 @@
     if (wk.yt) h += musecowHTML(wk.yt);
     if (wk.tasks && wk.tasks.length) {
       h += "<h3>聆聽任務總覽</h3>";
-      h += '<div class="hint" style="margin-bottom:8px">與各曲目下方的任務是<b>同一份</b>，勾選會同步。這裡列出全部，方便一次檢視本週要做的事。</div>';
+      h += '<div class="hint" style="margin-bottom:8px">與各曲目下方的任務是<b>同一份</b>，勾選會同步。這裡列出全部，方便一次檢視本' + COURSE.unitWord + '要做的事。</div>';
       h += '<ul class="chk">';
       h += wk.tasks.map(function (t, i) {
-        var k = wk.n + ":" + i, on = !!S.tasks[k];
+        var k = ck(wk.n) + ":" + i, on = !!S.tasks[k];
         return '<li class="' + (i === 0 ? "must " : "") + (on ? "dn" : "") + '">' +
           '<label><input type="checkbox" data-task="' + k + '"' + (on ? " checked" : "") + "><span>" + t + "</span></label></li>";
       }).join("") + "</ul>";
@@ -336,7 +376,7 @@
     if (wk.checks && wk.checks.length) {
       h += "<h3>自我檢核</h3><ul class=\"chk\">";
       h += wk.checks.map(function (t, i) {
-        var k = wk.n + ":" + i, on = !!S.checks[k];
+        var k = ck(wk.n) + ":" + i, on = !!S.checks[k];
         return '<li class="' + (on ? "dn" : "") + '"><input type="checkbox" data-check="' + k + '"' + (on ? " checked" : "") + "><span>" + t + "</span></li>";
       }).join("") + "</ul>";
     }
@@ -354,23 +394,28 @@
     if (wk.after) h += '<div class="banner">' + wk.after + "</div>";
 
     // 底部操作
-    var done = !!S.done[wk.n];
+    var done = !!S.done[ck(wk.n)];
     h += '<div class="rowbtns">' +
-      '<button class="iconbtn' + (done ? " on" : "") + '" data-done="' + wk.n + '">' + (done ? "✓ 本週已完成" : "標記本週完成") + "</button>" +
+      '<button class="iconbtn' + (done ? " on" : "") + '" data-done="' + ck(wk.n) + '">' + (done ? "✓ 已完成" : "標記" + COURSE.unitWord + "完成") + "</button>" +
       (wk.works && wk.works.length ?
-        '<button class="iconbtn" data-copyweek="' + wk.n + '">複製本週全部搜尋字串（建 W' + (wk.n < 10 ? "0" : "") + wk.n + " 播放清單用）</button>" : "") +
+        '<button class="iconbtn" data-copyweek="' + wk.n + '">複製本' + COURSE.unitWord + '全部搜尋字串' +
+          (COURSE.id === "classical" ? "（建 W" + (wk.n < 10 ? "0" : "") + wk.n + " 播放清單用）" : "") + "</button>" : "") +
       "</div>";
     h += "</div>";
     return h;
   }
 
+  /* 延伸影片。古典課用「音樂家的無聊人生 Musecow」的頻道內搜尋；
+     台灣傳統音樂沒有對應的單一頻道，改為一般 YouTube 搜尋。
+     兩者都用搜尋而非影片 ID——頻道會改名、影片會下架，搜尋不會失效。 */
   function musecowHTML(yt) {
-    var M = CORE.musecow;
+    var M = CORE.musecow || CORE.video;
+    if (!M) return "";
     var h = "<h3>延伸影片｜" + esc(M.name) + " " + tierTags("選") + "</h3>";
     h += '<ul class="vlist">';
-    h += '<li class="v yt"><div><div class="p">在頻道內搜尋本週主題</div>' +
+    h += '<li class="v yt"><div><div class="p">' + esc(M.searchLabel || "在頻道內搜尋本週主題") + "</div>" +
       '<div class="sub">關鍵字：<code>' + esc(yt.q) + "</code></div>" +
-      '<div class="why">頻道內搜尋，永遠不會失效。海牛的影片偏敘事與情境，正好補本課程偏結構分析的不足。</div></div>' +
+      '<div class="why">' + M.why + "</div></div>" +
       '<div class="acts"><a class="play yt" href="' + esc(M.searchBase + encodeURIComponent(yt.q)) +
       '" target="_blank" rel="noopener">▶ 搜尋影片</a></div></li>';
     (yt.v || []).forEach(function (v) {
@@ -380,7 +425,7 @@
         '" target="_blank" rel="noopener">▶ 觀看</a></div></li>';
     });
     h += "</ul>";
-    if (yt.v) h += '<div class="hint">直接影片連結取自公開搜尋結果，可能被改名或下架。失效的話用上面的頻道搜尋即可。</div>';
+    if (yt.v) h += '<div class="hint">直接影片連結取自公開搜尋結果，可能被改名或下架。失效的話用上面的搜尋即可。</div>';
     return h;
   }
 
@@ -432,23 +477,28 @@
      完全沒有「我現在該做第幾週」的線索。這裡依 done 狀態推算出下一個
      未完成的週次，直接把該週的必聽第一首與必做任務端到眼前。 */
   function thisWeekHTML() {
-    var doneCount = WEEKS.filter(function (w) { return S.done[w.n]; }).length;
-    var next = WEEKS.filter(function (w) { return !S.done[w.n]; })[0];
+    var doneCount = WEEKS.filter(function (w) { return S.done[ck(w.n)]; }).length;
+    var next = WEEKS.filter(function (w) { return !S.done[ck(w.n)]; })[0];
 
+    var u = COURSE.unitWord, tot = WEEKS.length;
     if (!next) {
-      return '<div class="card thisweek"><div class="eyebrow">24 / 24 週</div>' +
+      return '<div class="card thisweek"><div class="eyebrow">' + tot + " / " + tot + " " + u + "</div>" +
         "<h2>全部完成了</h2>" +
-        "<p>接下來是第 24 週規劃的事：檢視 ★ 重聽區，統計哪個時期／作曲家佔比最高——" +
-        "<b>那就是你的品味起點</b>——然後選一位作曲家做下一輪 6 個月的深度探索。</p>" +
-        '<div class="rowbtns"><button class="iconbtn on" data-go="week-24">回到第 24 週：建立自主聆聽路徑</button>' +
+        (COURSE.id === "classical"
+          ? "<p>接下來是第 24 週規劃的事：檢視 ★ 重聽區，統計哪個時期／作曲家佔比最高——" +
+            "<b>那就是你的品味起點</b>——然後選一位作曲家做下一輪 6 個月的深度探索。</p>"
+          : "<p>接下來是第 8 單元規劃的事：檢視 ★ 重聽區，看看你偏向器樂還是歌樂、漢人樂種還是原住民族——" +
+            "<b>那就是你的起點</b>。然後挑一個樂種深入，或去現場聽一次。</p>") +
+        '<div class="rowbtns"><button class="iconbtn on" data-go="' + unitView(tot) + '">回到第 ' + tot + " " + u + "：" +
+          esc(WEEKS[WEEKS.length - 1].title) + "</button>" +
         '<button class="iconbtn" id="favBtn2">★ 檢視重聽區</button></div></div>';
     }
 
     var mod = CORE.modules.filter(function (m) { return m.id === next.m; })[0];
     var h = '<div class="card thisweek">' +
-      '<div class="eyebrow">' + (doneCount ? "已完成 " + doneCount + " / 24 週　·　" : "") +
+      '<div class="eyebrow">' + (doneCount ? "已完成 " + doneCount + " / " + tot + " " + u + "　·　" : "") +
         esc(mod.label) + " " + esc(mod.title) + "</div>" +
-      "<h2>" + (doneCount ? "接下來：" : "從這裡開始：") + "第 " + next.n + " 週｜" + esc(next.title) +
+      "<h2>" + (doneCount ? "接下來：" : "從這裡開始：") + "第 " + next.n + " " + u + "｜" + esc(next.title) +
         (next.flag ? '<span class="flag">' + esc(next.flag) + "</span>" : "") + "</h2>";
 
     // 必聽第一首 ＝ 課程定義的「核心 15 分鐘」那首
@@ -456,21 +506,22 @@
     var w = id && WORKS[id];
     if (w) {
       var top = sortVersions(w.versions || [])[0];
-      h += '<div class="tw-work"><div class="tw-label">本週核心必聽（15 分鐘最低標準）</div>' +
+      h += '<div class="tw-work"><div class="tw-label">本' + COURSE.unitWord + '核心必聽' +
+        (COURSE.id === "classical" ? "（15 分鐘最低標準）" : "") + "</div>" +
         "<b>" + esc(w.title) + "</b>" +
         (top ? '<div class="tw-ver">' + esc(top.p) + "　" +
           '<span class="qbadge ' + top.qa + '">' + esc(CORE.quality[top.qa].label) + "</span></div>" : "") +
         (next.tasks && next.tasks.length
-          ? '<ul class="chk" style="margin-top:8px"><li class="must' + (S.tasks[next.n + ":0"] ? " dn" : "") + '">' +
-            '<label><input type="checkbox" data-task="' + next.n + ':0"' + (S.tasks[next.n + ":0"] ? " checked" : "") + ">" +
+          ? '<ul class="chk" style="margin-top:8px"><li class="must' + (S.tasks[ck(next.n) + ":0"] ? " dn" : "") + '">' +
+            '<label><input type="checkbox" data-task="' + ck(next.n) + ':0"' + (S.tasks[ck(next.n) + ":0"] ? " checked" : "") + ">" +
             "<span>" + next.tasks[0] + "</span></label></li></ul>"
           : "") +
         '<div class="rowbtns">' +
           (top ? playLinksHTML(top.q) : "") +
-          '<button class="iconbtn on" data-go="week-' + next.n + '">進入第 ' + next.n + " 週（全部曲目與任務）</button>" +
+          '<button class="iconbtn on" data-go="' + unitView(next.n) + '">進入第 ' + next.n + " " + COURSE.unitWord + "（全部曲目與任務）</button>" +
         "</div></div>";
     } else {
-      h += '<div class="rowbtns"><button class="iconbtn on" data-go="week-' + next.n + '">進入第 ' + next.n + " 週</button></div>";
+      h += '<div class="rowbtns"><button class="iconbtn on" data-go="' + unitView(next.n) + '">進入第 ' + next.n + " " + COURSE.unitWord + "</button></div>";
     }
     return h + "</div>";
   }
@@ -478,25 +529,46 @@
   function homeHTML() {
     var totalWorks = Object.keys(WORKS).length;
     var totalVers = Object.keys(WORKS).reduce(function (a, k) { return a + (WORKS[k].versions || []).length; }, 0);
-    var hires = Object.keys(WORKS).reduce(function (a, k) {
-      return a + (WORKS[k].versions || []).filter(function (v) { return v.qa === "hires"; }).length; }, 0);
+    var u = COURSE.unitWord;
     var h = thisWeekHTML();
     h += '<div class="card"><h2>' + esc(CORE.meta.title) + "</h2>" +
-      '<div class="enttl">' + esc(CORE.meta.subtitle) + " · " + esc(CORE.meta.version) + "</div>" +
-      "<p>24 週、每週 15–90 分鐘可調整的自學路徑。每首曲目都附<b>經過挑選的著名版本</b>，並依 <b>Hi-Res &gt; Hi-Fi &gt; 歷史錄音</b> 排序，可直接連往 KKBOX 搜尋。</p>" +
-      '<div class="grid2" style="margin:16px 0">' +
-        stat("24", "週單元") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本推薦") + stat(String(hires), "個 Hi-Res 優先版本") +
-      "</div>" +
-      '<div class="banner"><b>每一週怎麼用（三步驟）</b><br>' +
-        "1. 展開曲目 → <b>先讀「播放前先讀」那一格</b>，知道這次要聽什麼<br>" +
-        "2. 版本清單<b>選一個就好</b>（最上面那個是建議首選），點「在 KKBOX 開啟」<br>" +
-        "3. 聽完回來勾掉任務。時間不夠就<b>只做每首的第一項「必做」</b>，然後前進到下一週——" +
-        "<b>課程的連續性比單週的完整性重要。</b></div>" +
-      '<div class="rowbtns"><button class="iconbtn" data-go="p-hires">先開好 Hi-Res 音質設定</button>' +
-      '<button class="iconbtn" data-go="p-method">課程設計原則</button>' +
-      '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div></div>';
+      '<div class="enttl">' + esc(CORE.meta.subtitle) + " · " + esc(CORE.meta.version) + "</div>";
 
-    return h;
+    if (COURSE.id === "classical") {
+      var hires = Object.keys(WORKS).reduce(function (a, k) {
+        return a + (WORKS[k].versions || []).filter(function (v) { return v.qa === "hires"; }).length; }, 0);
+      h += "<p>24 週、每週 15–90 分鐘可調整的自學路徑。每首曲目都附<b>經過挑選的著名版本</b>，並依 <b>Hi-Res &gt; Hi-Fi &gt; 歷史錄音</b> 排序，可直接連往 KKBOX 或 YouTube。</p>" +
+        '<div class="grid2" style="margin:16px 0">' +
+          stat("24", "週單元") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本推薦") + stat(String(hires), "個 Hi-Res 優先版本") +
+        "</div>" +
+        '<div class="banner"><b>每一週怎麼用（三步驟）</b><br>' +
+          "1. 展開曲目 → <b>先讀「播放前先讀」那一格</b>，知道這次要聽什麼<br>" +
+          "2. 版本清單<b>選一個就好</b>（最上面那個是建議首選），點播放連結<br>" +
+          "3. 聽完回來勾掉任務。時間不夠就<b>只做每首的第一項「必做」</b>，然後前進到下一週——" +
+          "<b>課程的連續性比單週的完整性重要。</b></div>" +
+        '<div class="rowbtns"><button class="iconbtn" data-go="p-hires">先開好 Hi-Res 音質設定</button>' +
+        '<button class="iconbtn" data-go="p-method">課程設計原則</button>' +
+        '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div>';
+      h += '<div class="banner" style="margin-top:14px"><b>另一門課：台灣傳統音樂</b>　8 個單元，從南管到原住民族歌謠。' +
+        "這門課教的四項聆聽工具（音色／織體／曲式／調性）在那邊直接用得上——" +
+        "<b>布農族 Pasibutbut 是複音織體最極端的例子，歌仔戲七字調就是主題與變奏。</b>" +
+        '<div class="rowbtns" style="margin-top:10px"><button class="iconbtn on" data-course="taiwan">◉ 切換到台灣傳統音樂</button></div></div>';
+    } else {
+      h += "<p>8 個單元，從南管到原住民族歌謠。<b>沒有固定進度</b>——一個單元想聽多久都可以。每首曲目附版本建議與備用搜尋字串，" +
+        "預設連往 <b>YouTube</b>（台灣傳統音樂在商業串流平台上收錄極不完整，YouTube 才是真正找得到東西的地方）。</p>" +
+        '<div class="grid2" style="margin:16px 0">' +
+          stat("8", "單元") + stat("7", "個樂種") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本建議") +
+        "</div>" +
+        '<div class="banner"><b>不知道從哪開始？</b>直接看<b>〈先聽這 10 首〉</b>。' +
+          "十首依衝擊力排序，約 90 分鐘，聽完主要地貌就大致完整了。" +
+          '<div class="rowbtns" style="margin-top:10px"><button class="iconbtn on" data-go="p-start">十　先聽這 10 首</button>' +
+          '<button class="iconbtn" data-go="p-cross">橋　與古典音樂課的對照</button>' +
+          '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div></div>' +
+        '<div class="note"><b>先說清楚一件事：找不到指定版本是常態，不是你的問題。</b>' +
+          "傳統音樂多為口傳，同一曲調在不同館閣、劇團、部落之間本就不同，商業平台的收錄也極不完整。" +
+          "每首曲目下方都準備了多個備用搜尋字串，找到哪個聽哪個。</div>";
+    }
+    return h + "</div>";
   }
 
   function pHiresHTML() {
@@ -590,36 +662,83 @@
 
   /* ---------------- 導覽列 ---------------- */
   function navHTML() {
-    var h = '<button class="navitem" data-go="home"><span class="wn"><span>◎</span></span><span class="tx">課程總覽</span></button>';
-    h += '<button class="navitem" data-go="p-hires"><span class="wn"><span>HR</span></span><span class="tx">Hi-Res 挑選指南</span></button>';
-    h += '<button class="navitem" data-go="p-method"><span class="wn"><span>法</span></span><span class="tx">課程設計原則</span></button>';
-    h += '<button class="navitem" data-go="p-kkbox"><span class="wn"><span>K</span></span><span class="tx">KKBOX 操作實務</span></button>';
-    h += '<button class="navitem" data-go="p-geo"><span class="wn"><span>圖</span></span><span class="tx">音樂地圖（地理軸）</span></button>';
-    h += '<button class="navitem" data-go="p-inst"><span class="wn"><span>器</span></span><span class="tx">樂器的演變（樂器軸）</span></button>';
+    // 課程切換器。一次只看一門課，側邊欄才不會被兩門課的單元灌爆。
+    var h = '<div class="cswitch" role="group" aria-label="切換課程">' +
+      courseList().map(function (id) {
+        var c = COURSES[id];
+        return '<button class="cbtn' + (id === COURSE.id ? " on" : "") + '" data-course="' + id + '"' +
+          (id === COURSE.id ? ' aria-current="true"' : "") + '><span class="ci">' + c.icon + "</span>" +
+          esc(c.label) + "</button>";
+      }).join("") + "</div>";
+
+    h += '<button class="navitem" data-go="home"><span class="wn"><span>◎</span></span><span class="tx">課程總覽</span></button>';
+    (COURSE.id === "classical"
+      ? [["p-hires", "HR", "Hi-Res 挑選指南"], ["p-method", "法", "課程設計原則"],
+         ["p-kkbox", "K", "KKBOX 操作實務"], ["p-geo", "圖", "音樂地圖（地理軸）"],
+         ["p-inst", "器", "樂器的演變（樂器軸）"]]
+      : (COURSE.pages || []).filter(function (pg) { return !pg.appendix; })
+          .map(function (pg) { return [pg.id, pg.icon, pg.title]; })
+    ).forEach(function (r) {
+      h += '<button class="navitem" data-go="' + r[0] + '"><span class="wn"><span>' + esc(r[1]) +
+        "</span></span><span class=\"tx\">" + esc(r[2]) + "</span></button>";
+    });
+
     CORE.modules.forEach(function (m) {
       h += '<div class="navmod"><span>' + esc(m.label) + "</span> " + esc(m.title) + "</div>";
       m.weeks.forEach(function (n) {
         var wk = WEEKS.filter(function (w) { return w.n === n; })[0];
         if (!wk) return;
-        h += '<button class="navitem' + (S.done[n] ? " done" : "") + '" data-go="week-' + n + '" data-week="' + n + '">' +
+        h += '<button class="navitem' + (S.done[ck(n)] ? " done" : "") + '" data-go="' + unitView(n) + '" data-week="' + n + '">' +
           '<span class="wn"><span>' + n + "</span></span>" +
           '<span class="tx">' + esc(wk.title) + "</span></button>";
       });
     });
+
     h += '<div class="navmod">附錄</div>';
-    h += '<button class="navitem" data-go="p-tiers"><span class="wn"><span>層</span></span><span class="tx">內容性質分類</span></button>';
-    h += '<button class="navitem" data-go="p-glossary"><span class="wn"><span>詞</span></span><span class="tx">名詞速查表</span></button>';
-    h += '<button class="navitem" data-go="p-caveats"><span class="wn"><span>限</span></span><span class="tx">限制與缺口</span></button>';
+    (COURSE.id === "classical"
+      ? [["p-tiers", "層", "內容性質分類"], ["p-glossary", "詞", "名詞速查表"], ["p-caveats", "限", "限制與缺口"]]
+      : (COURSE.pages || []).filter(function (pg) { return pg.appendix; })
+          .map(function (pg) { return [pg.id, pg.icon, pg.title]; })
+    ).forEach(function (r) {
+      h += '<button class="navitem" data-go="' + r[0] + '"><span class="wn"><span>' + esc(r[1]) +
+        "</span></span><span class=\"tx\">" + esc(r[2]) + "</span></button>";
+    });
     h += '<div class="navmod">其他</div>';
     h += '<button class="navitem" data-go="all"><span class="wn"><span>全</span></span><span class="tx">顯示全部（列印用）</span></button>';
     return h;
   }
 
+  /* 資料驅動的參考頁渲染器（台灣傳統音樂課程用）。 */
+  function pageHTML(pg) {
+    var h = '<div class="card" id="' + esc(pg.id) + '"><h2>' + esc(pg.title) + "</h2>";
+    if (pg.en) h += '<div class="enttl">' + esc(pg.en) + "</div>";
+    (pg.blocks || []).forEach(function (b) {
+      if (b.h3) h += "<h3>" + b.h3 + (b.tier ? " " + tierTags(b.tier) : "") + "</h3>";
+      if (b.p) h += "<p>" + (b.tier && !b.h3 ? tierTags(b.tier) : "") + b.p + "</p>";
+      if (b.banner) h += '<div class="banner">' + b.banner + "</div>";
+      if (b.note) h += '<div class="note">' + b.note + "</div>";
+      if (b.ul) h += "<ul>" + b.ul.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul>";
+      if (b.ol) h += "<ol>" + b.ol.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ol>";
+      if (b.table) h += tableHTML(b.table);
+      if (b.works) h += b.works.map(function (id) { return workHTML(id, null); }).join("");
+      if (b.picks) {
+        h += '<ul class="vlist">' + b.picks.map(function (k) {
+          return '<li class="v ' + (k.qa || "hifi") + '"><div><div class="p">' + k.label + "</div>" +
+            (k.sub ? '<div class="sub">' + k.sub + "</div>" : "") +
+            '<div class="qline">🔍 <code>' + esc(k.q) + "</code></div></div>" +
+            '<div class="acts">' + playLinksHTML(k.q) + "</div></li>";
+        }).join("") + "</ul>";
+      }
+    });
+    return h + "</div>";
+  }
+
   /* ---------------- 進度 ---------------- */
   function updateProgress() {
-    var d = Object.keys(S.done).filter(function (k) { return S.done[k]; }).length;
-    $("#progTxt").textContent = "已完成 " + d + " / 24 週";
-    $("#progBar").style.width = (d / 24 * 100) + "%";
+    var tot = WEEKS.length;
+    var d = WEEKS.filter(function (w) { return S.done[ck(w.n)]; }).length;
+    $("#progTxt").textContent = "已完成 " + d + " / " + tot + " " + COURSE.unitWord;
+    $("#progBar").style.width = (tot ? d / tot * 100 : 0) + "%";
   }
 
   /* ---------------- 檢視與路由 ----------------
@@ -627,7 +746,7 @@
      DOM 8944 個節點。一門要用 6 個月、每週只需要一週內容的課程不該這樣。
      改為一次只渲染當前檢視，並以 URL hash 作為單一真實來源——
      因此瀏覽器上一頁／下一頁自動可用，單一週次也能加書籤。 */
-  var PAGES = {
+  var CLASSICAL_PAGES = {
     home: homeHTML,
     "p-hires": pHiresHTML,
     "p-method": pMethodHTML,
@@ -638,27 +757,63 @@
     "p-glossary": pGlossaryHTML,
     "p-caveats": pCaveatsHTML
   };
+  /* 台灣傳統音樂課程的參考頁面寫在資料檔裡（course.pages），由 pageHTML() 統一渲染，
+     不必為每一頁各寫一個函式。 */
+  function pagesFor(c) {
+    if (c.id === "classical") return CLASSICAL_PAGES;
+    var m = { home: function () { return homeHTML(); } };
+    (c.pages || []).forEach(function (pg) {
+      m[pg.id] = function () { return pageHTML(pg); };
+    });
+    return m;
+  }
+  function PAGE(v) { return pagesFor(COURSE)[v]; }
+
   var view = "home";
   var searchReturn = "home"; // 清空搜尋時要回到哪個檢視
 
+  /* hash 格式：[課程/]檢視。省略課程＝古典音樂，所以既有的 #week-5 書籤照舊有效；
+     台灣傳統音樂為 #taiwan/unit-3。兩者都可寫成完整形式 #classical/week-5。 */
+  function parseHash() {
+    var h = decodeURIComponent((location.hash || "").replace(/^#/, ""));
+    var course = "classical", rest = h;
+    // 課程前綴可帶或不帶斜線：#taiwan 與 #taiwan/ 與 #taiwan/unit-3 都要能用
+    var m = h.match(/^([a-z]+)(?:\/(.*))?$/);
+    if (m && COURSES[m[1]]) { course = m[1]; rest = m[2] || ""; }
+    return { course: course, view: rest };
+  }
+
   function viewFromHash() {
-    var h = (location.hash || "").replace(/^#/, "");
+    var pr = parseHash();
+    if (pr.course !== COURSE.id) useCourse(pr.course);
+    var h = pr.view, c = COURSE;
     if (!h) return "home";
     if (h === "all") return "all";
-    if (PAGES[h]) return h;
-    var m = h.match(/^week-(\d+)$/);
-    if (m && WEEKS.some(function (w) { return w.n === +m[1]; })) return h;
+    if (PAGE(h)) return h;
+    var m = h.match(/^(?:week|unit)-(\d+)$/);
+    if (m && WEEKS.some(function (w) { return w.n === +m[1]; })) return unitView(+m[1]);
     return "home"; // 未知的 hash（例如舊書籤）落回首頁，不留白畫面
+  }
+
+  // 古典課用 week-N，台灣課用 unit-N，讓網址讀起來符合該課程的用語
+  function unitSlug() { return COURSE.id === "classical" ? "week" : "unit"; }
+  function unitView(n) { return unitSlug() + "-" + n; }
+  function unitNum(v) { var m = v.match(/^(?:week|unit)-(\d+)$/); return m ? +m[1] : null; }
+
+  function hashFor(v, courseId) {
+    var cid = courseId || COURSE.id;
+    var prefix = cid === "classical" ? "" : cid + "/";
+    return (v === "home" && !prefix) ? "" : "#" + prefix + (v === "home" ? "" : v);
   }
 
   function setView(v, opts) {
     opts = opts || {};
     view = v;
     if (!opts.fromHash) {
-      var target = v === "home" ? "" : "#" + v;
+      var target = hashFor(v);
       if (location.hash !== target) {
-        // 用 hash 記錄檢視，讓上一頁／下一頁與書籤都能運作
-        if (target) location.hash = v; else history.replaceState(null, "", location.pathname + location.search);
+        if (target) location.hash = target.slice(1);
+        else history.replaceState(null, "", location.pathname + location.search);
       }
     }
     render();
@@ -666,15 +821,50 @@
     $("#side").classList.remove("open");
   }
 
-  var FOOT = '<div class="foot">古典音樂系統聆聽課程 · ' + esc(CORE.meta.version) +
-    "<br>版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。</div>";
+  // 切換課程：跳到該課程首頁，並套用該課程的預設（例如台灣課預設 YouTube 優先）
+  function switchCourse(id) {
+    if (!COURSES[id] || id === COURSE.id) return;
+    useCourse(id);
+    applyCourseDefaults();
+    if ($("#q").value) $("#q").value = "";
+    location.hash = hashFor("home", id).slice(1) || " ";
+    if (!location.hash || location.hash === "# ") {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+    view = "home"; render(); window.scrollTo(0, 0);
+    $("#side").classList.remove("open");
+    setBrand();
+  }
+
+  /* 每門課的合理預設不同，但使用者改過的就不再覆蓋（記在 S.touched）。
+     台灣傳統音樂在 KKBOX 上曲庫很薄，YouTube 才是主力；而且這門課最重要的錄音
+     常常是 1943／1971 年的歷史錄音，「Hi-Res 優先」在這裡是錯的預設。 */
+  function applyCourseDefaults() {
+    var d = COURSE.defaults || {};
+    var changed = false;
+    Object.keys(d).forEach(function (k) {
+      if (!S.touched[k] && S[k] !== d[k]) { S[k] = d[k]; changed = true; }
+    });
+    if (changed) save();
+  }
+
+  function setBrand() {
+    var el = $(".brand");
+    if (el) el.innerHTML = esc(COURSE.brand) + "<small>" + esc(COURSE.brandSub) + "</small>";
+  }
+
+  function FOOT() {
+    return '<div class="foot">' + esc(COURSE.brand) + " · " + esc(CORE.meta.version) +
+      "<br>" + COURSE.foot + "</div>";
+  }
 
   function weekNavHTML(n) {
+    var u = COURSE.unitWord;
     var prev = WEEKS.filter(function (w) { return w.n === n - 1; })[0];
     var next = WEEKS.filter(function (w) { return w.n === n + 1; })[0];
     return '<div class="weeknav">' +
-      (prev ? '<button class="iconbtn" data-go="week-' + prev.n + '">← 第 ' + prev.n + " 週　" + esc(prev.title) + "</button>" : "<span></span>") +
-      (next ? '<button class="iconbtn" data-go="week-' + next.n + '">第 ' + next.n + " 週　" + esc(next.title) + " →</button>" : "<span></span>") +
+      (prev ? '<button class="iconbtn" data-go="' + unitView(prev.n) + '">← 第 ' + prev.n + " " + u + "　" + esc(prev.title) + "</button>" : "<span></span>") +
+      (next ? '<button class="iconbtn" data-go="' + unitView(next.n) + '">第 ' + next.n + " " + u + "　" + esc(next.title) + " →</button>" : "<span></span>") +
       "</div>";
   }
 
@@ -685,19 +875,22 @@
     if (view === "search") {
       body = searchHTML();
     } else if (view === "all") {
-      body = '<div class="banner" style="margin-bottom:16px"><b>顯示全部</b>：整份課程在同一頁，適合一路瀏覽或列印。' +
-        '要回到單週檢視，點左側任一週次即可。</div>' +
-        homeHTML() + geographyHTML() + instrumentsHTML() +
-        pHiresHTML() + pMethodHTML() + pKkboxHTML() +
-        WEEKS.map(weekHTML).join("") + pTiersHTML() + pGlossaryHTML() + pCaveatsHTML();
-    } else if (/^week-\d+$/.test(view)) {
-      var n = +view.split("-")[1];
+      var pages = pagesFor(COURSE);
+      var extras = COURSE.id === "classical"
+        ? [homeHTML(), geographyHTML(), instrumentsHTML(), pHiresHTML(), pMethodHTML(), pKkboxHTML()].join("")
+        : [homeHTML()].concat((COURSE.pages || []).map(function (pg) { return pageHTML(pg); })).join("");
+      var tail = COURSE.id === "classical" ? pTiersHTML() + pGlossaryHTML() + pCaveatsHTML() : "";
+      body = '<div class="banner" style="margin-bottom:16px"><b>顯示全部</b>：整門課程在同一頁，適合一路瀏覽或列印。' +
+        "要回到單" + COURSE.unitWord + "檢視，點左側任一" + COURSE.unitWord + "次即可。</div>" +
+        extras + WEEKS.map(weekHTML).join("") + tail;
+    } else if (unitNum(view) !== null) {
+      var n = unitNum(view);
       var wk = WEEKS.filter(function (w) { return w.n === n; })[0];
       body = weekHTML(wk) + weekNavHTML(n);
     } else {
-      body = (PAGES[view] || homeHTML)();
+      body = (PAGE(view) || homeHTML)();
     }
-    $("#content").innerHTML = body + FOOT;
+    $("#content").innerHTML = body + FOOT();
     updateProgress();
     $$(".navitem").forEach(function (el) {
       el.classList.toggle("active", el.getAttribute("data-go") === view);
@@ -711,15 +904,22 @@
      的問題：每個結果都標明所屬週次，可直接跳過去。 */
 
   // 每首曲目出現在哪幾週（同一首可能跨週複用，例如 mozart-40 在第 4、8 週）
-  var WORK_WEEKS = (function () {
+  var WORK_WEEKS = {};
+  function buildWorkWeeks() {
     var map = {};
     WEEKS.forEach(function (w) {
       [].concat(w.works || [], w.extraWorks || []).forEach(function (id) {
         (map[id] = map[id] || []).push(w.n);
       });
     });
-    return map;
-  })();
+    // 資料頁（course.pages）裡直接嵌入的曲目也要能被搜尋定位
+    (COURSE.pages || []).forEach(function (pg) {
+      (pg.blocks || []).forEach(function (b) {
+        (b.works || []).forEach(function (id) { if (!map[id]) map[id] = []; });
+      });
+    });
+    WORK_WEEKS = map;
+  }
 
   function searchIndex(id) {
     var w = WORKS[id];
@@ -741,19 +941,45 @@
     return { works: works, weeks: weeks };
   }
 
+  // 另一門課裡有沒有命中？搜尋是最容易撞見跨課程關聯的地方，不該讓它靜默。
+  function otherHits(q) {
+    var res = [];
+    courseList().forEach(function (cid) {
+      if (cid === COURSE.id) return;
+      var c = COURSES[cid], lq = q.trim().toLowerCase(), n = 0;
+      Object.keys(c.works).forEach(function (id) {
+        var w = c.works[id];
+        var t = [w.title, w.en, w.composer, w.q, w.bg, w.fact, w.life, w.pick,
+                 (w.versions || []).map(function (v) { return v.p + " " + v.l + " " + v.q; }).join(" ")]
+          .filter(Boolean).join(" ").toLowerCase();
+        if (t.indexOf(lq) > -1) n++;
+      });
+      if (n) res.push({ course: c, n: n });
+    });
+    return res;
+  }
+
   function searchHTML() {
     var q = ($("#q").value || "").trim();
-    var r = runSearch(q);
-    var h = '<div class="card"><h2>搜尋「' + esc(q) + "」</h2>" +
-      '<div class="enttl">曲目 ' + r.works.length + " 首　·　週次 " + r.weeks.length + " 個</div>";
+    var r = runSearch(q), u = COURSE.unitWord;
+    var h = '<div class="card"><h2>在「' + esc(COURSE.label) + "」中搜尋「" + esc(q) + "」</h2>" +
+      '<div class="enttl">曲目 ' + r.works.length + " 首　·　" + u + "次 " + r.weeks.length + " 個</div>";
+    var other = otherHits(q);
     if (!r.works.length && !r.weeks.length) {
-      h += '<p class="hint">沒有符合的結果。試試作曲家姓氏（Beethoven）、演奏者（Kleiber）、' +
-        "或中文曲名關鍵字（夜曲、賦格）。</p></div>";
-      return h;
+      h += '<p class="hint">這門課裡沒有符合的結果。試試作曲家或演奏者姓名、樂種名稱（南管、歌仔戲）、' +
+        "或中文曲名關鍵字。</p>";
+    }
+    if (other.length) {
+      h += '<div class="banner" style="margin-top:12px"><b>另一門課有結果：</b>' +
+        other.map(function (o) {
+          return '<button class="iconbtn on" data-course="' + o.course.id + '" style="margin-left:6px">' +
+            o.course.icon + " " + esc(o.course.label) + "　" + o.n + " 首 →</button>";
+        }).join("") +
+        '<div class="hint" style="margin-top:8px">切過去之後再搜一次同一個關鍵字即可。</div></div>';
     }
     if (r.weeks.length) {
-      h += "<h3>週次</h3><div class=\"rowbtns\">" + r.weeks.map(function (w) {
-        return '<button class="iconbtn" data-go="week-' + w.n + '">第 ' + w.n + " 週　" + esc(w.title) + "</button>";
+      h += "<h3>" + u + "次</h3><div class=\"rowbtns\">" + r.weeks.map(function (w) {
+        return '<button class="iconbtn" data-go="' + unitView(w.n) + '">第 ' + w.n + " " + u + "　" + esc(w.title) + "</button>";
       }).join("") + "</div>";
     }
     h += "</div>";
@@ -763,7 +989,7 @@
         var wks = WORK_WEEKS[id] || [];
         var wk = WEEKS.filter(function (w) { return w.n === wks[0]; })[0];
         return '<div class="srow">' + (wks.length
-          ? wks.map(function (n) { return '<button class="wlink" data-go="week-' + n + '">第 ' + n + " 週</button>"; }).join(" ")
+          ? wks.map(function (n) { return '<button class="wlink" data-go="' + unitView(n) + '">第 ' + n + " " + u + "</button>"; }).join(" ")
           : '<span class="hint">延伸曲目</span>') + "</div>" + workHTML(id, wk);
       }).join("");
       h += "</div>";
@@ -771,7 +997,7 @@
     return h;
   }
 
-  var searchT;
+  var searchT;   // 輸入防抖，避免每敲一個字就重繪整個結果頁
   function onSearchInput() {
     clearTimeout(searchT);
     searchT = setTimeout(function () {
@@ -788,29 +1014,34 @@
   }
 
   /* ---------------- 重聽區 ---------------- */
+  /* ★ 重聽區跨課程共用——收藏是「這首打到我」，不該因為換課程就看不到。
+     兩門課的曲目分組顯示，各自標明課程。 */
   function favHTML() {
-    var ids = Object.keys(S.fav).filter(function (k) { return S.fav[k] && WORKS[k]; });
-    if (!ids.length) return '<p class="hint">還沒有收藏。點任一曲目左邊的 ☆ 就會加進來。<br><br>建議用法：課程進行中凡是聽了有感覺的曲目立即收藏，第 24 週統計哪個時期／作曲家佔比最高——那就是你的品味起點。</p>';
-    var lines = ids.map(function (id) {
-      var w = WORKS[id];
-      var top = sortVersions(w.versions || [])[0];
-      return { id: id, w: w, top: top };
-    });
+    var ids = Object.keys(S.fav).filter(function (k) { return S.fav[k] && findWork(k); });
+    if (!ids.length) return '<p class="hint">還沒有收藏。點任一曲目左邊的 ☆ 就會加進來。<br><br>建議用法：課程進行中凡是聽了有感覺的曲目立即收藏，最後統計哪個時期／樂種／作曲家佔比最高——那就是你的品味起點。<br><br><b>兩門課的收藏會放在一起</b>，所以你可以直接看出自己在古典音樂與台灣傳統音樂之間偏向哪一邊。</p>';
     var h = '<div class="rowbtns"><button class="iconbtn" id="favCopy">複製全部搜尋字串（' + ids.length + " 首）</button>" +
-      '<button class="iconbtn" id="favClear">清空</button></div><ul class="vlist" style="margin-top:14px">';
-    h += lines.map(function (L) {
-      return '<li class="v ' + (L.top ? L.top.qa : "hifi") + '"><div>' +
-        '<div class="p">' + esc(L.w.title) + "</div>" +
-        '<div class="sub">' + esc(L.w.composer) + (L.top ? " ｜ 推薦：" + esc(L.top.p) : "") + "</div></div>" +
-        '<div class="acts">' + playLinksHTML(L.top ? L.top.q : L.w.q, { short: true }) +
-        '<button class="copy" data-unfav="' + esc(L.id) + '">移除</button></div></li>';
-    }).join("") + "</ul>";
+      '<button class="iconbtn" id="favClear">清空</button></div>';
+    courseList().forEach(function (cid) {
+      var c = COURSES[cid];
+      var mine = ids.filter(function (id) { return c.works[id]; });
+      if (!mine.length) return;
+      h += '<div class="navmod" style="margin-top:18px"><span>' + c.icon + "</span> " +
+        esc(c.label) + "　" + mine.length + " 首</div>";
+      h += '<ul class="vlist">' + mine.map(function (id) {
+        var w = c.works[id], top = sortVersions(w.versions || [])[0];
+        return '<li class="v ' + (top ? top.qa : "hifi") + '"><div>' +
+          '<div class="p">' + esc(w.title) + "</div>" +
+          '<div class="sub">' + esc(w.composer) + (top ? " ｜ 推薦：" + esc(top.p) : "") + "</div></div>" +
+          '<div class="acts">' + playLinksHTML(top ? top.q : w.q, { short: true }) +
+          '<button class="copy" data-unfav="' + esc(id) + '">移除</button></div></li>';
+      }).join("") + "</ul>";
+    });
     return h;
   }
   function favText() {
-    return Object.keys(S.fav).filter(function (k) { return S.fav[k] && WORKS[k]; }).map(function (k) {
-      var top = sortVersions(WORKS[k].versions || [])[0];
-      return (top ? top.q : WORKS[k].q);
+    return Object.keys(S.fav).filter(function (k) { return S.fav[k] && findWork(k); }).map(function (k) {
+      var w = findWork(k).work, top = sortVersions(w.versions || [])[0];
+      return (top ? top.q : w.q);
     }).join("\n");
   }
 
@@ -955,7 +1186,7 @@
       S.done[wn] = !S.done[wn]; if (!S.done[wn]) delete S.done[wn];
       save();
       dn.classList.toggle("on", !!S.done[wn]);
-      dn.textContent = S.done[wn] ? "✓ 本週已完成" : "標記本週完成";
+      dn.textContent = S.done[wn] ? "✓ 已完成" : "標記" + COURSE.unitWord + "完成";
       var nav = $('.navitem[data-week="' + wn + '"]');
       if (nav) nav.classList.toggle("done", !!S.done[wn]);
       updateProgress();
@@ -1021,6 +1252,8 @@
       }
       return;
     }
+    var cb = t.closest("[data-course]");
+    if (cb) { switchCourse(cb.getAttribute("data-course")); return; }
     // 展開曲目
     var hd = t.closest(".workhd");
     if (hd && !t.closest(".star")) {
@@ -1070,13 +1303,13 @@
     }
     var map = { setRegion: "region", setLang: "lang", setTheme: "theme", setPlatform: "platform" };
     if (map[t.id]) {
-      S[map[t.id]] = t.value; save();
+      S[map[t.id]] = t.value; S.touched[map[t.id]] = true; save();
       if (t.id === "setTheme") applyTheme(); else render();
       // 設定面板本身也含播放連結說明，切換後要一起重畫
       if (t.id === "setPlatform") { openDrawer("settings"); toast("主要平台已切換為 " + (t.value === "youtube" ? "YouTube" : "KKBOX")); }
       return;
     }
-    if (t.id === "setHires") { S.hiresFirst = t.checked; save(); render(); return; }
+    if (t.id === "setHires") { S.hiresFirst = t.checked; S.touched.hiresFirst = true; save(); render(); return; }
     if (t.id === "setHideH") { S.hideHistoric = t.checked; save(); render(); return; }
   });
 
@@ -1123,6 +1356,9 @@
   }, { passive: true });
 
   /* ---------------- 啟動 ---------------- */
+  useCourse(parseHash().course);
+  applyCourseDefaults();
+  setBrand();
   applyTheme();
   view = viewFromHash();
   render();
