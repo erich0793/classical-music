@@ -720,6 +720,8 @@
       if (b.ul) h += "<ul>" + b.ul.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul>";
       if (b.ol) h += "<ol>" + b.ol.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ol>";
       if (b.table) h += tableHTML(b.table);
+      if (b.instcards) h += instCardsHTML();
+      if (b.instcompare) h += instCompareHTML();
       if (b.works) h += b.works.map(function (id) { return workHTML(id, null); }).join("");
       if (b.picks) {
         h += '<ul class="vlist">' + b.picks.map(function (k) {
@@ -731,6 +733,37 @@
       }
     });
     return h + "</div>";
+  }
+
+  /* 樂器線稿卡片。改用卡片而非表格：加了圖之後表格在手機上會變成必須橫向捲動
+     才看得完的四欄，那反而比沒有圖更難用。 */
+  function instCardsHTML() {
+    return '<div class="instgrid">' + (COURSE.instruments || []).map(function (i) {
+      return '<div class="instcard">' +
+        '<div class="instfig">' + i.svg + "</div>" +
+        '<div class="instbody">' +
+          '<div class="instname">' + esc(i.name) +
+            (i.alias ? '<span class="instalias">' + esc(i.alias) + "</span>" : "") + "</div>" +
+          '<div class="instrow"><b>外觀</b>' + i.look + "</div>" +
+          '<div class="instrow"><b>聲音</b>' + i.sound + "</div>" +
+          '<div class="instrow mut"><b>出現在</b>' + i.where + "</div>" +
+        "</div></div>";
+    }).join("") + "</div>";
+  }
+
+  /* 對照組：兩張線稿並列。視覺差異（橫抱／豎抱、直吹／橫吹）用文字說不清楚，
+     這是這一頁最需要圖的地方。 */
+  function instCompareHTML() {
+    return (COURSE.instCompare || []).map(function (c) {
+      var side = function (x) {
+        return '<div class="cmpside"><div class="instfig">' + x.svg + "</div>" +
+          '<div class="cmpname">' + esc(x.name) + "</div>" +
+          '<div class="cmpd">' + x.d + "</div></div>";
+      };
+      return '<div class="instcmp"><div class="cmphd">' + esc(c.title) + "</div>" +
+        '<div class="cmpbody">' + side(c.a) + '<div class="cmpvs">vs.</div>' + side(c.b) + "</div>" +
+        (c.note ? '<div class="cmpnote">' + c.note + "</div>" : "") + "</div>";
+    }).join("");
   }
 
   /* ---------------- 進度 ---------------- */
