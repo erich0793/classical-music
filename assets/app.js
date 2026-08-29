@@ -7,13 +7,14 @@
      調性）正好就是聽台灣傳統音樂的工具，而 Pasibutbut、七字調、哭調又反過來
      是那些概念最好的例子。分成兩站，這些連結就斷了。 */
   var COURSES = window.COURSES = window.COURSES || {};
-  COURSES.classical = {
+  // data-instruments.js 先載入並掛上 instruments / instCompare / pages，這裡補齊其餘欄位
+  COURSES.classical = Object.assign(COURSES.classical || {}, {
     id: "classical", label: "古典音樂", short: "古", icon: "♪",
     unitWord: "週", brand: "古典音樂系統聆聽課程", brandSub: "24 週 · KKBOX 適配版",
     core: window.CORE, works: window.WORKS, weeks: window.WEEKS,
     defaults: { platform: "kkbox", hiresFirst: true },
     foot: "版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。"
-  };
+  });
   var ORDER = ["classical", "taiwan"];
   function courseList() { return ORDER.filter(function (id) { return COURSES[id]; }); }
 
@@ -672,12 +673,15 @@
       }).join("") + "</div>";
 
     h += '<button class="navitem" data-go="home"><span class="wn"><span>◎</span></span><span class="tx">課程總覽</span></button>';
+    var dataPages = function (ap) {
+      return (COURSE.pages || []).filter(function (pg) { return !!pg.appendix === ap; })
+        .map(function (pg) { return [pg.id, pg.icon, pg.title]; });
+    };
     (COURSE.id === "classical"
-      ? [["p-hires", "HR", "Hi-Res 挑選指南"], ["p-method", "法", "課程設計原則"],
-         ["p-kkbox", "K", "KKBOX 操作實務"], ["p-geo", "圖", "音樂地圖（地理軸）"],
-         ["p-inst", "器", "樂器的演變（樂器軸）"]]
-      : (COURSE.pages || []).filter(function (pg) { return !pg.appendix; })
-          .map(function (pg) { return [pg.id, pg.icon, pg.title]; })
+      ? [["p-orch", "器", "樂器圖鑑"], ["p-hires", "HR", "Hi-Res 挑選指南"],
+         ["p-method", "法", "課程設計原則"], ["p-kkbox", "K", "KKBOX 操作實務"],
+         ["p-geo", "圖", "音樂地圖（地理軸）"], ["p-inst", "演", "樂器的演變（樂器軸）"]]
+      : dataPages(false)
     ).forEach(function (r) {
       h += '<button class="navitem" data-go="' + r[0] + '"><span class="wn"><span>' + esc(r[1]) +
         "</span></span><span class=\"tx\">" + esc(r[2]) + "</span></button>";
@@ -697,8 +701,7 @@
     h += '<div class="navmod">附錄</div>';
     (COURSE.id === "classical"
       ? [["p-tiers", "層", "內容性質分類"], ["p-glossary", "詞", "名詞速查表"], ["p-caveats", "限", "限制與缺口"]]
-      : (COURSE.pages || []).filter(function (pg) { return pg.appendix; })
-          .map(function (pg) { return [pg.id, pg.icon, pg.title]; })
+      : dataPages(true)
     ).forEach(function (r) {
       h += '<button class="navitem" data-go="' + r[0] + '"><span class="wn"><span>' + esc(r[1]) +
         "</span></span><span class=\"tx\">" + esc(r[2]) + "</span></button>";
@@ -738,7 +741,20 @@
   /* 樂器線稿卡片。改用卡片而非表格：加了圖之後表格在手機上會變成必須橫向捲動
      才看得完的四欄，那反而比沒有圖更難用。 */
   function instCardsHTML() {
-    return '<div class="instgrid">' + (COURSE.instruments || []).map(function (i) {
+    var list = COURSE.instruments || [], grp = null, h = "";
+    list.forEach(function (i, k) {
+      if (i.group && i.group !== grp) {
+        if (grp !== null) h += "</div>";
+        h += '<div class="navmod" style="margin-top:20px"><span>' + esc(i.group) + "</span> " +
+          esc(i.groupNote || "") + '</div><div class="instgrid">';
+        grp = i.group;
+      } else if (k === 0) { h += '<div class="instgrid">'; }
+      h += instCardHTML(i);
+    });
+    return h + (list.length ? "</div>" : "");
+  }
+  function instCardHTML(i) {
+    return [i].map(function (i) {
       return '<div class="instcard">' +
         '<div class="instfig">' + i.svg + "</div>" +
         '<div class="instbody">' +
@@ -748,7 +764,7 @@
           '<div class="instrow"><b>聲音</b>' + i.sound + "</div>" +
           '<div class="instrow mut"><b>出現在</b>' + i.where + "</div>" +
         "</div></div>";
-    }).join("") + "</div>";
+    }).join("");
   }
 
   /* 對照組：兩張線稿並列。視覺差異（橫抱／豎抱、直吹／橫吹）用文字說不清楚，
@@ -792,9 +808,12 @@
   };
   /* 台灣傳統音樂課程的參考頁面寫在資料檔裡（course.pages），由 pageHTML() 統一渲染，
      不必為每一頁各寫一個函式。 */
+  /* 兩門課都可以混用「函式頁」與「資料頁」：古典課既有的頁面是函式，
+     新加的樂器圖鑑是資料頁，共用 pageHTML() 渲染。 */
   function pagesFor(c) {
-    if (c.id === "classical") return CLASSICAL_PAGES;
-    var m = { home: function () { return homeHTML(); } };
+    var m = c.id === "classical"
+      ? Object.assign({}, CLASSICAL_PAGES)
+      : { home: function () { return homeHTML(); } };
     (c.pages || []).forEach(function (pg) {
       m[pg.id] = function () { return pageHTML(pg); };
     });
@@ -909,9 +928,10 @@
       body = searchHTML();
     } else if (view === "all") {
       var pages = pagesFor(COURSE);
+      var dp = (COURSE.pages || []).map(function (pg) { return pageHTML(pg); }).join("");
       var extras = COURSE.id === "classical"
-        ? [homeHTML(), geographyHTML(), instrumentsHTML(), pHiresHTML(), pMethodHTML(), pKkboxHTML()].join("")
-        : [homeHTML()].concat((COURSE.pages || []).map(function (pg) { return pageHTML(pg); })).join("");
+        ? [homeHTML(), dp, geographyHTML(), instrumentsHTML(), pHiresHTML(), pMethodHTML(), pKkboxHTML()].join("")
+        : homeHTML() + dp;
       var tail = COURSE.id === "classical" ? pTiersHTML() + pGlossaryHTML() + pCaveatsHTML() : "";
       body = '<div class="banner" style="margin-bottom:16px"><b>顯示全部</b>：整門課程在同一頁，適合一路瀏覽或列印。' +
         "要回到單" + COURSE.unitWord + "檢視，點左側任一" + COURSE.unitWord + "次即可。</div>" +
