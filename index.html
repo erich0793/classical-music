@@ -7,6 +7,12 @@
 <meta name="description" content="兩門互相對照的聆聽課程：古典音樂 24 週、台灣傳統音樂 8 單元。每首曲目附版本推薦與 KKBOX／YouTube 雙連結。">
 <meta name="color-scheme" content="light dark">
 <link rel="stylesheet" href="assets/style.css">
+<script>
+/* 字級要在第一次繪製之前就套上，否則選了「最大」的人每次開啟都會先看到
+   一瞬間的小字再跳大。只讀 --fs，主題仍由 app.js 處理（它要判斷「跟隨系統」）。 */
+try{var f=JSON.parse(localStorage.getItem("cmc.v1")||"{}").fs;
+if(f>0)document.documentElement.style.setProperty("--fs",String(f));}catch(e){}
+</script>
 </head>
 <body>
 

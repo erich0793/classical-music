@@ -47,6 +47,10 @@
   var DEFAULTS = {
     region: "tw", lang: "tc",
     hiresFirst: true, hideHistoric: false, theme: "auto",
+    // 字級。整站的 font-size 都是 calc(Npx*var(--fs))，這裡只設那一個倍率。
+    // 手機上預設的 15.5px 內文對年長者偏小，但直接調大預設會動到所有既有使用者，
+    // 所以做成可選的五個級距，選過就記在這台裝置上。
+    fs: 1,
     // 主要播放平台："kkbox" 或 "youtube"。兩個按鈕永遠都在，這裡只決定
     // 哪一個排在前面、用實心樣式。沒有 KKBOX 的人可以改成 youtube。
     platform: "kkbox",
@@ -613,6 +617,7 @@
           "<b>課程的連續性比單週的完整性重要。</b></div>" +
         '<div class="rowbtns"><button class="iconbtn" data-go="p-hires">先開好 Hi-Res 音質設定</button>' +
         '<button class="iconbtn" data-go="p-method">課程設計原則</button>' +
+        '<button class="iconbtn" data-open="settings">Aa　字太小？調整字級</button>' +
         '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div>';
       h += '<div class="banner" style="margin-top:14px"><b>另一門課：台灣傳統音樂</b>　8 個單元，從南管到原住民族歌謠。' +
         "這門課教的四項聆聽工具（音色／織體／曲式／調性）在那邊直接用得上——" +
@@ -628,6 +633,7 @@
           "十首依衝擊力排序，約 90 分鐘，聽完主要地貌就大致完整了。" +
           '<div class="rowbtns" style="margin-top:10px"><button class="iconbtn on" data-go="p-start">十　先聽這 10 首</button>' +
           '<button class="iconbtn" data-go="p-cross">橋　與古典音樂課的對照</button>' +
+          '<button class="iconbtn" data-open="settings">Aa　字太小？調整字級</button>' +
           '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div></div>' +
         '<div class="note"><b>先說清楚一件事：找不到指定版本是常態，不是你的問題。</b>' +
           "傳統音樂多為口傳，同一曲調在不同館閣、劇團、部落之間本就不同，商業平台的收錄也極不完整。" +
@@ -1207,7 +1213,23 @@
   /* ---------------- 設定面板 ---------------- */
   function settingsHTML() {
     var opt = function (v, cur, txt) { return '<option value="' + v + '"' + (v === cur ? " selected" : "") + ">" + txt + "</option>"; };
-    return "<h3>播放平台</h3>" +
+    /* 字級放在設定面板最上面：需要放大字的人，多半也不方便在一長串設定裡找。
+       用大按鈕而不是下拉選單——下拉選單本身的字就是小的，要放大字的人先看不到它。
+       每個按鈕用自己那一級的字級顯示，所見即所得。 */
+    var fsCur = fsIndex();
+    return "<h3>字級</h3>" +
+      '<div class="fsrow" role="group" aria-label="選擇字級">' +
+        FS_STEPS.map(function (s, i) {
+          return '<button class="fsbtn' + (i === fsCur ? " on" : "") + '" data-fs="' + s.v + '"' +
+            (i === fsCur ? ' aria-current="true"' : "") +
+            ' style="font-size:calc(15.5px*' + s.v + ')">' + esc(s.label) + "</button>";
+        }).join("") + "</div>" +
+      '<div class="fsprev"><b>看得清楚嗎？</b>這一段就是本文的實際大小。' +
+        "選一個看起來最舒服的，之後<b>整個網站都會照這個字級顯示</b>，換頁也不會跑掉。</div>" +
+      '<div class="hint">目前：<b>' + esc(FS_STEPS[fsCur].label) + "</b>（" + esc(FS_STEPS[fsCur].note) + "）。" +
+        "設定記在<b>這台裝置的這個瀏覽器</b>裡，換裝置要再設一次。<br>" +
+        "手機系統本身的「顯示大小／字體大小」設定也會一起作用，兩邊可以疊加。</div>" +
+      "<h3>播放平台</h3>" +
       '<div class="fld"><label>主要平台</label><select id="setPlatform">' +
         opt("kkbox", S.platform, "KKBOX") + opt("youtube", S.platform, "YouTube") + "</select>" +
         '<div class="hint"><b>兩個平台的連結永遠都在</b>，這裡只決定哪一個排在前面、用明顯的按鈕樣式。<br>' +
@@ -1260,6 +1282,28 @@
     var t = S.theme;
     if (t === "auto") t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", t);
+  }
+
+  /* 字級級距。名稱寫得直白（「大」「特大」），不用 A／AA／AAA 這種只有設計師懂的標示。
+     倍率之間至少差 15%——差太少的話按了看不出變化，反而讓人以為壞了。 */
+  var FS_STEPS = [
+    { v: 1,    label: "標準",   note: "內文 15.5px" },
+    { v: 1.15, label: "大",     note: "內文 18px" },
+    { v: 1.3,  label: "特大",   note: "內文 20px" },
+    { v: 1.5,  label: "超大",   note: "內文 23px" },
+    { v: 1.75, label: "最大",   note: "內文 27px" }
+  ];
+  function fsIndex() {
+    for (var i = 0; i < FS_STEPS.length; i++) if (Math.abs(FS_STEPS[i].v - S.fs) < 0.01) return i;
+    return 0;
+  }
+  function applyFs() {
+    document.documentElement.style.setProperty("--fs", String(S.fs || 1));
+  }
+  function setFs(v) {
+    S.fs = v; save(); applyFs();
+    var d = $("#drawer");
+    if (d && d.classList.contains("open")) openDrawer("settings");
   }
 
   /* ---------------- 抽屜 ---------------- */
@@ -1336,6 +1380,9 @@
       setFavCount();
       return;
     }
+    var fz = find("data-fs");
+    if (fz) { setFs(parseFloat(fz.getAttribute("data-fs")) || 1); return; }
+
     var uf = find("data-unfav");
     if (uf) { delete S.fav[uf.getAttribute("data-unfav")]; save(); openDrawer("fav");
       setFavCount();
@@ -1394,7 +1441,7 @@
         save(); render(); openDrawer("settings"); toast("已匯入 " + n + " 個連結");
       } else {
         S = Object.assign({}, DEFAULTS, data);
-        save(); applyTheme(); render(); openDrawer("settings");
+        save(); applyTheme(); applyFs(); render(); openDrawer("settings");
         setFavCount();
         toast("已匯入進度");
       }
@@ -1409,7 +1456,7 @@
     if (t.id === "setReset") {
       if (confirm("清除全部進度、收藏與設定？此動作無法復原。")) {
         S = Object.assign({}, DEFAULTS, { done: {}, tasks: {}, checks: {}, fav: {} });
-        save(); applyTheme(); render(); closeDrawer();
+        save(); applyTheme(); applyFs(); render(); closeDrawer();
         setFavCount();
       }
       return;
@@ -1526,6 +1573,7 @@
   applyCourseDefaults();
   setBrand();
   applyTheme();
+  applyFs();
   view = viewFromHash();
   render();
   setFavCount();

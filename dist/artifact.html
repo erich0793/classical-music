@@ -1,6 +1,9 @@
 <title>聆聽課程｜古典音樂 24 週 · 台灣傳統音樂 8 單元</title>
 <style>
 :root{
+  /* 字級縮放。所有 font-size 都寫成 calc(Npx*var(--fs))，設定裡改這一個變數
+     就能整站放大——不動版面結構，也不必為每個級距各寫一份樣式。 */
+  --fs:1;
   --bg:#f7f5f1; --bg2:#fffdfa; --fg:#22201d; --mut:#6d6760; --line:#e2ddd4;
   --acc:#8a5a2b; --acc2:#b8813f; --sel:#f0e6d6;
   --hires:#1c6b52; --hiresBg:#dff0e8; --hifi:#2f5d8a; --hifiBg:#dde9f4;
@@ -24,7 +27,7 @@ html{scroll-behavior:smooth}
 body{
   margin:0;background:var(--bg);color:var(--fg);
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
-  line-height:1.75;font-size:15.5px;-webkit-font-smoothing:antialiased;
+  line-height:1.75;font-size:calc(15.5px*var(--fs));-webkit-font-smoothing:antialiased;
 }
 a{color:var(--acc);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -40,8 +43,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .main{padding:24px 30px 100px;min-width:0}
 
 /* ---------- header ---------- */
-.brand{font-weight:700;font-size:17px;letter-spacing:-.01em;margin-bottom:2px}
-.brand small{display:block;font-weight:400;font-size:12px;color:var(--mut);letter-spacing:0}
+.brand{font-weight:700;font-size:calc(17px*var(--fs));letter-spacing:-.01em;margin-bottom:2px}
+.brand small{display:block;font-weight:400;font-size:calc(12px*var(--fs));color:var(--mut);letter-spacing:0}
 .topbar{
   position:sticky;top:0;z-index:40;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
   padding:12px 0 12px;margin:-24px 0 20px;background:linear-gradient(var(--bg) 78%,transparent);
@@ -58,7 +61,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .iconbtn{
   border:1px solid var(--line);background:var(--bg2);border-radius:999px;
   /* 不用 transition:.15s（等於 all）——那會讓鍵盤焦點框淡入，Tab 快速切換時明顯落後 */
-  padding:7px 13px;font-size:13px;white-space:nowrap;transition:background-color .15s,border-color .15s,color .15s;
+  padding:7px 13px;font-size:calc(13px*var(--fs));white-space:nowrap;transition:background-color .15s,border-color .15s,color .15s;
 }
 .iconbtn:hover{border-color:var(--acc);color:var(--acc)}
 .iconbtn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
@@ -68,49 +71,49 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .cswitch{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:0 0 14px;
   background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px}
 .cbtn{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 6px;
-  border-radius:7px;font-size:12.5px;font-weight:600;color:var(--mut);
+  border-radius:7px;font-size:calc(12.5px*var(--fs));font-weight:600;color:var(--mut);
   transition:background-color .15s,color .15s;min-height:40px;line-height:1.25}
 .cbtn:hover{color:var(--acc)}
 .cbtn.on{background:var(--acc);color:#fff}
-.cbtn .ci{font-size:13px}
+.cbtn .ci{font-size:calc(13px*var(--fs))}
 
 /* ---------- nav ---------- */
-.navmod{margin:16px 0 6px;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--mut);text-transform:uppercase}
+.navmod{margin:16px 0 6px;font-size:calc(11px*var(--fs));font-weight:700;letter-spacing:.08em;color:var(--mut);text-transform:uppercase}
 .navmod span{color:var(--acc)}
 .navitem{
   display:flex;align-items:center;gap:8px;width:100%;text-align:left;
-  padding:5px 9px;border-radius:8px;font-size:13.5px;color:var(--fg);
+  padding:5px 9px;border-radius:8px;font-size:calc(13.5px*var(--fs));color:var(--fg);
   transition:background-color .12s,border-color .12s,color .12s;border:1px solid transparent;
 }
 .navitem:hover{background:var(--sel)}
 .navitem.active{background:var(--sel);border-color:var(--line);font-weight:600}
 .navitem .wn{
-  flex:none;width:23px;height:23px;border-radius:6px;background:var(--sel);
-  display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--mut);
+  flex:none;width:calc(23px*var(--fs));height:calc(23px*var(--fs));border-radius:6px;background:var(--sel);
+  display:grid;place-items:center;font-size:calc(11px*var(--fs));font-weight:700;color:var(--mut);
   font-variant-numeric:tabular-nums;
 }
 .navitem.active .wn,.navitem.done .wn{background:var(--acc);color:#fff}
-.navitem.done .wn::after{content:"✓";font-size:12px}
+.navitem.done .wn::after{content:"✓";font-size:calc(12px*var(--fs))}
 .navitem.done .wn span{display:none}
 .navitem .tx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- progress ---------- */
-.prog{margin:14px 0 4px;font-size:12px;color:var(--mut)}
+.prog{margin:14px 0 4px;font-size:calc(12px*var(--fs));color:var(--mut)}
 .bar{height:5px;border-radius:99px;background:var(--sel);overflow:hidden;margin-top:5px}
 .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .4s}
 
 /* ---------- cards ---------- */
 .card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;margin-bottom:18px;box-shadow:var(--sh)}
-.card h2{margin:0 0 4px;font-size:22px;letter-spacing:-.015em}
-.card h3{margin:22px 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
+.card h2{margin:0 0 4px;font-size:calc(22px*var(--fs));letter-spacing:-.015em}
+.card h3{margin:22px 0 10px;font-size:calc(15px*var(--fs));display:flex;align-items:center;gap:8px}
 .card h3::before{content:"";width:3px;height:15px;background:var(--acc);border-radius:2px}
-.eyebrow{font-size:12px;color:var(--mut);letter-spacing:.04em;margin-bottom:6px}
-.enttl{font-size:13px;color:var(--mut);font-style:italic;margin-bottom:14px}
-.flag{display:inline-block;background:var(--acc);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}
-.banner{background:var(--sel);border-left:3px solid var(--acc);padding:11px 15px;border-radius:0 8px 8px 0;margin:12px 0;font-size:14px}
+.eyebrow{font-size:calc(12px*var(--fs));color:var(--mut);letter-spacing:.04em;margin-bottom:6px}
+.enttl{font-size:calc(13px*var(--fs));color:var(--mut);font-style:italic;margin-bottom:14px}
+.flag{display:inline-block;background:var(--acc);color:#fff;font-size:calc(11px*var(--fs));font-weight:700;padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.banner{background:var(--sel);border-left:3px solid var(--acc);padding:11px 15px;border-radius:0 8px 8px 0;margin:12px 0;font-size:calc(14px*var(--fs))}
 
 /* ---------- tier tags ---------- */
-.tier{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;border:1px solid;vertical-align:middle;margin-right:6px;line-height:1.6}
+.tier{display:inline-block;font-size:calc(10.5px*var(--fs));font-weight:700;padding:1px 6px;border-radius:5px;border:1px solid;vertical-align:middle;margin-right:6px;line-height:1.6}
 .tier.史{color:var(--t-shi);border-color:var(--t-shi)}
 .tier.析{color:var(--t-xi);border-color:var(--t-xi)}
 .tier.選{color:var(--t-xuan);border-color:var(--t-xuan)}
@@ -122,26 +125,26 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* 不用 background-attachment:local——那會讓漸層跟著內容捲走，
    一滑就不見了。預設的 scroll 才是固定在元素右緣。 */
 .tw.scrollable{background:linear-gradient(to left,var(--bg2),rgba(0,0,0,0)) right/26px 100% no-repeat}
-.twhint{font-size:11.5px;color:var(--mut);margin:12px 0 -4px;letter-spacing:.02em}
-table{border-collapse:collapse;width:100%;font-size:14px;min-width:400px}
+.twhint{font-size:calc(11.5px*var(--fs));color:var(--mut);margin:12px 0 -4px;letter-spacing:.02em}
+table{border-collapse:collapse;width:100%;font-size:calc(14px*var(--fs));min-width:400px}
 th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
-th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
+th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-space:nowrap}
 
 /* ---------- works ---------- */
 .work{border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow:hidden;background:var(--bg)}
 .workhd{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;cursor:pointer;transition:background-color .12s}
 .workhd:hover{background:var(--sel)}
 .workhd .ttl{flex:1;min-width:0;text-align:left;padding:0}
-.workhd .ttl b{font-size:15px;font-weight:650;display:block}
-.workhd .ttl em{font-size:12.5px;color:var(--mut);font-style:normal;display:block}
-.star{flex:none;font-size:17px;line-height:1;padding:2px 4px;color:var(--line);transition:color .15s}
+.workhd .ttl b{font-size:calc(15px*var(--fs));font-weight:650;display:block}
+.workhd .ttl em{font-size:calc(12.5px*var(--fs));color:var(--mut);font-style:normal;display:block}
+.star{flex:none;font-size:calc(17px*var(--fs));line-height:1;padding:2px 4px;color:var(--line);transition:color .15s}
 .star:hover{transform:scale(1.15)}
 .star.on{color:var(--acc2)}
-.chev{flex:none;color:var(--mut);font-size:12px;transition:transform .2s;padding-top:4px}
+.chev{flex:none;color:var(--mut);font-size:calc(12px*var(--fs));transition:transform .2s;padding-top:4px}
 .work.open .chev{transform:rotate(90deg)}
 .workbd{display:none;padding:0 15px 14px;border-top:1px dashed var(--line)}
 .work.open .workbd{display:block}
-.meta{font-size:13px;color:var(--mut);margin:10px 0 4px}
+.meta{font-size:calc(13px*var(--fs));color:var(--mut);margin:10px 0 4px}
 .meta b{color:var(--fg)}
 
 /* ---------- versions ---------- */
@@ -162,55 +165,55 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .play.yt.alt{border-color:var(--yt);color:var(--yt)}
 .play.yt.alt:hover{background:var(--sel);color:var(--yt)}
 .life{
-  font-size:13px;line-height:1.7;margin:10px 0 4px;padding:9px 13px;
+  font-size:calc(13px*var(--fs));line-height:1.7;margin:10px 0 4px;padding:9px 13px;
   background:var(--lifeBg);border-left:3px solid var(--life);border-radius:0 8px 8px 0;
 }
-.life>b:first-child{display:block;font-size:11px;letter-spacing:.06em;color:var(--life);margin-bottom:3px}
+.life>b:first-child{display:block;font-size:calc(11px*var(--fs));letter-spacing:.06em;color:var(--life);margin-bottom:3px}
 .wlink{
-  font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:5px;
+  font-size:calc(11.5px*var(--fs));font-weight:700;padding:1px 7px;border-radius:5px;
   background:var(--sel);color:var(--acc);white-space:nowrap;
 }
 .wlink:hover{background:var(--acc);color:#fff}
 .pinTag{background:var(--hiresBg);color:var(--hires);font-weight:700}
-.qline{font-size:11.5px;color:var(--mut);margin-top:6px;line-height:1.6;word-break:break-word}
-.qline code{font-size:11.5px;background:var(--sel);padding:1px 5px}
+.qline{font-size:calc(11.5px*var(--fs));color:var(--mut);margin-top:6px;line-height:1.6;word-break:break-word}
+.qline code{font-size:calc(11.5px*var(--fs));background:var(--sel);padding:1px 5px}
 .qline.muted{opacity:.6}
-.v .p{font-weight:600;font-size:14px}
-.v .sub{font-size:12px;color:var(--mut);margin-top:1px}
-.v .why{font-size:12.5px;color:var(--mut);margin-top:5px;line-height:1.6}
+.v .p{font-weight:600;font-size:calc(14px*var(--fs))}
+.v .sub{font-size:calc(12px*var(--fs));color:var(--mut);margin-top:1px}
+.v .why{font-size:calc(12.5px*var(--fs));color:var(--mut);margin-top:5px;line-height:1.6}
 .v .acts{display:flex;flex-direction:column;gap:5px;align-items:stretch}
-.qbadge{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:5px;margin-right:6px;white-space:nowrap}
+.qbadge{display:inline-block;font-size:calc(10.5px*var(--fs));font-weight:700;padding:1px 7px;border-radius:5px;margin-right:6px;white-space:nowrap}
 .qbadge.hires{color:var(--hires);background:var(--hiresBg)}
 .qbadge.hifi{color:var(--hifi);background:var(--hifiBg)}
 .qbadge.historic{color:var(--hist);background:var(--histBg)}
-.tag{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:5px;background:var(--sel);color:var(--mut);margin-right:4px}
+.tag{display:inline-block;font-size:calc(10.5px*var(--fs));padding:1px 6px;border-radius:5px;background:var(--sel);color:var(--mut);margin-right:4px}
 .play{
-  display:block;text-align:center;background:var(--acc);color:#fff;font-size:12.5px;font-weight:600;
+  display:block;text-align:center;background:var(--acc);color:#fff;font-size:calc(12.5px*var(--fs));font-weight:600;
   /* 透明外框：讓實心與 .alt 外框兩種按鈕的高度完全一致，不會差那 2px */
   padding:6px 14px;border:1px solid transparent;border-radius:7px;white-space:nowrap;
   transition:background-color .15s,color .15s;
 }
 .play:hover{background:var(--acc2);text-decoration:none;color:#fff}
-.copy{border:1px solid var(--line);border-radius:7px;padding:5px 14px;font-size:12px;color:var(--mut);background:var(--bg)}
+.copy{border:1px solid var(--line);border-radius:7px;padding:5px 14px;font-size:calc(12px*var(--fs));color:var(--mut);background:var(--bg)}
 .copy:hover{border-color:var(--acc);color:var(--acc)}
 .copy.ok{border-color:var(--hires);color:var(--hires)}
 
 /* ---------- checklists ---------- */
 .chk{list-style:none;padding:0;margin:8px 0;display:grid;gap:7px}
-.chk li{font-size:14px;line-height:1.7}
+.chk li{font-size:calc(14px*var(--fs));line-height:1.7}
 .chk li>label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .chk input{margin-top:6px;flex:none;width:15px;height:15px;accent-color:var(--acc);cursor:pointer}
-.chk li.must span::before{content:"必做";font-size:10.5px;font-weight:700;background:var(--acc);color:#fff;padding:1px 6px;border-radius:5px;margin-right:7px;vertical-align:2px}
+.chk li.must span::before{content:"必做";font-size:calc(10.5px*var(--fs));font-weight:700;background:var(--acc);color:#fff;padding:1px 6px;border-radius:5px;margin-right:7px;vertical-align:2px}
 .chk li.dn span{opacity:.5;text-decoration:line-through}
 
 /* ---------- 可摺疊概念區 ---------- */
 .theory{border:1px solid var(--line);border-radius:10px;background:var(--bg2);margin:14px 0 18px;padding:0 15px}
 .theory>summary{
-  cursor:pointer;font-size:14px;font-weight:650;padding:11px 0;margin:0 -15px;padding-left:15px;padding-right:15px;
+  cursor:pointer;font-size:calc(14px*var(--fs));font-weight:650;padding:11px 0;margin:0 -15px;padding-left:15px;padding-right:15px;
   list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;
 }
 .theory>summary::-webkit-details-marker{display:none}
-.theory>summary::before{content:"▶";font-size:10px;color:var(--mut);transition:transform .15s}
+.theory>summary::before{content:"▶";font-size:calc(10px*var(--fs));color:var(--mut);transition:transform .15s}
 .theory[open]>summary::before{transform:rotate(90deg)}
 .theory>summary .hint{font-weight:400}
 /* 窄螢幕上這行提示會擠成第二行，把收起後的區塊撐高一倍；▶ 三角本身已足夠表意 */
@@ -226,13 +229,13 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 /* 摘要列排成一般的行內文字而不是 flex：標題長到要換行時（「中提琴 vs. 大提琴
    （看尺寸——本圖為真實比例）」），flex 會把 ▸ 這個文字節點單獨甩到上一行。 */
 .fold>summary{
-  cursor:pointer;font-size:13px;line-height:1.65;padding:10px 13px;min-height:40px;
+  cursor:pointer;font-size:calc(13px*var(--fs));line-height:1.65;padding:10px 13px;min-height:40px;
   list-style:none;color:var(--mut);
 }
 .fold>summary .tier,.fold>summary .hint{margin-left:6px}
 .fold>summary::-webkit-details-marker{display:none}
 .fold>summary b{color:var(--fg);font-weight:650}
-.fold>summary .hint{font-size:11.5px}
+.fold>summary .hint{font-size:calc(11.5px*var(--fs))}
 .fold:hover>summary b{color:var(--acc)}
 .fold[open]>summary{border-bottom:1px solid var(--line)}
 .foldbd{padding:12px 13px 14px}
@@ -249,13 +252,13 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 /* 對照表：虛線外框，與其他摺疊列區隔（劇透區） */
 .fold.ans{border-style:dashed}
 .fold.ans[open]>summary{border-bottom-style:dashed}
-.ans h4{font-size:13.5px;margin:16px 0 0;padding-left:9px;border-left:3px solid var(--acc)}
+.ans h4{font-size:calc(13.5px*var(--fs));margin:16px 0 0;padding-left:9px;border-left:3px solid var(--acc)}
 .ans h4:first-of-type{margin-top:0}
-.ans p{font-size:13.5px;line-height:1.85}
+.ans p{font-size:calc(13.5px*var(--fs));line-height:1.85}
 
 /* 版本列裡的「⋯ 搜尋字串與釘選」——進階功能，預設收起 */
 .vmore{margin-top:6px}
-.vmore>summary{cursor:pointer;font-size:11.5px;color:var(--mut);list-style:none;
+.vmore>summary{cursor:pointer;font-size:calc(11.5px*var(--fs));color:var(--mut);list-style:none;
   display:inline-flex;align-items:center;min-height:28px}
 .vmore>summary::-webkit-details-marker{display:none}
 .vmore>summary:hover{color:var(--acc)}
@@ -300,10 +303,10 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .instfig{flex:none;width:76px;height:76px;color:var(--fg);
   background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:6px}
 .instbody{min-width:0}
-.instname{font-size:15.5px;font-weight:700;margin-bottom:6px}
-.instalias{font-size:11.5px;font-weight:400;color:var(--mut);margin-left:8px}
-.instrow{font-size:13px;line-height:1.7;margin-top:3px}
-.instrow>b:first-child{display:inline-block;min-width:44px;color:var(--acc);font-size:11.5px;
+.instname{font-size:calc(15.5px*var(--fs));font-weight:700;margin-bottom:6px}
+.instalias{font-size:calc(11.5px*var(--fs));font-weight:400;color:var(--mut);margin-left:8px}
+.instrow{font-size:calc(13px*var(--fs));line-height:1.7;margin-top:3px}
+.instrow>b:first-child{display:inline-block;min-width:44px;color:var(--acc);font-size:calc(11.5px*var(--fs));
   letter-spacing:.04em;vertical-align:top}
 .instrow.mut{color:var(--mut)}
 .instrow.mut>b:first-child{color:var(--mut)}
@@ -312,7 +315,7 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
    收起來時七件樂器就是七張縮圖，圖本身即索引。 */
 .instfold>summary{display:flex;align-items:center;gap:11px;padding:7px 11px}
 .instfold>summary .instfig{width:46px;height:46px;padding:4px;border-radius:7px}
-.instfold>summary .iname{font-size:15px;font-weight:700;color:var(--fg)}
+.instfold>summary .iname{font-size:calc(15px*var(--fs));font-weight:700;color:var(--fg)}
 .instfold:hover>summary .iname{color:var(--acc)}
 /* 這種摘要列開頭是圖不是 ▸，右側補一個記號才看得出可以點開 */
 .instfold>summary::after{content:"▸";margin-left:auto;padding-left:8px;color:var(--mut)}
@@ -321,10 +324,10 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .cmpbody{display:flex;align-items:center;gap:12px}
 .cmpside{flex:1;min-width:0;text-align:center}
 .cmpside .instfig{width:96px;height:96px;margin:0 auto 8px}
-.cmpname{font-size:13.5px;font-weight:650}
-.cmpd{font-size:12.5px;color:var(--mut);line-height:1.65;margin-top:3px}
-.cmpvs{flex:none;font-size:12px;color:var(--mut);font-style:italic}
-.cmpnote{font-size:12.5px;color:var(--mut);line-height:1.7;margin-top:12px;
+.cmpname{font-size:calc(13.5px*var(--fs));font-weight:650}
+.cmpd{font-size:calc(12.5px*var(--fs));color:var(--mut);line-height:1.65;margin-top:3px}
+.cmpvs{flex:none;font-size:calc(12px*var(--fs));color:var(--mut);font-style:italic}
+.cmpnote{font-size:calc(12.5px*var(--fs));color:var(--mut);line-height:1.7;margin-top:12px;
   border-top:1px dashed var(--line);padding-top:10px}
 
 @media(max-width:520px){
@@ -337,11 +340,15 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 @media print{.instfig{border-color:#999}}
 
 /* ---------- misc ---------- */
-.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 11px;background:var(--bg2);color:var(--mut)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:calc(12px*var(--fs));border:1px solid var(--line);border-radius:999px;padding:3px 11px;background:var(--bg2);color:var(--mut)}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-.note{font-size:13px;color:var(--mut);border-left:2px solid var(--line);padding-left:12px;margin:12px 0}
+.note{font-size:calc(13px*var(--fs));color:var(--mut);border-left:2px solid var(--line);padding-left:12px;margin:12px 0}
 .rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
-.foot{text-align:center;color:var(--mut);font-size:12px;padding:30px 0}
+/* .iconbtn 預設 white-space:nowrap，長標籤（「複製本週全部搜尋字串（建 W01 播放清單用）」）
+   在 flex 裡撐不下也不會縮，就直接推出畫面。這裡讓成排的按鈕可以折行——
+   字級調到「超大」時這是唯一會溢出的地方。 */
+.rowbtns .iconbtn{max-width:100%;white-space:normal;text-align:left}
+.foot{text-align:center;color:var(--mut);font-size:calc(12px*var(--fs));padding:30px 0}
 .hidden{display:none!important}
 
 /* ---------- drawer ---------- */
@@ -355,18 +362,35 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.25s;z-index:55}
 .scrim.on{opacity:1;pointer-events:auto}
 .fld{margin:14px 0}
-.fld label{display:block;font-size:12px;color:var(--mut);margin-bottom:5px}
+.fld label{display:block;font-size:calc(12px*var(--fs));color:var(--mut);margin-bottom:5px}
 .fld select,.fld input[type=text]{
   width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;
-  background:var(--bg);color:var(--fg);font:inherit;font-size:14px;
+  background:var(--bg);color:var(--fg);font:inherit;font-size:calc(14px*var(--fs));
 }
-.hint{font-size:12px;color:var(--mut);margin-top:5px;line-height:1.6}
+.hint{font-size:calc(12px*var(--fs));color:var(--mut);margin-top:5px;line-height:1.6}
 .menubtn{display:none}
+
+/* ---------- 字級選擇 ----------
+   每顆按鈕用它自己那一級的字級顯示，所見即所得；但 min-height 固定，
+   所以「標準」那顆字雖然小，觸控目標一樣夠大。 */
+.fsrow{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.fsbtn{
+  flex:1 1 auto;min-width:92px;min-height:58px;padding:10px 14px;line-height:1.25;
+  border:1.5px solid var(--line);border-radius:11px;background:var(--bg2);
+  color:var(--fg);font-weight:650;
+}
+.fsbtn:hover{border-color:var(--acc2);color:var(--acc)}
+.fsbtn.on{border-color:var(--acc);border-width:2px;background:var(--sel);color:var(--acc)}
+.fsprev{
+  font-size:calc(15.5px*var(--fs));line-height:1.8;
+  border-left:3px solid var(--acc);background:var(--sel);
+  padding:12px 15px;border-radius:0 9px 9px 0;margin:12px 0;
+}
 
 /* ---------- toast ---------- */
 .toast{
   position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);z-index:80;
-  background:var(--fg);color:var(--bg);padding:9px 18px;border-radius:999px;font-size:13px;
+  background:var(--fg);color:var(--bg);padding:9px 18px;border-radius:999px;font-size:calc(13px*var(--fs));
   opacity:0;pointer-events:none;transition:.2s;
 }
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -396,43 +420,46 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
    而這一段在後面，於是圖鑑裡每一列都被硬套上邊框與 14px 內距——
    單是這個衝突就讓〈樂器圖鑑〉在手機上多出兩千多像素。 */
 .instweeks{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.instarc{font-size:13.5px;line-height:1.8;color:var(--mut);padding-bottom:10px;border-bottom:1px dashed var(--line)}
-.insttask{font-size:13.5px;line-height:1.8;margin-top:10px}
-.insttask>b:first-child{display:block;font-size:11px;letter-spacing:.06em;color:var(--acc);margin-bottom:3px}
+.instarc{font-size:calc(13.5px*var(--fs));line-height:1.8;color:var(--mut);padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.insttask{font-size:calc(13.5px*var(--fs));line-height:1.8;margin-top:10px}
+.insttask>b:first-child{display:block;font-size:calc(11px*var(--fs));letter-spacing:.06em;color:var(--acc);margin-bottom:3px}
 
 /* ---------- 作品背景 / 任務盒 / 版本清單抬頭 ---------- */
 .bg{
-  font-size:13.5px;line-height:1.85;margin:12px 0;padding:12px 15px;
+  font-size:calc(13.5px*var(--fs));line-height:1.85;margin:12px 0;padding:12px 15px;
   background:var(--sel);border-radius:9px;
 }
 .bg>b:first-child{
-  display:block;font-size:11px;letter-spacing:.06em;color:var(--acc);margin-bottom:5px;
+  display:block;font-size:calc(11px*var(--fs));letter-spacing:.06em;color:var(--acc);margin-bottom:5px;
 }
 .taskbox{
   margin:14px 0 10px;padding:12px 15px;border:1.5px solid var(--acc);
   border-radius:9px;background:var(--bg2);
 }
 .taskbox>b:first-child{
-  display:block;font-size:12px;font-weight:700;color:var(--acc);margin-bottom:6px;
+  display:block;font-size:calc(12px*var(--fs));font-weight:700;color:var(--acc);margin-bottom:6px;
 }
 .taskbox .chk{margin:0}
-.taskbox .chk li{font-size:13.5px}
-.vhead{font-size:12.5px;color:var(--mut);margin:12px 0 -2px;line-height:1.7}
+.taskbox .chk li{font-size:calc(13.5px*var(--fs))}
+.vhead{font-size:calc(12.5px*var(--fs));color:var(--mut);margin:12px 0 -2px;line-height:1.7}
 .vhead b{color:var(--fg)}
 
 /* ---------- 本週入口卡片 ---------- */
 .card.thisweek{border:2px solid var(--acc);background:var(--bg2)}
-.card.thisweek h2{font-size:20px;margin-bottom:12px}
+.card.thisweek h2{font-size:calc(20px*var(--fs));margin-bottom:12px}
 .tw-work{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--bg);margin-top:4px}
-.tw-label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--acc);margin-bottom:5px}
-.tw-work>b{font-size:16px;display:block}
-.tw-ver{font-size:13px;color:var(--mut);margin-top:4px}
+.tw-label{font-size:calc(11px*var(--fs));font-weight:700;letter-spacing:.06em;color:var(--acc);margin-bottom:5px}
+.tw-work>b{font-size:calc(16px*var(--fs));display:block}
+.tw-ver{font-size:calc(13px*var(--fs));color:var(--mut);margin-top:4px}
 .tw-work .rowbtns{margin-top:12px;align-items:center}
 .tw-work .play{display:inline-block}
 
 /* ---------- 週次前後導覽 ---------- */
 .weeknav{display:flex;justify-content:space-between;gap:10px;margin:4px 0 40px}
-.weeknav .iconbtn{max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* min-width:0 是必要的：.iconbtn 有 white-space:nowrap，在 flex 裡預設的
+   min-width:auto 會讓它至少撐到整段標題的寬度，於是長標題的週次會把版面推出畫面。
+   字級調大之後這件事會更明顯，所以連同 max-width 一起改成不會溢出的寫法。 */
+.weeknav .iconbtn{min-width:0;max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- 搜尋結果 ---------- */
 .srow{margin:14px 0 -6px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
@@ -441,9 +468,9 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 @media(max-width:900px){
   /* 原本三顆按鈕等寬、文字擠成三行，主要動作沒有優先性 */
   .v .acts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-  .v .acts .play{grid-column:1/-1;font-size:14px;padding:12px 16px;min-height:48px;
+  .v .acts .play{grid-column:1/-1;font-size:calc(14px*var(--fs));padding:12px 16px;min-height:48px;
     display:flex;align-items:center;justify-content:center;white-space:nowrap}
-  .v .acts .copy{min-height:44px;font-size:12.5px;padding:8px 10px}
+  .v .acts .copy{min-height:44px;font-size:calc(12.5px*var(--fs));padding:8px 10px}
   .navitem{min-height:44px}
   .wlink{min-height:36px;padding:7px 12px;display:inline-flex;align-items:center}
   .star{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin:-6px 0 -6px -6px}
@@ -457,7 +484,7 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
   .topbar .iconbtn{padding:9px 11px;min-height:42px}
   .topbar .iconbtn .lbl{display:none}
   .weeknav{flex-direction:column}
-  .weeknav .iconbtn{max-width:none;min-height:44px}
+  .weeknav .iconbtn{max-width:100%;min-width:0;min-height:44px}
 }
 @media(max-width:640px){
   /* min-width:400px 在 390px 螢幕上會把欄位擠到剩幾十像素，連 "Thomas"
@@ -4142,6 +4169,10 @@ window.PINNED = {
   var DEFAULTS = {
     region: "tw", lang: "tc",
     hiresFirst: true, hideHistoric: false, theme: "auto",
+    // 字級。整站的 font-size 都是 calc(Npx*var(--fs))，這裡只設那一個倍率。
+    // 手機上預設的 15.5px 內文對年長者偏小，但直接調大預設會動到所有既有使用者，
+    // 所以做成可選的五個級距，選過就記在這台裝置上。
+    fs: 1,
     // 主要播放平台："kkbox" 或 "youtube"。兩個按鈕永遠都在，這裡只決定
     // 哪一個排在前面、用實心樣式。沒有 KKBOX 的人可以改成 youtube。
     platform: "kkbox",
@@ -4708,6 +4739,7 @@ window.PINNED = {
           "<b>課程的連續性比單週的完整性重要。</b></div>" +
         '<div class="rowbtns"><button class="iconbtn" data-go="p-hires">先開好 Hi-Res 音質設定</button>' +
         '<button class="iconbtn" data-go="p-method">課程設計原則</button>' +
+        '<button class="iconbtn" data-open="settings">Aa　字太小？調整字級</button>' +
         '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div>';
       h += '<div class="banner" style="margin-top:14px"><b>另一門課：台灣傳統音樂</b>　8 個單元，從南管到原住民族歌謠。' +
         "這門課教的四項聆聽工具（音色／織體／曲式／調性）在那邊直接用得上——" +
@@ -4723,6 +4755,7 @@ window.PINNED = {
           "十首依衝擊力排序，約 90 分鐘，聽完主要地貌就大致完整了。" +
           '<div class="rowbtns" style="margin-top:10px"><button class="iconbtn on" data-go="p-start">十　先聽這 10 首</button>' +
           '<button class="iconbtn" data-go="p-cross">橋　與古典音樂課的對照</button>' +
+          '<button class="iconbtn" data-open="settings">Aa　字太小？調整字級</button>' +
           '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div></div>' +
         '<div class="note"><b>先說清楚一件事：找不到指定版本是常態，不是你的問題。</b>' +
           "傳統音樂多為口傳，同一曲調在不同館閣、劇團、部落之間本就不同，商業平台的收錄也極不完整。" +
@@ -5302,7 +5335,23 @@ window.PINNED = {
   /* ---------------- 設定面板 ---------------- */
   function settingsHTML() {
     var opt = function (v, cur, txt) { return '<option value="' + v + '"' + (v === cur ? " selected" : "") + ">" + txt + "</option>"; };
-    return "<h3>播放平台</h3>" +
+    /* 字級放在設定面板最上面：需要放大字的人，多半也不方便在一長串設定裡找。
+       用大按鈕而不是下拉選單——下拉選單本身的字就是小的，要放大字的人先看不到它。
+       每個按鈕用自己那一級的字級顯示，所見即所得。 */
+    var fsCur = fsIndex();
+    return "<h3>字級</h3>" +
+      '<div class="fsrow" role="group" aria-label="選擇字級">' +
+        FS_STEPS.map(function (s, i) {
+          return '<button class="fsbtn' + (i === fsCur ? " on" : "") + '" data-fs="' + s.v + '"' +
+            (i === fsCur ? ' aria-current="true"' : "") +
+            ' style="font-size:calc(15.5px*' + s.v + ')">' + esc(s.label) + "</button>";
+        }).join("") + "</div>" +
+      '<div class="fsprev"><b>看得清楚嗎？</b>這一段就是本文的實際大小。' +
+        "選一個看起來最舒服的，之後<b>整個網站都會照這個字級顯示</b>，換頁也不會跑掉。</div>" +
+      '<div class="hint">目前：<b>' + esc(FS_STEPS[fsCur].label) + "</b>（" + esc(FS_STEPS[fsCur].note) + "）。" +
+        "設定記在<b>這台裝置的這個瀏覽器</b>裡，換裝置要再設一次。<br>" +
+        "手機系統本身的「顯示大小／字體大小」設定也會一起作用，兩邊可以疊加。</div>" +
+      "<h3>播放平台</h3>" +
       '<div class="fld"><label>主要平台</label><select id="setPlatform">' +
         opt("kkbox", S.platform, "KKBOX") + opt("youtube", S.platform, "YouTube") + "</select>" +
         '<div class="hint"><b>兩個平台的連結永遠都在</b>，這裡只決定哪一個排在前面、用明顯的按鈕樣式。<br>' +
@@ -5355,6 +5404,28 @@ window.PINNED = {
     var t = S.theme;
     if (t === "auto") t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", t);
+  }
+
+  /* 字級級距。名稱寫得直白（「大」「特大」），不用 A／AA／AAA 這種只有設計師懂的標示。
+     倍率之間至少差 15%——差太少的話按了看不出變化，反而讓人以為壞了。 */
+  var FS_STEPS = [
+    { v: 1,    label: "標準",   note: "內文 15.5px" },
+    { v: 1.15, label: "大",     note: "內文 18px" },
+    { v: 1.3,  label: "特大",   note: "內文 20px" },
+    { v: 1.5,  label: "超大",   note: "內文 23px" },
+    { v: 1.75, label: "最大",   note: "內文 27px" }
+  ];
+  function fsIndex() {
+    for (var i = 0; i < FS_STEPS.length; i++) if (Math.abs(FS_STEPS[i].v - S.fs) < 0.01) return i;
+    return 0;
+  }
+  function applyFs() {
+    document.documentElement.style.setProperty("--fs", String(S.fs || 1));
+  }
+  function setFs(v) {
+    S.fs = v; save(); applyFs();
+    var d = $("#drawer");
+    if (d && d.classList.contains("open")) openDrawer("settings");
   }
 
   /* ---------------- 抽屜 ---------------- */
@@ -5431,6 +5502,9 @@ window.PINNED = {
       setFavCount();
       return;
     }
+    var fz = find("data-fs");
+    if (fz) { setFs(parseFloat(fz.getAttribute("data-fs")) || 1); return; }
+
     var uf = find("data-unfav");
     if (uf) { delete S.fav[uf.getAttribute("data-unfav")]; save(); openDrawer("fav");
       setFavCount();
@@ -5489,7 +5563,7 @@ window.PINNED = {
         save(); render(); openDrawer("settings"); toast("已匯入 " + n + " 個連結");
       } else {
         S = Object.assign({}, DEFAULTS, data);
-        save(); applyTheme(); render(); openDrawer("settings");
+        save(); applyTheme(); applyFs(); render(); openDrawer("settings");
         setFavCount();
         toast("已匯入進度");
       }
@@ -5504,7 +5578,7 @@ window.PINNED = {
     if (t.id === "setReset") {
       if (confirm("清除全部進度、收藏與設定？此動作無法復原。")) {
         S = Object.assign({}, DEFAULTS, { done: {}, tasks: {}, checks: {}, fav: {} });
-        save(); applyTheme(); render(); closeDrawer();
+        save(); applyTheme(); applyFs(); render(); closeDrawer();
         setFavCount();
       }
       return;
@@ -5621,6 +5695,7 @@ window.PINNED = {
   applyCourseDefaults();
   setBrand();
   applyTheme();
+  applyFs();
   view = viewFromHash();
   render();
   setFavCount();
