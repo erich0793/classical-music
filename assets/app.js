@@ -435,9 +435,11 @@
         return '<li class="' + (on ? "dn" : "") + '"><input type="checkbox" data-check="' + k + '"' + (on ? " checked" : "") + "><span>" + t + "</span></li>";
       }).join("") + "</ul>";
     }
+    // 「沒有涵蓋的東西」講的是課程之外的延伸，不是本單元要做的事——收起來
     if (wk.gaps) {
-      h += "<h3>" + esc(wk.gaps.title) + " " + tierTags("選") + "</h3><ul>";
-      h += wk.gaps.items.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</ul>";
+      h += foldHTML("f-page", "▸ <b>" + esc(wk.gaps.title) + "</b>" +
+        '<span class="hint">' + wk.gaps.items.length + " 項延伸方向</span> " + tierTags("選"),
+        "<ul>" + wk.gaps.items.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</ul>");
     }
     if (wk.live) h += '<div class="banner">' + wk.live + "</div>";
     if (wk.n === 24) {
@@ -503,14 +505,18 @@
     var h = '<div class="card" id="p-inst"><h2>' + esc(I.title) + "</h2>" +
       '<div class="enttl">樂器軸 — 為什麼「時代風格」有一半其實是樂器差異</div>' +
       "<p>" + I.intro + "</p>";
+    // 六件樂器各有一段演變史加一項對比聆聽任務，全部攤開是一面文字牆；
+    // 摘要列只留樂器名與週次連結，當索引用
     h += I.rows.map(function (r) {
-      return '<div class="instrow">' +
-        '<div class="instname">' + esc(r.inst) +
-          '<span class="instweeks">' + r.weeks.map(function (n) {
-            return '<button class="wlink" data-go="week-' + n + '">W' + n + "</button>"; }).join(" ") + "</span></div>" +
+      // 週次做成兩份：摘要列上是純文字（當索引），跳轉按鈕放進展開後的內容裡。
+      // 把按鈕塞在 <summary> 裡會讓觸控目標互相打架，摘要列也會被撐成三行。
+      return foldHTML("f-page",
+        "▸ <b>" + esc(r.inst) + "</b><span class=\"hint\">" +
+          r.weeks.map(function (n) { return "W" + n; }).join(" · ") + "</span>",
         '<div class="instarc">' + r.arc + "</div>" +
         '<div class="insttask"><b>對比聆聽</b>' + r.task + "</div>" +
-      "</div>";
+        '<div class="instweeks">' + r.weeks.map(function (n) {
+          return '<button class="wlink" data-go="week-' + n + '">第 ' + n + " 週</button>"; }).join("") + "</div>");
     }).join("");
     h += '<div class="note">' + I.note + " " + tierTags("析選") + "</div></div>";
     return h;
@@ -665,19 +671,24 @@
   }
 
   function pKkboxHTML() {
+    // 四段都是「需要時才查」的操作說明，不是要一路讀下來的正文——各自收起來
     var h = '<div class="card" id="p-kkbox"><h2>KKBOX 操作實務</h2>' +
-      "<h3>搜尋策略 " + tierTags("選") + "</h3><ol>" + CORE.practice.search.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ol>" +
-      "<h3>播放清單管理</h3><p><b>建議建立 24 個播放清單</b>，命名為 <code>古典課程 W01</code>～<code>W24</code>，每週開始時先建好當週清單。此舉的價值不在整理，而在於<b>課程結束後，你會擁有一份自己的、有結構的個人曲庫</b>。</p>" +
-      "<p>另建一份 <code>古典課程｜重聽區</code>，凡是聽了有感覺的曲目立即丟進去。本站右上角的 <b>★ 重聽區</b> 即對應此用途，可一鍵匯出全部搜尋字串。</p>" +
-      "<h3>沒有 KKBOX 怎麼辦 " + tierTags("選") + "</h3>" +
-      "<p><b>本課程不需要 KKBOX 也能完整走完。</b>每個版本旁邊都有一個 <b>▶ 在 YouTube 開啟</b> 的連結，用同一組搜尋字串，不需要帳號、不需要訂閱。到 <b>⚙ 設定 → 播放平台</b> 把主要平台改成 YouTube，YouTube 的按鈕就會排到前面。</p>" +
-      "<p>兩者的差別只有兩點：</p><ul>" +
-      "<li><b>音質標記只對 KKBOX 有意義。</b>YouTube 不提供無損或高解析串流，本站的 Hi-Res／Hi-Fi 標示在那邊無法對應。</li>" +
-      "<li><b>曲庫互有長短。</b>KKBOX 的正式發行版本較齊全；但 KKBOX 沒有的歷史錄音（單聲道、早期立體聲）反而常常只有 YouTube 找得到——第 22、23 週的版本比較尤其明顯。</li>" +
-      "</ul><p>其餘功能（進度、任務、★ 重聽區、複製搜尋字串）與平台無關，兩邊都能用。</p>" +
-      "<h3>音質與設備 " + tierTags("選") + "</h3>" +
-      "<p>古典音樂的動態範圍（dynamic range）遠大於流行音樂——最弱與最強的音量差距可達 60 dB 以上。實務影響：</p>" +
-      "<ul>" + CORE.practice.audio.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul></div>";
+      '<div class="enttl">四段都是需要時再查的操作說明，點開即可</div>' +
+      foldHTML("f-page", "▸ <b>搜尋策略</b> " + tierTags("選"),
+        "<ol>" + CORE.practice.search.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ol>") +
+      foldHTML("f-page", "▸ <b>播放清單管理</b><span class=\"hint\">W01～W24 ＋ 重聽區</span>",
+        "<p><b>建議建立 24 個播放清單</b>，命名為 <code>古典課程 W01</code>～<code>W24</code>，每週開始時先建好當週清單。此舉的價值不在整理，而在於<b>課程結束後，你會擁有一份自己的、有結構的個人曲庫</b>。</p>" +
+        "<p>另建一份 <code>古典課程｜重聽區</code>，凡是聽了有感覺的曲目立即丟進去。本站右上角的 <b>★ 重聽區</b> 即對應此用途，可一鍵匯出全部搜尋字串。</p>") +
+      foldHTML("f-page", "▸ <b>沒有 KKBOX 怎麼辦</b><span class=\"hint\">用 YouTube 一樣能走完</span> " + tierTags("選"),
+        "<p><b>本課程不需要 KKBOX 也能完整走完。</b>每個版本旁邊都有一個 <b>▶ 在 YouTube 開啟</b> 的連結，用同一組搜尋字串，不需要帳號、不需要訂閱。到 <b>⚙ 設定 → 播放平台</b> 把主要平台改成 YouTube，YouTube 的按鈕就會排到前面。</p>" +
+        "<p>兩者的差別只有兩點：</p><ul>" +
+        "<li><b>音質標記只對 KKBOX 有意義。</b>YouTube 不提供無損或高解析串流，本站的 Hi-Res／Hi-Fi 標示在那邊無法對應。</li>" +
+        "<li><b>曲庫互有長短。</b>KKBOX 的正式發行版本較齊全；但 KKBOX 沒有的歷史錄音（單聲道、早期立體聲）反而常常只有 YouTube 找得到——第 22、23 週的版本比較尤其明顯。</li>" +
+        "</ul><p>其餘功能（進度、任務、★ 重聽區、複製搜尋字串）與平台無關，兩邊都能用。</p>") +
+      foldHTML("f-page", "▸ <b>音質與設備</b><span class=\"hint\">動態範圍差 60 dB 的實務影響</span> " + tierTags("選"),
+        "<p>古典音樂的動態範圍（dynamic range）遠大於流行音樂——最弱與最強的音量差距可達 60 dB 以上。實務影響：</p>" +
+        "<ul>" + CORE.practice.audio.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul>") +
+      "</div>";
 
     return h;
   }
@@ -810,30 +821,50 @@
   /* 樂器線稿卡片。改用卡片而非表格：加了圖之後表格在手機上會變成必須橫向捲動
      才看得完的四欄，那反而比沒有圖更難用。 */
   function instCardsHTML() {
-    var list = COURSE.instruments || [], grp = null, h = "";
-    list.forEach(function (i, k) {
-      if (i.group && i.group !== grp) {
-        if (grp !== null) h += "</div>";
-        h += '<div class="navmod" style="margin-top:20px"><span>' + esc(i.group) + "</span> " +
-          esc(i.groupNote || "") + '</div><div class="instgrid">';
-        grp = i.group;
-      } else if (k === 0) { h += '<div class="instgrid">'; }
-      h += instCardHTML(i);
+    var list = COURSE.instruments || [];
+    if (!list.length) return "";
+    /* 十四張卡片一路攤到底，這一頁在手機上有八個螢幕高，等於沒有索引可言。
+       有分家族的（古典課）就整組收起來，摘要列直接寫出組內樂器名，
+       收起來時整頁就是一份四行的目錄；沒分家族的（台灣課七件）
+       則讓每張卡片各自收合，線稿與名稱留在外面——圖本身就是索引。 */
+    var groups = [], by = {};
+    list.forEach(function (i) {
+      var g = i.group || "";
+      if (!by[g]) { by[g] = { name: g, note: "", items: [] }; groups.push(by[g]); }
+      if (i.groupNote) by[g].note = i.groupNote;
+      by[g].items.push(i);
     });
-    return h + (list.length ? "</div>" : "");
+    if (groups.length > 1) {
+      return groups.map(function (g) {
+        return foldHTML("f-page",
+          "▸ <b>" + esc(g.name) + "</b><span class=\"hint\">" +
+            g.items.map(function (i) { return esc(i.name); }).join("、") + "</span>",
+          (g.note ? '<div class="hint" style="display:block;margin-bottom:4px">' + esc(g.note) + "</div>" : "") +
+          '<div class="instgrid">' + g.items.map(instCardHTML).join("") + "</div>");
+      }).join("");
+    }
+    return list.map(instCardFoldHTML).join("");
+  }
+  function instDetailHTML(i) {
+    return '<div class="instrow"><b>外觀</b>' + i.look + "</div>" +
+      '<div class="instrow"><b>聲音</b>' + i.sound + "</div>" +
+      '<div class="instrow mut"><b>出現在</b>' + i.where + "</div>";
   }
   function instCardHTML(i) {
-    return [i].map(function (i) {
-      return '<div class="instcard">' +
-        '<div class="instfig">' + i.svg + "</div>" +
-        '<div class="instbody">' +
-          '<div class="instname">' + esc(i.name) +
-            (i.alias ? '<span class="instalias">' + esc(i.alias) + "</span>" : "") + "</div>" +
-          '<div class="instrow"><b>外觀</b>' + i.look + "</div>" +
-          '<div class="instrow"><b>聲音</b>' + i.sound + "</div>" +
-          '<div class="instrow mut"><b>出現在</b>' + i.where + "</div>" +
-        "</div></div>";
-    }).join("");
+    return '<div class="instcard">' +
+      '<div class="instfig">' + i.svg + "</div>" +
+      '<div class="instbody">' +
+        '<div class="instname">' + esc(i.name) +
+          (i.alias ? '<span class="instalias">' + esc(i.alias) + "</span>" : "") + "</div>" +
+        instDetailHTML(i) +
+      "</div></div>";
+  }
+  function instCardFoldHTML(i) {
+    return foldHTML("f-page instfold",
+      '<span class="instfig">' + i.svg + "</span>" +
+      '<span class="iname">' + esc(i.name) +
+        (i.alias ? '<span class="instalias">' + esc(i.alias) + "</span>" : "") + "</span>",
+      instDetailHTML(i));
   }
 
   /* 對照組：兩張線稿並列。視覺差異（橫抱／豎抱、直吹／橫吹）用文字說不清楚，
@@ -845,9 +876,10 @@
           '<div class="cmpname">' + esc(x.name) + "</div>" +
           '<div class="cmpd">' + x.d + "</div></div>";
       };
-      return '<div class="instcmp"><div class="cmphd">' + esc(c.title) + "</div>" +
+      // 標題本身就寫明了要比什麼（「看頂端」「看管子怎麼繞」），拿來當摘要列剛好
+      return foldHTML("f-page", "▸ <b>" + esc(c.title) + "</b>",
         '<div class="cmpbody">' + side(c.a) + '<div class="cmpvs">vs.</div>' + side(c.b) + "</div>" +
-        (c.note ? '<div class="cmpnote">' + c.note + "</div>" : "") + "</div>";
+        (c.note ? '<div class="cmpnote">' + c.note + "</div>" : ""));
     }).join("");
   }
 
@@ -891,6 +923,10 @@
   function PAGE(v) { return pagesFor(COURSE)[v]; }
 
   var view = "home";
+  /* 目前畫面屬於哪一門課。兩門課有同名的檢視（p-inst 在古典課是「樂器的演變」、
+     在台灣課是「樂器辨識」，home 與 all 也一樣），只比對 view 字串的話，
+     從 #taiwan/p-inst 換到 #p-inst 會被判定為「沒有變動」而不重繪。 */
+  var viewCourse = "classical";
   var searchReturn = "home"; // 清空搜尋時要回到哪個檢視
 
   /* hash 格式：[課程/]檢視。省略課程＝古典音樂，所以既有的 #week-5 書籤照舊有效；
@@ -930,6 +966,7 @@
   function setView(v, opts) {
     opts = opts || {};
     view = v;
+    viewCourse = COURSE.id;
     if (!opts.fromHash) {
       var target = hashFor(v);
       if (location.hash !== target) {
@@ -1261,6 +1298,9 @@
     }
     var go = find("data-go");
     if (go) {
+      // 週次連結有的長在 <summary> 裡（樂器的演變），不擋掉預設動作的話
+      // 點一下會同時跳頁又把摺疊列翻開
+      e.preventDefault();
       var id = go.getAttribute("data-go");
       if (view === "all") {
         // 顯示全部模式下沿用捲動定位，不切換檢視
@@ -1453,8 +1493,11 @@
     if (e.key === "Escape") { this.value = ""; onSearchInput(); }
   });
   window.addEventListener("hashchange", function () {
-    var v = viewFromHash();
-    if (v !== view) { if ($("#q").value) $("#q").value = ""; setView(v, { fromHash: true }); }
+    var v = viewFromHash();   // 會順帶切換 COURSE，所以課程也要一起比對
+    if (v !== view || COURSE.id !== viewCourse) {
+      if ($("#q").value) $("#q").value = "";
+      setView(v, { fromHash: true });
+    }
   });
   if (window.matchMedia) {
     var mq = window.matchMedia("(prefers-color-scheme: dark)");

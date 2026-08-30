@@ -221,10 +221,13 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
    其他版本、對照表）各自點開。不做全站模式切換——沒有模式狀態要記，
    每張卡片自己就看得出還有什麼可以展開。 */
 .fold{border:1px solid var(--line);border-radius:9px;background:var(--bg2);margin:7px 0}
+/* 摘要列排成一般的行內文字而不是 flex：標題長到要換行時（「中提琴 vs. 大提琴
+   （看尺寸——本圖為真實比例）」），flex 會把 ▸ 這個文字節點單獨甩到上一行。 */
 .fold>summary{
-  cursor:pointer;font-size:13px;padding:9px 13px;min-height:40px;
-  list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--mut);
+  cursor:pointer;font-size:13px;line-height:1.65;padding:10px 13px;min-height:40px;
+  list-style:none;color:var(--mut);
 }
+.fold>summary .tier,.fold>summary .hint{margin-left:6px}
 .fold>summary::-webkit-details-marker{display:none}
 .fold>summary b{color:var(--fg);font-weight:650}
 .fold>summary .hint{font-size:11.5px}
@@ -303,8 +306,16 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .instrow.mut{color:var(--mut)}
 .instrow.mut>b:first-child{color:var(--mut)}
 
-.instcmp{border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin:12px 0;background:var(--bg2)}
-.cmphd{font-size:14px;font-weight:700;margin-bottom:12px}
+/* 沒有分家族的樂器清單（台灣課）：線稿與名稱留在摺疊列上，說明點開才出現。
+   收起來時七件樂器就是七張縮圖，圖本身即索引。 */
+.instfold>summary{display:flex;align-items:center;gap:11px;padding:7px 11px}
+.instfold>summary .instfig{width:46px;height:46px;padding:4px;border-radius:7px}
+.instfold>summary .iname{font-size:15px;font-weight:700;color:var(--fg)}
+.instfold:hover>summary .iname{color:var(--acc)}
+/* 這種摘要列開頭是圖不是 ▸，右側補一個記號才看得出可以點開 */
+.instfold>summary::after{content:"▸";margin-left:auto;padding-left:8px;color:var(--mut)}
+.instfold[open]>summary::after{content:"▾"}
+
 .cmpbody{display:flex;align-items:center;gap:12px}
 .cmpside{flex:1;min-width:0;text-align:center}
 .cmpside .instfig{width:96px;height:96px;margin:0 auto 8px}
@@ -378,10 +389,11 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
   body{background:#fff}
 }
 
-/* ---------- 樂器軸 ---------- */
-.instrow{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0;background:var(--bg)}
-.instname{font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
-.instweeks{display:flex;gap:4px;flex-wrap:wrap}
+/* ---------- 樂器軸（樂器的演變）----------
+   類名刻意與上面的樂器圖鑑（.instrow/.instname）分開。兩邊原本同名，
+   而這一段在後面，於是圖鑑裡每一列都被硬套上邊框與 14px 內距——
+   單是這個衝突就讓〈樂器圖鑑〉在手機上多出兩千多像素。 */
+.instweeks{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .instarc{font-size:13.5px;line-height:1.8;color:var(--mut);padding-bottom:10px;border-bottom:1px dashed var(--line)}
 .insttask{font-size:13.5px;line-height:1.8;margin-top:10px}
 .insttask>b:first-child{display:block;font-size:11px;letter-spacing:.06em;color:var(--acc);margin-bottom:3px}
