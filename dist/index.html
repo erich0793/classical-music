@@ -225,21 +225,52 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .theory[open]>summary{border-bottom:1px solid var(--line)}
 .theory>*:last-child{margin-bottom:14px}
 
-/* 對照表（答案）：預設收起的劇透區，用虛線與概念區區分 */
-.ans{border:1px dashed var(--line);border-radius:10px;background:var(--bg);margin:14px 0;padding:0 14px}
-.ans>summary{
-  cursor:pointer;font-size:13.5px;font-weight:650;padding:10px 14px;margin:0 -14px;
-  list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;color:var(--mut);
+/* ---------- 摺疊列（fold） ----------
+   曲目卡片改為「首選版本＋播放鈕」一律可見，其餘（本週任務、作品背景、
+   其他版本、對照表）各自點開。不做全站模式切換——沒有模式狀態要記，
+   每張卡片自己就看得出還有什麼可以展開。 */
+.fold{border:1px solid var(--line);border-radius:9px;background:var(--bg2);margin:7px 0}
+.fold>summary{
+  cursor:pointer;font-size:13px;padding:9px 13px;min-height:40px;
+  list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--mut);
 }
-.ans>summary::-webkit-details-marker{display:none}
-.ans[open]>summary{border-bottom:1px dashed var(--line);color:var(--fg)}
-.ans>summary .hint{font-weight:400}
-.ans>*:last-child{margin-bottom:14px}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary b{color:var(--fg);font-weight:650}
+.fold>summary .hint{font-size:11.5px}
+.fold:hover>summary b{color:var(--acc)}
+.fold[open]>summary{border-bottom:1px solid var(--line)}
+.foldbd{padding:12px 13px 14px}
+.foldbd>*:first-child{margin-top:0}
+.foldbd>*:last-child{margin-bottom:0}
+
+/* 本週任務：未完成時用重點色，一眼看得出還有事沒做 */
+.fold.f-task{border-color:var(--acc);background:var(--sel)}
+.fold.f-task>summary{color:var(--acc)}
+.fold.f-task>summary b{color:var(--acc)}
+.fold.f-task.done{border-color:var(--line);background:var(--bg2)}
+.fold.f-task.done>summary,.fold.f-task.done>summary b{color:var(--mut)}
+
+/* 對照表：虛線外框，與其他摺疊列區隔（劇透區） */
+.fold.ans{border-style:dashed}
+.fold.ans[open]>summary{border-bottom-style:dashed}
 .ans h4{font-size:13.5px;margin:16px 0 0;padding-left:9px;border-left:3px solid var(--acc)}
-.ans h4:first-of-type{margin-top:12px}
+.ans h4:first-of-type{margin-top:0}
 .ans p{font-size:13.5px;line-height:1.85}
 
-/* ---------- 鍵盤焦點 ---------- */
+/* 版本列裡的「⋯ 搜尋字串與釘選」——進階功能，預設收起 */
+.vmore{margin-top:6px}
+.vmore>summary{cursor:pointer;font-size:11.5px;color:var(--mut);list-style:none;
+  display:inline-flex;align-items:center;min-height:28px}
+.vmore>summary::-webkit-details-marker{display:none}
+.vmore>summary:hover{color:var(--acc)}
+.vmore .rowbtns{margin-top:8px}
+.vmore .qline{margin-top:6px}
+
+/* 首選版本：去掉外框，讓它讀起來像卡片本身的一部分而不是清單的第一項 */
+.vlist.top{margin:0}
+.vlist.top>li{border-left-width:3px;background:var(--bg)}
+
+/* ---------- 鍵盤焦點 ---------- *//* ---------- 鍵盤焦點 ---------- */
 /* 原本全檔唯一的 outline 規則是 .search input{outline:none}，等於移除瀏覽器
    預設焦點框而未補回，鍵盤使用者看不見自己在哪裡。用 :focus-visible 讓滑鼠
    點擊不出現焦點框，只有鍵盤操作才顯示。 */
@@ -3905,37 +3936,32 @@ window.PINNED = {
   {
     id: "p-search", icon: "找", title: "怎麼找到這些音樂", en: "How to Actually Find It",
     blocks: [
-      { p: "這門課從頭到尾都在說「找不到指定版本是常態」——<b>但只說常態不夠，得告訴你怎麼提高命中率。</b>下面九條是實際有用的。" },
-      { banner: "<b>先建立正確的預期：</b>台灣傳統音樂在商業串流平台上的收錄極不完整。真正齊全的東西在<b>公部門的典藏系統</b>裡，YouTube 只是最方便的入口，不是最完整的來源。" },
-      { h3: "一、用人名與團名，不要用曲名", tier: "選" },
-      { p: "<b>曲名在各團之間不統一，但人名與團名是穩定的。</b>「客家八音 大團圓」可能搜不到，但「美濃 客家八音」一定有東西。同理：<b>南聲社、漢唐樂府、王心心、陳達、賴碧霞、邱火榮、楊麗花、明華園</b>——這些是比曲名可靠得多的錨點。" },
-      { h3: "二、一定要加樂種前綴", tier: "選" },
-      { p: "曲牌名會撞。<b>「將軍令」單獨搜會得到琵琶獨奏、廣東音樂、武俠片配樂</b>，全都不是北管。加上「北管」兩個字才對。同樣：「風入松」「百家春」「平板」都會撞到別的東西。" },
-      { h3: "三、用字不統一，兩種都試", tier: "選" },
-      { table: {
-        head: ["常見寫法", "另一種寫法"],
-        rows: [
-          ["歌仔戲", "歌子戲"],
-          ["殼仔弦", "殼子弦、椰胡"],
-          ["思想起", "思想枝"],
-          ["南管", "南音、弦管"],
-          ["北管", "亂彈（指戲曲部分時）"],
-          ["Pasibutbut", "八部合音、祈禱小米豐收歌"]
-        ]
-      } },
-      { h3: "四、英文關鍵字有時更有效", tier: "選" },
-      { p: "學術錄音與國際發行多用英文標記，中文搜不到時換英文常有意外收穫：<br><code>Nanguan</code>／<code>Nanyin</code>、<code>Beiguan</code>、<code>Hakka bayin</code>、<code>Taiwanese opera</code>、<code>Pasibutbut</code>、<code>Bunun</code>、<code>Paiwan nose flute</code>、<code>Jew\'s harp Atayal</code>。" },
-      { h3: "五、加「紀錄片／保存者／人間國寶」找高品質的", tier: "選" },
-      { p: "文化部與各縣市文化局拍過大量傳承者紀錄片，<b>畫質、收音與解說都遠勝一般上傳</b>。關鍵字：<code>重要傳統藝術保存者</code>、<code>人間國寶</code>、<code>傳統藝術 紀錄片</code>、<code>藝生 傳習</code>。" },
-      { h3: "六、找現場錄影，不要只找錄音", tier: "選" },
-      { p: "這門課反覆強調「場合決定了音樂為什麼長這樣」。<b>廟會、典禮、祭儀的現場錄影會把場合一起給你</b>——你會看到北管是走著演奏的、八音是坐在誰旁邊吹的。加關鍵字：<code>現場</code>、<code>遶境</code>、<code>祭典</code>、<code>實錄</code>。" },
-      { h3: "七、原住民族用部落名比族名精準", tier: "選" },
-      { p: "族名太廣，部落名才對得上具體的歌。<b>馬蘭</b>（阿美族，郭英男）、<b>南王</b>（卑南族，陸森寶）、<b>信義鄉／羅娜／望鄉</b>（布農族 Pasibutbut）——用這些會比「阿美族歌謠」準得多。" },
-      { h3: "八、YouTube 的時長篩選很有用", tier: "選" },
-      { p: "搜尋結果頁的「篩選器 → 時長 → 20 分鐘以上」<b>可以一次濾掉大量短影音剪輯與配樂挪用</b>，剩下的多半是完整演出或紀錄片。這門課的曲目多半本來就長（〈梅花操〉15–20 分鐘、《春之祭》33 分鐘）。" },
-      { h3: "九、真的找不到，就去典藏系統", tier: "選" },
-      { p: "商業平台沒有的東西，公部門多半有——而且免費。詳見附錄〈在地資源與下一步〉。<b>臺灣音樂館與國家文化記憶庫的收錄深度不是 YouTube 能比的</b>，只是介面比較不好用。" },
-      { note: "<b>最後一件事：找到不同的版本不是失敗，是這門課的內容。</b>口傳音樂本來就沒有標準版——你找到的那個「跟課程寫的不一樣」的版本，往往正好是不同館閣、不同劇團、不同部落的傳承。<b>把它收進 ★ 重聽區，那就是你自己的田野。</b>" }
+      { p: "這門課一直說「找不到指定版本是常態」——<b>但只說常態不夠。</b>下面九條是實際有用的，點開看細節。" },
+      { banner: "台灣傳統音樂在商業串流平台上收錄極不完整。<b>真正齊全的東西在公部門的典藏系統裡</b>，YouTube 只是最方便的入口。" },
+      { folds: [
+        { t: "一、用人名團名，不要用曲名", sub: "命中率差最多的一條", blocks: [
+          { p: "<b>曲名在各團之間不統一，但人名與團名是穩定的。</b>「客家八音 大團圓」可能搜不到，但「美濃 客家八音」一定有東西。<br>可靠的錨點：<b>南聲社、漢唐樂府、王心心、陳達、賴碧霞、邱火榮、楊麗花、明華園、唐美雲</b>。" } ] },
+        { t: "二、一定要加樂種前綴", sub: "曲牌名會撞", blocks: [
+          { p: "<b>「將軍令」單獨搜會得到琵琶獨奏、廣東音樂、武俠片配樂</b>，全都不是北管——加上「北管」兩個字才對。「風入松」「百家春」「平板」同樣會撞。" } ] },
+        { t: "三、用字不統一，兩種都試", blocks: [
+          { table: { head: ["常見寫法", "另一種寫法"], rows: [
+            ["歌仔戲", "歌子戲"], ["殼仔弦", "殼子弦、椰胡"], ["思想起", "思想枝"],
+            ["南管", "南音、弦管"], ["北管", "亂彈（指戲曲部分時）"],
+            ["Pasibutbut", "八部合音、祈禱小米豐收歌"] ] } } ] },
+        { t: "四、換英文關鍵字", sub: "學術與國際發行多用英文標記", blocks: [
+          { p: "<code>Nanguan</code>／<code>Nanyin</code>、<code>Beiguan</code>、<code>Hakka bayin</code>、<code>Taiwanese opera</code>、<code>Pasibutbut</code>、<code>Bunun</code>、<code>Paiwan nose flute</code>、<code>Atayal jew\'s harp</code>。" } ] },
+        { t: "五、加「紀錄片／人間國寶」找高品質的", blocks: [
+          { p: "文化部與各縣市文化局拍過大量傳承者紀錄片，<b>畫質、收音與解說都遠勝一般上傳</b>。<br>關鍵字：<code>重要傳統藝術保存者</code>、<code>人間國寶</code>、<code>傳統藝術 紀錄片</code>、<code>藝生 傳習</code>。" } ] },
+        { t: "六、找現場錄影，不要只找錄音", blocks: [
+          { p: "這門課反覆強調「場合決定了音樂為什麼長這樣」。<b>現場錄影會把場合一起給你</b>——你會看到北管是走著演奏的、八音是坐在誰旁邊吹的。<br>關鍵字：<code>現場</code>、<code>遶境</code>、<code>祭典</code>、<code>實錄</code>。" } ] },
+        { t: "七、原住民族用部落名比族名準", blocks: [
+          { p: "族名太廣，部落名才對得上具體的歌：<b>馬蘭</b>（阿美族，郭英男）、<b>南王</b>（卑南族，陸森寶）、<b>信義鄉／羅娜／望鄉</b>（布農族 Pasibutbut）。" } ] },
+        { t: "八、用 YouTube 的時長篩選", blocks: [
+          { p: "「篩選器 → 時長 → 20 分鐘以上」<b>可以一次濾掉大量短影音剪輯與配樂挪用</b>。這門課的曲目本來就長（〈梅花操〉15–20 分鐘）。" } ] },
+        { t: "九、真的找不到，就去典藏系統", blocks: [
+          { p: "商業平台沒有的，公部門多半有，而且免費。<b>臺灣音樂館與國家文化記憶庫的收錄深度不是 YouTube 能比的</b>，只是介面比較不好用。詳見附錄〈在地資源與下一步〉。" } ] }
+      ] },
+      { note: "<b>找到不同的版本不是失敗，是這門課的內容。</b>口傳音樂本來就沒有標準版——你找到那個「跟課程寫的不一樣」的版本，往往正好是不同館閣、不同劇團、不同部落的傳承。<b>收進 ★ 重聽區，那就是你自己的田野。</b>" }
     ]
   },
 
@@ -3965,63 +3991,60 @@ window.PINNED = {
   {
     id: "p-cross", icon: "橋", title: "與古典音樂課的對照", en: "Cross-Course Listening",
     blocks: [
-      { p: "這兩門課放在同一個網站，真正的理由在這一頁。<b>古典音樂課教的四項聆聽工具（音色、織體、曲式、調性）不是古典音樂專用的</b>——它們是聽任何音樂的工具。下面六組是最值得直接對照聽的。" },
-      { banner: "<b>做法：</b>兩首連著聽，中間不要停。目的不是找出「誰比較好」，是<b>用同一個概念去聽兩種完全不同的音樂</b>。" },
-      { h3: "1　複音織體：巴赫 vs. Pasibutbut", tier: "析" },
-      { p: "古典課<b>第 2 週</b>用巴赫《賦格的藝術》示範複音——多條地位平等的旋律線同時進行。<b>Pasibutbut 是更極端的例子</b>：巴赫的每條線都是完整旋律，Pasibutbut 連旋律都沒有，<b>只剩下聲部之間的關係本身</b>。先聽巴赫再聽這首，衝擊會大得多。" },
-      { picks: [
-        { label: "Bach《賦格的藝術》", sub: "古典課第 2 週", q: "Bach Art of Fugue Contrapunctus 1", qa: "hifi" },
-        { label: "布農族〈Pasibutbut〉", sub: "本課單元 7", q: "布農族 Pasibutbut 祈禱小米豐收歌", qa: "historic" }
+      { p: "兩門課放在同一個網站，理由在這一頁。<b>古典課教的四項聆聽工具（音色、織體、曲式、調性）不是古典音樂專用的。</b>下面六組最值得直接對照聽——兩首連著聽，中間不要停。" },
+      { folds: [
+        { t: "1　複音織體：巴赫 vs. Pasibutbut", sub: "最推薦從這組開始", blocks: [
+          { p: "古典課<b>第 2 週</b>用巴赫《賦格的藝術》示範複音——多條地位平等的旋律線同時進行。<b>Pasibutbut 更極端</b>：巴赫的每條線都是完整旋律，Pasibutbut 連旋律都沒有，<b>只剩聲部之間的關係本身</b>。先聽巴赫再聽這首，衝擊會大得多。" },
+          { picks: [
+            { label: "Bach《賦格的藝術》", sub: "古典課第 2 週", q: "Bach Art of Fugue Contrapunctus 1", qa: "hifi" },
+            { label: "布農族〈Pasibutbut〉", sub: "本課單元 7", q: "布農族 Pasibutbut 祈禱小米豐收歌", qa: "historic" } ] } ] },
+        { t: "2　主題與變奏：Haydn vs. 七字調", blocks: [
+          { p: "古典課<b>第 3 週</b>：同一主題反覆回來，每次改掉一個參數（調性、配器、節奏密度）。<b>七字調是同一原理的另一種解法</b>——旋律骨架幾乎不動，變的是<b>詞與速度</b>。都是「一個素材用一整齣戲」。" },
+          { picks: [
+            { label: "Haydn 第 94 號《驚愕》第二樂章", sub: "古典課第 3 週", q: "Haydn Symphony 94 Surprise Kleiber", qa: "hifi" },
+            { label: "歌仔戲〈七字調〉", sub: "本課單元 4", q: "歌仔戲 七字調", qa: "hifi" } ] } ] },
+        { t: "3　宣敘 vs. 詠嘆：Handel vs. 客家三大調", blocks: [
+          { p: "古典課<b>第 7 週</b>：宣敘調推進劇情、詠嘆調抒發情感。<b>客家三大調是同一條軸線</b>：老山歌散板最能抒情，平板規整最能敘事。<b>愈規整愈能講故事，這個交換關係在兩種音樂裡完全一致。</b>" },
+          { picks: [
+            { label: "Handel《彌賽亞》開頭三軌", sub: "古典課第 7 週", q: "Handel Messiah Gardiner", qa: "hifi" },
+            { label: "客家〈老山歌〉→〈平板〉", sub: "本課單元 5", q: "客家 老山歌 平板 三大調", qa: "hifi" } ] } ] },
+        { t: "4　音樂與國族認同：Sibelius vs. 哭調", sub: "兩者皆屬【析】層", blocks: [
+          { p: "《芬蘭頌》作於俄國實施審查的時期，一度必須改名演出。<b>哭調在日治時期大量發展並極受歡迎</b>，常見的詮釋認為它反映被殖民處境下的集體情緒。<b>音樂與政治的因果從來不容易證實</b>，但這個平行值得放在一起想。" },
+          { picks: [
+            { label: "Sibelius《芬蘭頌》", sub: "古典課第 17 週", q: "Sibelius Finlandia Berglund", qa: "hifi" },
+            { label: "歌仔戲〈哭調〉", sub: "本課單元 4", q: "歌仔戲 哭調", qa: "hifi" } ] } ] },
+        { t: "5　室內樂編制：巴洛克 vs. 南管", blocks: [
+          { p: "巴洛克室內樂：小編制、旋律樂器加低音支撐、「幾個人在房間裡奏給彼此聽」。<b>南管的上四管是完全獨立發展出來的同類解法</b>——洞簫走旋律、南琶點骨架、二絃三絃填中間。<b>兩者沒有任何歷史關聯，卻解決了同一個問題。</b>" },
+          { picks: [
+            { label: "Bach 布蘭登堡第 5 號 第一樂章", sub: "古典課第 5 週", q: "Bach Brandenburg 5 Pinnock", qa: "hifi" },
+            { label: "南管〈梅花操〉", sub: "本課單元 1", q: "南管 梅花操", qa: "hifi" } ] } ] },
+        { t: "6　配器策略：波麗露 vs. 北管", blocks: [
+          { p: "《波麗露》旋律不變，靠配器<b>單向累積</b>推進。<b>北管相反——它不累積，第一秒就全開。</b>「用音色做事」的兩種極端策略。" },
+          { picks: [
+            { label: "Ravel《波麗露》", sub: "古典課第 18 週", q: "Ravel Bolero Dudamel", qa: "hifi" },
+            { label: "北管〈風入松〉", sub: "本課單元 2", q: "北管 風入松", qa: "hifi" } ] } ] }
       ] },
-      { h3: "2　主題與變奏：Haydn vs. 七字調", tier: "析" },
-      { p: "古典課<b>第 3 週</b>的主題與變奏：同一個主題反覆回來，每次改掉一個參數（調性、配器、節奏密度）。<b>歌仔戲七字調是同一個原理的另一種解法</b>——旋律骨架幾乎不動，變的是<b>詞與速度</b>。同樣是「一個素材用一整齣戲」。" },
-      { picks: [
-        { label: "Haydn 第 94 號《驚愕》第二樂章", sub: "古典課第 3 週", q: "Haydn Symphony 94 Surprise Kleiber", qa: "hifi" },
-        { label: "歌仔戲〈七字調〉", sub: "本課單元 4", q: "歌仔戲 七字調", qa: "hifi" }
-      ] },
-      { h3: "3　宣敘 vs. 詠嘆：Handel vs. 客家三大調", tier: "析" },
-      { p: "古典課<b>第 7 週</b>：宣敘調推進劇情（節奏接近說話），詠嘆調抒發情感（時間停下來）。<b>客家三大調是同一條軸線</b>：老山歌散板、最自由、最能抒情；平板規整、樂句完整、最能敘事。<b>愈規整愈能講故事，這個交換關係在兩種音樂裡完全一致。</b>" },
-      { picks: [
-        { label: "Handel《彌賽亞》開頭三軌", sub: "古典課第 7 週", q: "Handel Messiah Gardiner", qa: "hifi" },
-        { label: "客家〈老山歌〉→〈平板〉", sub: "本課單元 5", q: "客家 老山歌 平板 三大調", qa: "hifi" }
-      ] },
-      { h3: "4　音樂與國族認同：Sibelius vs. 哭調", tier: "析" },
-      { p: "古典課<b>第 17 週</b>的國民樂派：《芬蘭頌》作於俄國強化統治、實施審查的時期，一度必須改名演出。<b>歌仔戲的哭調在日治時期大量發展並極受歡迎</b>，常見的詮釋認為它反映了被殖民處境下的集體情緒。<b>兩者都屬【析】層</b>——音樂與政治的因果關係從來不容易證實，但這個平行值得放在一起想。" },
-      { picks: [
-        { label: "Sibelius《芬蘭頌》", sub: "古典課第 17 週", q: "Sibelius Finlandia Berglund", qa: "hifi" },
-        { label: "歌仔戲〈哭調〉", sub: "本課單元 4", q: "歌仔戲 哭調", qa: "hifi" }
-      ] },
-      { h3: "5　室內樂編制：巴洛克 vs. 南管", tier: "析" },
-      { p: "古典課<b>第 5–6 週</b>的巴洛克室內樂：小編制、旋律樂器加低音支撐、以「幾個人在房間裡奏給彼此聽」為前提。<b>南管的上四管是完全獨立發展出來的同類解法</b>——洞簫走旋律、南琶點節奏骨架、二絃與三絃填中間。兩者沒有任何歷史關聯，卻解決了同一個問題。" },
-      { picks: [
-        { label: "Bach 布蘭登堡第 5 號 第一樂章", sub: "古典課第 5 週", q: "Bach Brandenburg 5 Pinnock", qa: "hifi" },
-        { label: "南管〈梅花操〉", sub: "本課單元 1", q: "南管 梅花操", qa: "hifi" }
-      ] },
-      { h3: "6　配器與音色：波麗露 vs. 北管", tier: "選" },
-      { p: "古典課<b>第 18 週</b>的《波麗露》：旋律不變，靠配器單向累積推進。<b>北管的做法相反</b>——它不累積，它從第一秒就全開。把兩者放在一起，可以很清楚地看到「用音色做事」的兩種極端策略：一種是慢慢加，一種是一次給滿。" },
-      { picks: [
-        { label: "Ravel《波麗露》", sub: "古典課第 18 週", q: "Ravel Bolero Dudamel", qa: "hifi" },
-        { label: "北管〈風入松〉", sub: "本課單元 2", q: "北管 風入松", qa: "hifi" }
-      ] },
-      { note: "<b>★ 重聽區跨課程共用。</b>兩門課的收藏放在一起，所以你可以直接看出自己在古典音樂與台灣傳統音樂之間偏向哪一邊——那個比例本身就是有用的資訊。" }
+      { note: "<b>★ 重聽區跨課程共用。</b>兩門課的收藏放在一起，你可以直接看出自己偏向哪一邊——那個比例本身就是資訊。" }
     ]
   },
 
   {
     id: "p-manner", icon: "分", title: "聆聽的分寸", en: "Listening Responsibly", appendix: true,
     blocks: [
-      { p: "這一頁不是法律聲明，是<b>幾件實際上會影響你怎麼聽的事</b>。" },
-      { h3: "1　這些音樂原本不是為聽眾寫的", tier: "析" },
-      { p: "北管是給神明出巡聽的，客家八音是典禮的執行環節，南管是館閣裡幾個人自娛，Pasibutbut 是播種前的祭儀。<b>它們幾乎都不是「表演」</b>。這解釋了很多聽感上的困惑——為什麼南管那麼慢（因為沒有人趕時間）、為什麼北管那麼吵（因為要壓過整條街）、為什麼 Pasibutbut 沒有旋律（因為它的目的不是好聽）。" },
-      { h3: "2　原住民族音樂的限制性", tier: "史" },
-      { p: "部分歌謠具有<b>儀式性與限制性</b>——有特定的演唱者、時間與場合，並不是任何人在任何時候都可以演唱或播放。<b>以聆聽與理解為目的沒有問題</b>；但請避免把它們當成一般的「表演曲目」，或拿來當背景音樂、短影音配樂使用。" },
-      { p: "郭英男〈老人飲酒歌〉被 Enigma 取樣的案例（單元 7）不只是一個有趣的故事——<b>它是一個真實的傷害</b>：歌聲傳遍全世界，而演唱者一開始完全不知情。這件事之後才有了比較認真的討論：傳統歌謠的權利應該屬於誰？" },
-      { h3: "3　沒有「標準版」", tier: "析" },
-      { p: "傳統音樂多以口傳心授延續，<b>同一曲調在不同館閣、劇團、部落之間本來就不同</b>。本課程列出的版本是入門的代表性錄音，<b>不代表其他版本是錯的</b>。這與古典音樂有樂譜可依的情況根本不同——那邊的「版本差異」是詮釋差異，這邊的版本差異往往是傳承差異。" },
-      { h3: "4　命名仍在辯論", tier: "析" },
-      { p: "「南管／南音／弦管」、「北管／亂彈」、「八部合音」等名稱的適用範圍，學界至今仍有不同主張。本課程採用台灣通行的說法，並在正文中以【析】標記。<b>看到別的資料用不同的說法，不必假設有一方是錯的。</b>" },
-      { h3: "5　族群命名以當事者為準", tier: "選" },
-      { p: "本課程使用官方認定的族名。族內各部落對歌謠的稱呼與歸屬可能不同——<b>以部落自身的說法為準</b>。" }
+      { p: "不是法律聲明，是<b>幾件實際上會影響你怎麼聽的事</b>。" },
+      { folds: [
+        { t: "1　這些音樂原本不是為聽眾寫的", tier: "析", blocks: [
+          { p: "北管給神明出巡聽、客家八音是典禮的執行環節、南管是館閣裡幾個人自娛、Pasibutbut 是播種前的祭儀。<b>它們幾乎都不是「表演」。</b><br>這解釋了很多聽感上的困惑——為什麼南管那麼慢（沒有人趕時間）、北管那麼吵（要壓過整條街）、Pasibutbut 沒有旋律（目的不是好聽）。" } ] },
+        { t: "2　原住民族音樂的限制性", sub: "最重要的一條", blocks: [
+          { p: "部分歌謠具有<b>儀式性與限制性</b>——有特定的演唱者、時間與場合，並不是任何人在任何時候都可以演唱或播放。<b>以聆聽與理解為目的沒有問題</b>；但請避免把它們當成「表演曲目」，或拿來當背景音樂、短影音配樂。" },
+          { p: "郭英男〈老人飲酒歌〉被 Enigma 取樣的案例不只是有趣的故事——<b>它是一個真實的傷害</b>：歌聲傳遍全世界，而演唱者一開始完全不知情。這件事之後才有了比較認真的討論：傳統歌謠的權利應該屬於誰？" } ] },
+        { t: "3　沒有「標準版」", blocks: [
+          { p: "傳統音樂多以口傳心授延續，<b>同一曲調在不同館閣、劇團、部落之間本來就不同</b>。本課列出的版本是入門的代表性錄音，<b>不代表其他版本是錯的</b>。<br>這與古典音樂有樂譜可依的情況根本不同——那邊的版本差異是<b>詮釋差異</b>，這邊往往是<b>傳承差異</b>。" } ] },
+        { t: "4　命名仍在辯論", blocks: [
+          { p: "「南管／南音／弦管」、「北管／亂彈」、「八部合音」等名稱的適用範圍，學界至今仍有不同主張。本課採用台灣通行的說法並標記為【析】。<b>看到別的資料用不同說法，不必假設有一方是錯的。</b>" } ] },
+        { t: "5　族群命名以當事者為準", blocks: [
+          { p: "本課使用官方認定的族名。族內各部落對歌謠的稱呼與歸屬可能不同——<b>以部落自身的說法為準</b>。" } ] }
+      ] }
     ]
   },
 
@@ -4250,30 +4273,46 @@ window.PINNED = {
       ? '<span class="tag pinTag" title="本機釘選——只存在這台裝置的瀏覽器，其他裝置看不到">🔗 本機</span>'
       : pin === "repo"
         ? '<span class="tag pinTag repo" title="內建連結——隨網站部署，所有裝置都有">🔗 內建</span>' : "";
+    /* 搜尋字串與「複製／貼上釘選連結」是進階功能，一般使用者只會點播放。
+       原本每個版本都攤開來，光是搜尋字串那一列全站就佔掉大量篇幅——降級到 ⋯ 裡。 */
     return '<li class="v ' + v.qa + (pin ? " pinned" : "") + '">' +
       "<div>" +
         '<div class="p">' + esc(v.p) + " " + pinLabel + "</div>" +
         '<div class="sub"><span class="qbadge ' + v.qa + '" title="' + esc(q.desc) + '">' + esc(q.label) + "</span>" +
           esc(v.l) + (v.y ? " · " + v.y : "") + " " + tags + "</div>" +
         (v.w ? '<div class="why">' + esc(v.w) + "</div>" : "") +
-        '<div class="qline' + (pin ? " muted" : "") + '">' +
-          (pin ? "🔗 KKBOX 直接開啟已釘選連結，不經過搜尋　｜　搜尋字串：" : "🔍 ") +
-          "<code>" + esc(v.q) + "</code></div>" +
+        '<details class="vmore"><summary>⋯ 搜尋字串與釘選</summary>' +
+          '<div class="qline' + (pin ? " muted" : "") + '">' +
+            (pin ? "🔗 KKBOX 直接開啟已釘選連結，不經過搜尋　｜　搜尋字串：" : "🔍 ") +
+            "<code>" + esc(v.q) + "</code></div>" +
+          '<div class="rowbtns">' +
+            '<button class="copy" data-copy="' + esc(v.q) + '">複製搜尋字串</button>' +
+            '<button class="copy" data-pin="' + esc(v.q) + '">' + (pin === "local" ? "換／清除連結" : "🔗 貼上分享連結") + "</button>" +
+          "</div></details>" +
       "</div>" +
-      '<div class="acts">' +
-        playLinksHTML(v.q) +
-        '<button class="copy" data-copy="' + esc(v.q) + '">複製搜尋字串</button>' +
-        '<button class="copy" data-pin="' + esc(v.q) + '">' + (pin === "local" ? "換／清除連結" : "🔗 貼上分享連結") + "</button>" +
-      "</div></li>";
+      '<div class="acts">' + playLinksHTML(v.q) + "</div></li>";
   }
 
   /* ---------------- 渲染：曲目 ---------------- */
+  /* 曲目卡片。實測展開一首曲目原本有 947 字、16 個按鈕，其中最重要的聆聽任務
+     只佔 11%，而「其他三個版本的詳細資料」佔 57%。改為：
+       一律可見＝曲名、首選版本、兩個播放鈕
+       點開才有＝本週任務、作品背景、其他版本、對照表
+     不做全站「精簡／完整」模式——每個區塊各自點開，沒有模式狀態要記。 */
+  function foldHTML(cls, summary, body, opts) {
+    if (!body) return "";
+    opts = opts || {};
+    return '<details class="fold ' + cls + '"' + (opts.open ? " open" : "") + ">" +
+      "<summary>" + summary + "</summary><div class=\"foldbd\">" + body + "</div></details>";
+  }
+
   function workHTML(id, wk) {
     var w = WORKS[id];
     if (!w) return '<div class="work"><div class="workhd"><button class="ttl" aria-expanded="false"><b>（缺少資料：' + esc(id) + "）</b></button></div></div>";
     var vs = sortVersions(w.versions || []);
-    var open = false;
+    var top = vs[0], rest = vs.slice(1);
     var fav = !!S.fav[id];
+
     var metas = [];
     if (w.texture) metas.push("<b>對應織體：</b>" + esc(w.texture));
     if (w.form) metas.push("<b>對應曲式：</b>" + esc(w.form));
@@ -4283,32 +4322,56 @@ window.PINNED = {
     if (w.diff) metas.push("<b>難度：</b>" + esc(w.diff));
     if (w.period) metas.push("<b>分期：</b>" + esc(w.period));
 
-    return '<div class="work' + (open ? " open" : "") + '" data-work="' + esc(id) + '" data-search="' +
+    // 背景層：作品背景、史實註記、生活關聯、編者建議、meta 標籤全部收在一起
+    var bgBody =
+      (w.bg ? '<div class="bg"><b>作品背景</b>' + tierTags("史析") + w.bg + "</div>" : "") +
+      (w.fact ? '<div class="meta">' + tierTags("史") + esc(w.fact) + "</div>" : "") +
+      (w.life ? '<div class="life"><b>你可能在哪裡聽過</b>' + w.life + "</div>" : "") +
+      (w.pick ? '<div class="meta">' + tierTags("選") + w.pick + "</div>" : "") +
+      (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
+      (metas.length ? '<div class="meta">' + metas.join(" ｜ ") + "</div>" : "");
+
+    // 任務層：摺疊列上直接顯示「還有幾項沒做」，不展開也看得到狀態
+    var tk = taskStatus(id, wk);
+    var taskFold = tk
+      ? foldHTML("f-task" + (tk.left ? "" : " done"),
+          (tk.left ? "▸ <b>本週任務</b>　還有 " + tk.left + " 項" : "✓ <b>本週任務</b>　已完成"),
+          taskBoxHTML(id, wk))
+      : "";
+
+    var restBody = rest.length
+      ? '<div class="hint" style="margin-bottom:8px">都是<b>同一首曲子的不同演出</b>，選一個聽就好。</div>' +
+        '<ul class="vlist">' + rest.map(versionHTML).join("") + "</ul>" +
+        '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">都找不到？複製通用搜尋字串</button></div>'
+      : '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">都找不到？複製通用搜尋字串</button></div>';
+
+    return '<div class="work" data-work="' + esc(id) + '" data-search="' +
         esc((w.title + " " + (w.en || "") + " " + w.composer + " " + w.q + " " + (w.versions || []).map(function (v) { return v.p; }).join(" ")).toLowerCase()) + '">' +
       '<div class="workhd">' +
         '<button class="star' + (fav ? " on" : "") + '" data-fav="' + esc(id) + '" title="加入／移出重聽區">' + (fav ? "★" : "☆") + "</button>" +
-        /* .ttl 必須是 button：原本的 <div> 無法聚焦，鍵盤使用者根本展不開曲目，
-           也就拿不到任務與播放連結。不把整個 .workhd 變成 button，否則會嵌套 .star。 */
-        '<button class="ttl" aria-expanded="' + (open ? "true" : "false") + '"><b>' + esc(w.title) + "</b><em>" + esc(w.en || "") + " · " + esc(w.composer) + "</em></button>" +
+        /* .ttl 必須是 button：原本的 <div> 無法聚焦，鍵盤使用者根本展不開曲目。
+           不把整個 .workhd 變成 button，否則會嵌套 .star。 */
+        '<button class="ttl" aria-expanded="false"><b>' + esc(w.title) + "</b><em>" + esc(w.en || "") + " · " + esc(w.composer) + "</em></button>" +
         '<span class="chev">▶</span>' +
       "</div>" +
       '<div class="workbd">' +
-        (metas.length ? '<div class="meta">' + metas.join(" ｜ ") + "</div>" : "") +
-        (w.bg ? '<div class="bg"><b>作品背景</b>' + tierTags("史析") + w.bg + "</div>" : "") +
-        (w.fact ? '<div class="meta">' + tierTags("史") + esc(w.fact) + "</div>" : "") +
-        (w.life ? '<div class="life"><b>你可能在哪裡聽過</b>' + w.life + "</div>" : "") +
-        // pick 與 bg／life 一樣允許內嵌 HTML（資料由編者撰寫，非使用者輸入）。
-        // 先前用 esc() 包住，導致改寫後的 <b> 標籤被當成文字顯示出來。
-        (w.pick ? '<div class="meta">' + tierTags("選") + w.pick + "</div>" : "") +
-        (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
-        taskBoxHTML(id, wk) +
-        answerHTML(w.answer) +
-        '<div class="vhead">以下 <b>' + vs.length + "</b> 個都是<b>同一首曲子的不同演出</b>（皆為全曲，非片段）——" +
-          "<b>選一個聽就好</b>，不必每個都聽。" +
-          (S.hiresFirst ? "已依 Hi-Res 優先排序，最上面那個就是建議首選。" : "") + "</div>" +
-        '<ul class="vlist">' + vs.map(versionHTML).join("") + "</ul>" +
-        '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">都找不到？複製通用搜尋字串：' + esc(w.q) + "</button></div>" +
+        (top ? '<ul class="vlist top">' + versionHTML(top) + "</ul>" : "") +
+        taskFold +
+        foldHTML("f-bg", "▸ <b>作品背景</b>", bgBody) +
+        foldHTML("f-ver", "▸ <b>其他 " + rest.length + " 個版本</b>" +
+          (S.hiresFirst && rest.length ? '<span class="hint">上面那個是建議首選</span>' : ""), restBody) +
+        (w.answer ? answerHTML(w.answer) : "") +
       "</div></div>";
+  }
+
+  /* 這首曲目在本週有幾項任務、還剩幾項沒勾。給摺疊列顯示狀態用。 */
+  function taskStatus(workId, wk) {
+    if (!wk || !wk.tw) return null;
+    var hits = [];
+    wk.tw.forEach(function (ids, i) { if (ids.indexOf(workId) > -1) hits.push(i); });
+    if (!hits.length) return null;
+    var left = hits.filter(function (i) { return !S.tasks[ck(wk.n) + ":" + i]; }).length;
+    return { total: hits.length, left: left };
   }
 
   /* 對照表（答案）。第 1 週的任務要求「不看曲目說明作答，聽完後對照計算正確率」，
@@ -4323,9 +4386,9 @@ window.PINNED = {
         (x.text ? "<p>" + x.text + "</p>" : "") +
         (x.note ? '<div class="note">' + x.note + "</div>" : "");
     }
-    return '<details class="ans"><summary>' + (a.label || "🔒 對照表（答案）") +
-      '<span class="hint">' + (a.hint || "聽完再打開") + "</span></summary>" +
-      (a.parts ? a.parts.map(block).join("") : block(a)) + "</details>";
+    return '<details class="fold ans"><summary>' + (a.label || "🔒 <b>對照表（答案）</b>") +
+      '<span class="hint">' + (a.hint || "聽完再打開") + '</span></summary><div class="foldbd">' +
+      (a.parts ? a.parts.map(block).join("") : block(a)) + "</div></details>";
   }
 
   /* 把本週指派給這首曲目的聆聽任務，直接放在播放按鈕正上方。
@@ -4334,17 +4397,29 @@ window.PINNED = {
   function taskBoxHTML(workId, wk) {
     if (!wk || !wk.tw) return "";
     var hits = [];
-    wk.tw.forEach(function (ids, i) {
-      if (ids.indexOf(workId) > -1) hits.push(i);
-    });
+    wk.tw.forEach(function (ids, i) { if (ids.indexOf(workId) > -1) hits.push(i); });
     if (!hits.length) return "";
-    return '<div class="taskbox"><b>▶ 播放前先讀：本' + COURSE.unitWord + '要用這首做什麼</b><ul class="chk">' +
+    return '<ul class="chk">' +
       hits.map(function (i) {
         var k = ck(wk.n) + ":" + i, on = !!S.tasks[k];
         return '<li class="' + (i === 0 ? "must " : "") + (on ? "dn" : "") + '">' +
           '<label><input type="checkbox" data-task="' + k + '"' + (on ? " checked" : "") + ">" +
           "<span>" + wk.tasks[i] + "</span></label></li>";
-      }).join("") + "</ul></div>";
+      }).join("") + "</ul>";
+  }
+
+  /* 任務摺疊列上顯示「還有幾項」，勾選後即時更新——不展開也看得到狀態。
+     直接數 DOM 裡的 checkbox，不必回查資料。 */
+  function refreshTaskFolds() {
+    $$("details.f-task").forEach(function (d) {
+      var boxes = $$("input[data-task]", d);
+      var left = boxes.filter(function (x) { return !x.checked; }).length;
+      var sum = d.querySelector("summary");
+      if (sum) sum.innerHTML = left
+        ? "▸ <b>本週任務</b>　還有 " + left + " 項"
+        : "✓ <b>本週任務</b>　已完成";
+      d.classList.toggle("done", !left);
+    });
   }
 
   /* ---------------- 渲染：週 ---------------- */
@@ -4412,9 +4487,8 @@ window.PINNED = {
 
     if (wk.works && wk.works.length) {
       h += "<h3>必聽曲目與版本建議 " + tierTags("選") + "</h3>";
-      h += '<div class="hint" style="margin-bottom:8px">點曲名展開版本清單。' +
-        (S.hiresFirst ? "目前<b>依 Hi-Res 優先排序</b>" : "目前<b>依編者推薦順序排列</b>") +
-        (S.hideHistoric ? "，且已隱藏歷史錄音" : "") + "。</div>";
+      h += '<div class="hint" style="margin-bottom:8px">點曲名展開。' +
+        (S.hideHistoric ? "已隱藏歷史錄音。" : "") + "</div>";
       h += wk.works.map(function (id) { return workHTML(id, wk); }).join("");
     }
     if (wk.compare) {
@@ -4777,11 +4851,10 @@ window.PINNED = {
     return h;
   }
 
-  /* 資料驅動的參考頁渲染器（台灣傳統音樂課程用）。 */
-  function pageHTML(pg) {
-    var h = '<div class="card" id="' + esc(pg.id) + '"><h2>' + esc(pg.title) + "</h2>";
-    if (pg.en) h += '<div class="enttl">' + esc(pg.en) + "</div>";
-    (pg.blocks || []).forEach(function (b) {
+  /* 資料驅動的參考頁渲染器。blocks 可巢狀，讓長篇說明能收進摺疊列。 */
+  function blocksHTML(arr) {
+    var h = "";
+    (arr || []).forEach(function (b) {
       if (b.h3) h += "<h3>" + b.h3 + (b.tier ? " " + tierTags(b.tier) : "") + "</h3>";
       if (b.p) h += "<p>" + (b.tier && !b.h3 ? tierTags(b.tier) : "") + b.p + "</p>";
       if (b.banner) h += '<div class="banner">' + b.banner + "</div>";
@@ -4796,12 +4869,24 @@ window.PINNED = {
         h += '<ul class="vlist">' + b.picks.map(function (k) {
           return '<li class="v ' + (k.qa || "hifi") + '"><div><div class="p">' + k.label + "</div>" +
             (k.sub ? '<div class="sub">' + k.sub + "</div>" : "") +
-            '<div class="qline">🔍 <code>' + esc(k.q) + "</code></div></div>" +
+            '<details class="vmore"><summary>⋯ 搜尋字串</summary>' +
+            '<div class="qline">🔍 <code>' + esc(k.q) + "</code></div></details></div>" +
             '<div class="acts">' + playLinksHTML(k.q) + "</div></li>";
         }).join("") + "</ul>";
       }
+      // 長篇說明收成摺疊列——參考頁原本是一整面文字牆，掃不動
+      if (b.folds) h += b.folds.map(function (f) {
+        return foldHTML("f-page", "▸ <b>" + esc(f.t) + "</b>" +
+          (f.sub ? '<span class="hint">' + f.sub + "</span>" : ""), blocksHTML(f.blocks));
+      }).join("");
     });
-    return h + "</div>";
+    return h;
+  }
+
+  function pageHTML(pg) {
+    return '<div class="card" id="' + esc(pg.id) + '"><h2>' + esc(pg.title) + "</h2>" +
+      (pg.en ? '<div class="enttl">' + esc(pg.en) + "</div>" : "") +
+      blocksHTML(pg.blocks) + "</div>";
   }
 
   /* 樂器線稿卡片。改用卡片而非表格：加了圖之後表格在手機上會變成必須橫向捲動
@@ -5413,6 +5498,7 @@ window.PINNED = {
         el.checked = t.checked;
         el.closest("li").classList.toggle("dn", t.checked);
       });
+      refreshTaskFolds();
       return;
     }
     if (t.hasAttribute && t.hasAttribute("data-check")) {

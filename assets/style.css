@@ -216,21 +216,52 @@ th{background:var(--sel);font-weight:700;font-size:13px;white-space:nowrap}
 .theory[open]>summary{border-bottom:1px solid var(--line)}
 .theory>*:last-child{margin-bottom:14px}
 
-/* 對照表（答案）：預設收起的劇透區，用虛線與概念區區分 */
-.ans{border:1px dashed var(--line);border-radius:10px;background:var(--bg);margin:14px 0;padding:0 14px}
-.ans>summary{
-  cursor:pointer;font-size:13.5px;font-weight:650;padding:10px 14px;margin:0 -14px;
-  list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;color:var(--mut);
+/* ---------- 摺疊列（fold） ----------
+   曲目卡片改為「首選版本＋播放鈕」一律可見，其餘（本週任務、作品背景、
+   其他版本、對照表）各自點開。不做全站模式切換——沒有模式狀態要記，
+   每張卡片自己就看得出還有什麼可以展開。 */
+.fold{border:1px solid var(--line);border-radius:9px;background:var(--bg2);margin:7px 0}
+.fold>summary{
+  cursor:pointer;font-size:13px;padding:9px 13px;min-height:40px;
+  list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--mut);
 }
-.ans>summary::-webkit-details-marker{display:none}
-.ans[open]>summary{border-bottom:1px dashed var(--line);color:var(--fg)}
-.ans>summary .hint{font-weight:400}
-.ans>*:last-child{margin-bottom:14px}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary b{color:var(--fg);font-weight:650}
+.fold>summary .hint{font-size:11.5px}
+.fold:hover>summary b{color:var(--acc)}
+.fold[open]>summary{border-bottom:1px solid var(--line)}
+.foldbd{padding:12px 13px 14px}
+.foldbd>*:first-child{margin-top:0}
+.foldbd>*:last-child{margin-bottom:0}
+
+/* 本週任務：未完成時用重點色，一眼看得出還有事沒做 */
+.fold.f-task{border-color:var(--acc);background:var(--sel)}
+.fold.f-task>summary{color:var(--acc)}
+.fold.f-task>summary b{color:var(--acc)}
+.fold.f-task.done{border-color:var(--line);background:var(--bg2)}
+.fold.f-task.done>summary,.fold.f-task.done>summary b{color:var(--mut)}
+
+/* 對照表：虛線外框，與其他摺疊列區隔（劇透區） */
+.fold.ans{border-style:dashed}
+.fold.ans[open]>summary{border-bottom-style:dashed}
 .ans h4{font-size:13.5px;margin:16px 0 0;padding-left:9px;border-left:3px solid var(--acc)}
-.ans h4:first-of-type{margin-top:12px}
+.ans h4:first-of-type{margin-top:0}
 .ans p{font-size:13.5px;line-height:1.85}
 
-/* ---------- 鍵盤焦點 ---------- */
+/* 版本列裡的「⋯ 搜尋字串與釘選」——進階功能，預設收起 */
+.vmore{margin-top:6px}
+.vmore>summary{cursor:pointer;font-size:11.5px;color:var(--mut);list-style:none;
+  display:inline-flex;align-items:center;min-height:28px}
+.vmore>summary::-webkit-details-marker{display:none}
+.vmore>summary:hover{color:var(--acc)}
+.vmore .rowbtns{margin-top:8px}
+.vmore .qline{margin-top:6px}
+
+/* 首選版本：去掉外框，讓它讀起來像卡片本身的一部分而不是清單的第一項 */
+.vlist.top{margin:0}
+.vlist.top>li{border-left-width:3px;background:var(--bg)}
+
+/* ---------- 鍵盤焦點 ---------- *//* ---------- 鍵盤焦點 ---------- */
 /* 原本全檔唯一的 outline 規則是 .search input{outline:none}，等於移除瀏覽器
    預設焦點框而未補回，鍵盤使用者看不見自己在哪裡。用 :focus-visible 讓滑鼠
    點擊不出現焦點框，只有鍵盤操作才顯示。 */

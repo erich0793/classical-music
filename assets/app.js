@@ -184,30 +184,46 @@
       ? '<span class="tag pinTag" title="本機釘選——只存在這台裝置的瀏覽器，其他裝置看不到">🔗 本機</span>'
       : pin === "repo"
         ? '<span class="tag pinTag repo" title="內建連結——隨網站部署，所有裝置都有">🔗 內建</span>' : "";
+    /* 搜尋字串與「複製／貼上釘選連結」是進階功能，一般使用者只會點播放。
+       原本每個版本都攤開來，光是搜尋字串那一列全站就佔掉大量篇幅——降級到 ⋯ 裡。 */
     return '<li class="v ' + v.qa + (pin ? " pinned" : "") + '">' +
       "<div>" +
         '<div class="p">' + esc(v.p) + " " + pinLabel + "</div>" +
         '<div class="sub"><span class="qbadge ' + v.qa + '" title="' + esc(q.desc) + '">' + esc(q.label) + "</span>" +
           esc(v.l) + (v.y ? " · " + v.y : "") + " " + tags + "</div>" +
         (v.w ? '<div class="why">' + esc(v.w) + "</div>" : "") +
-        '<div class="qline' + (pin ? " muted" : "") + '">' +
-          (pin ? "🔗 KKBOX 直接開啟已釘選連結，不經過搜尋　｜　搜尋字串：" : "🔍 ") +
-          "<code>" + esc(v.q) + "</code></div>" +
+        '<details class="vmore"><summary>⋯ 搜尋字串與釘選</summary>' +
+          '<div class="qline' + (pin ? " muted" : "") + '">' +
+            (pin ? "🔗 KKBOX 直接開啟已釘選連結，不經過搜尋　｜　搜尋字串：" : "🔍 ") +
+            "<code>" + esc(v.q) + "</code></div>" +
+          '<div class="rowbtns">' +
+            '<button class="copy" data-copy="' + esc(v.q) + '">複製搜尋字串</button>' +
+            '<button class="copy" data-pin="' + esc(v.q) + '">' + (pin === "local" ? "換／清除連結" : "🔗 貼上分享連結") + "</button>" +
+          "</div></details>" +
       "</div>" +
-      '<div class="acts">' +
-        playLinksHTML(v.q) +
-        '<button class="copy" data-copy="' + esc(v.q) + '">複製搜尋字串</button>' +
-        '<button class="copy" data-pin="' + esc(v.q) + '">' + (pin === "local" ? "換／清除連結" : "🔗 貼上分享連結") + "</button>" +
-      "</div></li>";
+      '<div class="acts">' + playLinksHTML(v.q) + "</div></li>";
   }
 
   /* ---------------- 渲染：曲目 ---------------- */
+  /* 曲目卡片。實測展開一首曲目原本有 947 字、16 個按鈕，其中最重要的聆聽任務
+     只佔 11%，而「其他三個版本的詳細資料」佔 57%。改為：
+       一律可見＝曲名、首選版本、兩個播放鈕
+       點開才有＝本週任務、作品背景、其他版本、對照表
+     不做全站「精簡／完整」模式——每個區塊各自點開，沒有模式狀態要記。 */
+  function foldHTML(cls, summary, body, opts) {
+    if (!body) return "";
+    opts = opts || {};
+    return '<details class="fold ' + cls + '"' + (opts.open ? " open" : "") + ">" +
+      "<summary>" + summary + "</summary><div class=\"foldbd\">" + body + "</div></details>";
+  }
+
   function workHTML(id, wk) {
     var w = WORKS[id];
     if (!w) return '<div class="work"><div class="workhd"><button class="ttl" aria-expanded="false"><b>（缺少資料：' + esc(id) + "）</b></button></div></div>";
     var vs = sortVersions(w.versions || []);
-    var open = false;
+    var top = vs[0], rest = vs.slice(1);
     var fav = !!S.fav[id];
+
     var metas = [];
     if (w.texture) metas.push("<b>對應織體：</b>" + esc(w.texture));
     if (w.form) metas.push("<b>對應曲式：</b>" + esc(w.form));
@@ -217,32 +233,56 @@
     if (w.diff) metas.push("<b>難度：</b>" + esc(w.diff));
     if (w.period) metas.push("<b>分期：</b>" + esc(w.period));
 
-    return '<div class="work' + (open ? " open" : "") + '" data-work="' + esc(id) + '" data-search="' +
+    // 背景層：作品背景、史實註記、生活關聯、編者建議、meta 標籤全部收在一起
+    var bgBody =
+      (w.bg ? '<div class="bg"><b>作品背景</b>' + tierTags("史析") + w.bg + "</div>" : "") +
+      (w.fact ? '<div class="meta">' + tierTags("史") + esc(w.fact) + "</div>" : "") +
+      (w.life ? '<div class="life"><b>你可能在哪裡聽過</b>' + w.life + "</div>" : "") +
+      (w.pick ? '<div class="meta">' + tierTags("選") + w.pick + "</div>" : "") +
+      (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
+      (metas.length ? '<div class="meta">' + metas.join(" ｜ ") + "</div>" : "");
+
+    // 任務層：摺疊列上直接顯示「還有幾項沒做」，不展開也看得到狀態
+    var tk = taskStatus(id, wk);
+    var taskFold = tk
+      ? foldHTML("f-task" + (tk.left ? "" : " done"),
+          (tk.left ? "▸ <b>本週任務</b>　還有 " + tk.left + " 項" : "✓ <b>本週任務</b>　已完成"),
+          taskBoxHTML(id, wk))
+      : "";
+
+    var restBody = rest.length
+      ? '<div class="hint" style="margin-bottom:8px">都是<b>同一首曲子的不同演出</b>，選一個聽就好。</div>' +
+        '<ul class="vlist">' + rest.map(versionHTML).join("") + "</ul>" +
+        '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">都找不到？複製通用搜尋字串</button></div>'
+      : '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">都找不到？複製通用搜尋字串</button></div>';
+
+    return '<div class="work" data-work="' + esc(id) + '" data-search="' +
         esc((w.title + " " + (w.en || "") + " " + w.composer + " " + w.q + " " + (w.versions || []).map(function (v) { return v.p; }).join(" ")).toLowerCase()) + '">' +
       '<div class="workhd">' +
         '<button class="star' + (fav ? " on" : "") + '" data-fav="' + esc(id) + '" title="加入／移出重聽區">' + (fav ? "★" : "☆") + "</button>" +
-        /* .ttl 必須是 button：原本的 <div> 無法聚焦，鍵盤使用者根本展不開曲目，
-           也就拿不到任務與播放連結。不把整個 .workhd 變成 button，否則會嵌套 .star。 */
-        '<button class="ttl" aria-expanded="' + (open ? "true" : "false") + '"><b>' + esc(w.title) + "</b><em>" + esc(w.en || "") + " · " + esc(w.composer) + "</em></button>" +
+        /* .ttl 必須是 button：原本的 <div> 無法聚焦，鍵盤使用者根本展不開曲目。
+           不把整個 .workhd 變成 button，否則會嵌套 .star。 */
+        '<button class="ttl" aria-expanded="false"><b>' + esc(w.title) + "</b><em>" + esc(w.en || "") + " · " + esc(w.composer) + "</em></button>" +
         '<span class="chev">▶</span>' +
       "</div>" +
       '<div class="workbd">' +
-        (metas.length ? '<div class="meta">' + metas.join(" ｜ ") + "</div>" : "") +
-        (w.bg ? '<div class="bg"><b>作品背景</b>' + tierTags("史析") + w.bg + "</div>" : "") +
-        (w.fact ? '<div class="meta">' + tierTags("史") + esc(w.fact) + "</div>" : "") +
-        (w.life ? '<div class="life"><b>你可能在哪裡聽過</b>' + w.life + "</div>" : "") +
-        // pick 與 bg／life 一樣允許內嵌 HTML（資料由編者撰寫，非使用者輸入）。
-        // 先前用 esc() 包住，導致改寫後的 <b> 標籤被當成文字顯示出來。
-        (w.pick ? '<div class="meta">' + tierTags("選") + w.pick + "</div>" : "") +
-        (w.note ? '<div class="meta">' + esc(w.note) + "</div>" : "") +
-        taskBoxHTML(id, wk) +
-        answerHTML(w.answer) +
-        '<div class="vhead">以下 <b>' + vs.length + "</b> 個都是<b>同一首曲子的不同演出</b>（皆為全曲，非片段）——" +
-          "<b>選一個聽就好</b>，不必每個都聽。" +
-          (S.hiresFirst ? "已依 Hi-Res 優先排序，最上面那個就是建議首選。" : "") + "</div>" +
-        '<ul class="vlist">' + vs.map(versionHTML).join("") + "</ul>" +
-        '<div class="rowbtns"><button class="iconbtn" data-copy="' + esc(w.q) + '">都找不到？複製通用搜尋字串：' + esc(w.q) + "</button></div>" +
+        (top ? '<ul class="vlist top">' + versionHTML(top) + "</ul>" : "") +
+        taskFold +
+        foldHTML("f-bg", "▸ <b>作品背景</b>", bgBody) +
+        foldHTML("f-ver", "▸ <b>其他 " + rest.length + " 個版本</b>" +
+          (S.hiresFirst && rest.length ? '<span class="hint">上面那個是建議首選</span>' : ""), restBody) +
+        (w.answer ? answerHTML(w.answer) : "") +
       "</div></div>";
+  }
+
+  /* 這首曲目在本週有幾項任務、還剩幾項沒勾。給摺疊列顯示狀態用。 */
+  function taskStatus(workId, wk) {
+    if (!wk || !wk.tw) return null;
+    var hits = [];
+    wk.tw.forEach(function (ids, i) { if (ids.indexOf(workId) > -1) hits.push(i); });
+    if (!hits.length) return null;
+    var left = hits.filter(function (i) { return !S.tasks[ck(wk.n) + ":" + i]; }).length;
+    return { total: hits.length, left: left };
   }
 
   /* 對照表（答案）。第 1 週的任務要求「不看曲目說明作答，聽完後對照計算正確率」，
@@ -257,9 +297,9 @@
         (x.text ? "<p>" + x.text + "</p>" : "") +
         (x.note ? '<div class="note">' + x.note + "</div>" : "");
     }
-    return '<details class="ans"><summary>' + (a.label || "🔒 對照表（答案）") +
-      '<span class="hint">' + (a.hint || "聽完再打開") + "</span></summary>" +
-      (a.parts ? a.parts.map(block).join("") : block(a)) + "</details>";
+    return '<details class="fold ans"><summary>' + (a.label || "🔒 <b>對照表（答案）</b>") +
+      '<span class="hint">' + (a.hint || "聽完再打開") + '</span></summary><div class="foldbd">' +
+      (a.parts ? a.parts.map(block).join("") : block(a)) + "</div></details>";
   }
 
   /* 把本週指派給這首曲目的聆聽任務，直接放在播放按鈕正上方。
@@ -268,17 +308,29 @@
   function taskBoxHTML(workId, wk) {
     if (!wk || !wk.tw) return "";
     var hits = [];
-    wk.tw.forEach(function (ids, i) {
-      if (ids.indexOf(workId) > -1) hits.push(i);
-    });
+    wk.tw.forEach(function (ids, i) { if (ids.indexOf(workId) > -1) hits.push(i); });
     if (!hits.length) return "";
-    return '<div class="taskbox"><b>▶ 播放前先讀：本' + COURSE.unitWord + '要用這首做什麼</b><ul class="chk">' +
+    return '<ul class="chk">' +
       hits.map(function (i) {
         var k = ck(wk.n) + ":" + i, on = !!S.tasks[k];
         return '<li class="' + (i === 0 ? "must " : "") + (on ? "dn" : "") + '">' +
           '<label><input type="checkbox" data-task="' + k + '"' + (on ? " checked" : "") + ">" +
           "<span>" + wk.tasks[i] + "</span></label></li>";
-      }).join("") + "</ul></div>";
+      }).join("") + "</ul>";
+  }
+
+  /* 任務摺疊列上顯示「還有幾項」，勾選後即時更新——不展開也看得到狀態。
+     直接數 DOM 裡的 checkbox，不必回查資料。 */
+  function refreshTaskFolds() {
+    $$("details.f-task").forEach(function (d) {
+      var boxes = $$("input[data-task]", d);
+      var left = boxes.filter(function (x) { return !x.checked; }).length;
+      var sum = d.querySelector("summary");
+      if (sum) sum.innerHTML = left
+        ? "▸ <b>本週任務</b>　還有 " + left + " 項"
+        : "✓ <b>本週任務</b>　已完成";
+      d.classList.toggle("done", !left);
+    });
   }
 
   /* ---------------- 渲染：週 ---------------- */
@@ -346,9 +398,8 @@
 
     if (wk.works && wk.works.length) {
       h += "<h3>必聽曲目與版本建議 " + tierTags("選") + "</h3>";
-      h += '<div class="hint" style="margin-bottom:8px">點曲名展開版本清單。' +
-        (S.hiresFirst ? "目前<b>依 Hi-Res 優先排序</b>" : "目前<b>依編者推薦順序排列</b>") +
-        (S.hideHistoric ? "，且已隱藏歷史錄音" : "") + "。</div>";
+      h += '<div class="hint" style="margin-bottom:8px">點曲名展開。' +
+        (S.hideHistoric ? "已隱藏歷史錄音。" : "") + "</div>";
       h += wk.works.map(function (id) { return workHTML(id, wk); }).join("");
     }
     if (wk.compare) {
@@ -711,11 +762,10 @@
     return h;
   }
 
-  /* 資料驅動的參考頁渲染器（台灣傳統音樂課程用）。 */
-  function pageHTML(pg) {
-    var h = '<div class="card" id="' + esc(pg.id) + '"><h2>' + esc(pg.title) + "</h2>";
-    if (pg.en) h += '<div class="enttl">' + esc(pg.en) + "</div>";
-    (pg.blocks || []).forEach(function (b) {
+  /* 資料驅動的參考頁渲染器。blocks 可巢狀，讓長篇說明能收進摺疊列。 */
+  function blocksHTML(arr) {
+    var h = "";
+    (arr || []).forEach(function (b) {
       if (b.h3) h += "<h3>" + b.h3 + (b.tier ? " " + tierTags(b.tier) : "") + "</h3>";
       if (b.p) h += "<p>" + (b.tier && !b.h3 ? tierTags(b.tier) : "") + b.p + "</p>";
       if (b.banner) h += '<div class="banner">' + b.banner + "</div>";
@@ -730,12 +780,24 @@
         h += '<ul class="vlist">' + b.picks.map(function (k) {
           return '<li class="v ' + (k.qa || "hifi") + '"><div><div class="p">' + k.label + "</div>" +
             (k.sub ? '<div class="sub">' + k.sub + "</div>" : "") +
-            '<div class="qline">🔍 <code>' + esc(k.q) + "</code></div></div>" +
+            '<details class="vmore"><summary>⋯ 搜尋字串</summary>' +
+            '<div class="qline">🔍 <code>' + esc(k.q) + "</code></div></details></div>" +
             '<div class="acts">' + playLinksHTML(k.q) + "</div></li>";
         }).join("") + "</ul>";
       }
+      // 長篇說明收成摺疊列——參考頁原本是一整面文字牆，掃不動
+      if (b.folds) h += b.folds.map(function (f) {
+        return foldHTML("f-page", "▸ <b>" + esc(f.t) + "</b>" +
+          (f.sub ? '<span class="hint">' + f.sub + "</span>" : ""), blocksHTML(f.blocks));
+      }).join("");
     });
-    return h + "</div>";
+    return h;
+  }
+
+  function pageHTML(pg) {
+    return '<div class="card" id="' + esc(pg.id) + '"><h2>' + esc(pg.title) + "</h2>" +
+      (pg.en ? '<div class="enttl">' + esc(pg.en) + "</div>" : "") +
+      blocksHTML(pg.blocks) + "</div>";
   }
 
   /* 樂器線稿卡片。改用卡片而非表格：加了圖之後表格在手機上會變成必須橫向捲動
@@ -1347,6 +1409,7 @@
         el.checked = t.checked;
         el.closest("li").classList.toggle("dn", t.checked);
       });
+      refreshTaskFolds();
       return;
     }
     if (t.hasAttribute && t.hasAttribute("data-check")) {
