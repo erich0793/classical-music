@@ -406,9 +406,12 @@
       h += "<h3>" + esc(wk.compare.title) + "</h3><ul class=\"vlist\">";
       h += wk.compare.picks.map(function (p) {
         return '<li class="v ' + p.qa + '"><div><div class="p">' + esc(p.label) + "</div>" +
-          '<div class="sub"><span class="qbadge ' + p.qa + '">' + esc(CORE.quality[p.qa].label) + "</span><code>" + esc(p.q) + "</code></div></div>" +
-          '<div class="acts">' + playLinksHTML(p.q) +
-          '<button class="copy" data-copy="' + esc(p.q) + '">複製</button></div></li>';
+          '<div class="sub"><span class="qbadge ' + p.qa + '">' + esc(CORE.quality[p.qa].label) + "</span></div>" +
+          '<details class="vmore"><summary>⋯ 搜尋字串</summary>' +
+            '<div class="qline">🔍 <code>' + esc(p.q) + "</code></div>" +
+            '<div class="rowbtns"><button class="copy" data-copy="' + esc(p.q) + '">複製搜尋字串</button></div>' +
+          "</details></div>" +
+          '<div class="acts">' + playLinksHTML(p.q) + "</div></li>";
       }).join("") + "</ul>";
     }
     if (wk.extraWorks && wk.extraWorks.length) {
@@ -548,9 +551,9 @@
 
     var mod = CORE.modules.filter(function (m) { return m.id === next.m; })[0];
     var h = '<div class="card thisweek">' +
-      '<div class="eyebrow">' + (doneCount ? "已完成 " + doneCount + " / " + tot + " " + u + "　·　" : "") +
-        esc(mod.label) + " " + esc(mod.title) + "</div>" +
-      "<h2>" + (doneCount ? "接下來：" : "從這裡開始：") + "第 " + next.n + " " + u + "｜" + esc(next.title) +
+      '<div class="eyebrow">' + (doneCount ? "接下來 · 已完成 " + doneCount + " / " + tot + " " + u : "從這裡開始") +
+        "　·　" + esc(mod.label) + " " + esc(mod.title) + "</div>" +
+      "<h2>第 " + next.n + " " + u + "｜" + esc(next.title) +
         (next.flag ? '<span class="flag">' + esc(next.flag) + "</span>" : "") + "</h2>";
 
     // 必聽第一首 ＝ 課程定義的「核心 15 分鐘」那首
@@ -558,20 +561,24 @@
     var w = id && WORKS[id];
     if (w) {
       var top = sortVersions(w.versions || [])[0];
+      // 任務與曲目卡片一致：收進摺疊列，列上直接顯示還有沒有事沒做
+      var k0 = ck(next.n) + ":0", done0 = !!S.tasks[k0];
+      var taskFold = (next.tasks && next.tasks.length)
+        ? foldHTML("f-task" + (done0 ? " done" : ""),
+            done0 ? "✓ <b>必做任務</b>　已完成" : "▸ <b>必做任務</b>　還有 1 項",
+            '<ul class="chk"><li class="must' + (done0 ? " dn" : "") + '">' +
+              '<label><input type="checkbox" data-task="' + k0 + '"' + (done0 ? " checked" : "") + ">" +
+              "<span>" + next.tasks[0] + "</span></label></li></ul>")
+        : "";
       h += '<div class="tw-work"><div class="tw-label">本' + COURSE.unitWord + '核心必聽' +
         (COURSE.id === "classical" ? "（15 分鐘最低標準）" : "") + "</div>" +
         "<b>" + esc(w.title) + "</b>" +
         (top ? '<div class="tw-ver">' + esc(top.p) + "　" +
           '<span class="qbadge ' + top.qa + '">' + esc(CORE.quality[top.qa].label) + "</span></div>" : "") +
-        (next.tasks && next.tasks.length
-          ? '<ul class="chk" style="margin-top:8px"><li class="must' + (S.tasks[ck(next.n) + ":0"] ? " dn" : "") + '">' +
-            '<label><input type="checkbox" data-task="' + ck(next.n) + ':0"' + (S.tasks[ck(next.n) + ":0"] ? " checked" : "") + ">" +
-            "<span>" + next.tasks[0] + "</span></label></li></ul>"
-          : "") +
-        '<div class="rowbtns">' +
-          (top ? playLinksHTML(top.q) : "") +
-          '<button class="iconbtn on" data-go="' + unitView(next.n) + '">進入第 ' + next.n + " " + COURSE.unitWord + "（全部曲目與任務）</button>" +
-        "</div></div>";
+        '<div class="rowbtns" style="margin-top:12px">' + (top ? playLinksHTML(top.q) : "") + "</div>" +
+        taskFold +
+        '<div class="rowbtns"><button class="iconbtn on" data-go="' + unitView(next.n) + '">進入第 ' + next.n + " " + COURSE.unitWord + "（全部曲目與任務）</button></div>" +
+        "</div>";
     } else {
       h += '<div class="rowbtns"><button class="iconbtn on" data-go="' + unitView(next.n) + '">進入第 ' + next.n + " " + COURSE.unitWord + "</button></div>";
     }
