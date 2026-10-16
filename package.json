@@ -1,0 +1,13 @@
+{
+  "name": "listening-courses",
+  "private": true,
+  "description": "聆聽課程：古典音樂 24 週 · 台灣傳統音樂 8 單元。網站本身零相依；這裡的套件只給測試與產生圖示用。",
+  "scripts": {
+    "build": "node build.js",
+    "test": "node tests/regression.mjs",
+    "icons": "node tools/make-icons.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  }
+}

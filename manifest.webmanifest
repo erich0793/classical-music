@@ -1,0 +1,21 @@
+{
+  "name": "聆聽課程｜古典音樂・台灣傳統音樂",
+  "short_name": "聆聽課程",
+  "description": "兩門互相對照的聆聽課程：古典音樂 24 週、台灣傳統音樂 8 單元。每首曲目附版本推薦與 KKBOX／YouTube 雙連結。",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "zh-Hant-TW",
+  "dir": "ltr",
+  "background_color": "#f7f5f1",
+  "theme_color": "#8a5a2b",
+  "categories": ["education", "music"],
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

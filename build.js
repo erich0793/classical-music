@@ -100,6 +100,28 @@ let html = read("index.html");
   }
 }
 
+// 離線快取（sw.js）的預存清單必須涵蓋 index.html 載入的每一支 script 與樣式表，
+// 而且清單裡的每個檔案都要真的存在——漏一個，裝到主畫面之後一斷網就是白畫面。
+{
+  const sw = read("sw.js");
+  const list = (sw.match(/var PRECACHE = \[([\s\S]*?)\];/) || [])[1];
+  if (!list) { console.error("sw.js 找不到 PRECACHE 清單"); process.exit(1); }
+  const pre = new Set([...list.matchAll(/"([^"]+)"/g)].map((m) => m[1]));
+  const need = [...html.matchAll(/<(?:script src|link rel="stylesheet" href)="([^"]+)"/g)].map((m) => m[1]);
+  const missing = need.filter((f) => !pre.has(f));
+  const ghost = [...pre].filter((f) => f !== "./" && !fs.existsSync(path.join(root, f)));
+  if (missing.length || ghost.length) {
+    if (missing.length) console.error("sw.js 的 PRECACHE 少了：\n  " + missing.join("\n  "));
+    if (ghost.length) console.error("sw.js 的 PRECACHE 列了不存在的檔案：\n  " + ghost.join("\n  "));
+    process.exit(1);
+  }
+}
+
+// 單一檔案版旁邊沒有圖檔與 manifest：拿掉標了 data-pwa 的那幾行，SVG 圖示改為內嵌
+html = html.replace(/^.*\sdata-pwa>\r?\n/gm, "");
+html = html.replace('href="assets/icons/icon.svg"',
+  'href="data:image/svg+xml,' + encodeURIComponent(read("assets/icons/icon.svg").trim()) + '"');
+
 html = html.replace(
   /<link rel="stylesheet" href="(assets\/[^"]+)">/g,
   (_, p) => "<style>\n" + read(p) + "\n</style>"

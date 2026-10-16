@@ -617,7 +617,6 @@
           "<b>課程的連續性比單週的完整性重要。</b></div>" +
         '<div class="rowbtns"><button class="iconbtn" data-go="p-hires">先開好 Hi-Res 音質設定</button>' +
         '<button class="iconbtn" data-go="p-method">課程設計原則</button>' +
-        '<button class="iconbtn" data-open="settings">Aa　字太小？調整字級</button>' +
         '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div>';
       h += '<div class="banner" style="margin-top:14px"><b>另一門課：台灣傳統音樂</b>　8 個單元，從南管到原住民族歌謠。' +
         "這門課教的四項聆聽工具（音色／織體／曲式／調性）在那邊直接用得上——" +
@@ -633,13 +632,22 @@
           "十首依衝擊力排序，約 90 分鐘，聽完主要地貌就大致完整了。" +
           '<div class="rowbtns" style="margin-top:10px"><button class="iconbtn on" data-go="p-start">十　先聽這 10 首</button>' +
           '<button class="iconbtn" data-go="p-cross">橋　與古典音樂課的對照</button>' +
-          '<button class="iconbtn" data-open="settings">Aa　字太小？調整字級</button>' +
           '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div></div>' +
         '<div class="note"><b>先說清楚一件事：找不到指定版本是常態，不是你的問題。</b>' +
           "傳統音樂多為口傳，同一曲調在不同館閣、劇團、部落之間本就不同，商業平台的收錄也極不完整。" +
           "每首曲目下方都準備了多個備用搜尋字串，找到哪個聽哪個。</div>";
     }
-    return h + "</div>";
+    return h + deviceHelpHTML() + "</div>";
+  }
+  /* 「在這台裝置上」三顆按鈕：字級、加到主畫面、搬家。
+     三件事都跟課程內容無關，卻決定了能不能順手用下去，所以集中放在首頁一處，
+     而不是只藏在 ⚙ 設定裡——那個齒輪對很多人來說太隱晦了。 */
+  function deviceHelpHTML() {
+    return '<div class="devhelp"><div class="devhelp-hd">在這台裝置上</div><div class="rowbtns">' +
+      '<button class="iconbtn" data-open="settings">Aa　調整字級</button>' +
+      (isStandalone() ? "" : '<button class="iconbtn" data-open="install">📱 加到手機主畫面</button>') +
+      '<button class="iconbtn" data-open="sync">⇄ 搬到另一台裝置</button>' +
+      "</div></div>";
   }
 
   function pHiresHTML() {
@@ -1229,6 +1237,12 @@
       '<div class="hint">目前：<b>' + esc(FS_STEPS[fsCur].label) + "</b>（" + esc(FS_STEPS[fsCur].note) + "）。" +
         "設定記在<b>這台裝置的這個瀏覽器</b>裡，換裝置要再設一次。<br>" +
         "手機系統本身的「顯示大小／字體大小」設定也會一起作用，兩邊可以疊加。</div>" +
+      // 緊接在字級之後：這兩件事跟字級一樣是「每個人都用得到」的，不該埋在連結格式設定後面
+      "<h3>在手機上使用</h3>" +
+      '<div class="rowbtns">' +
+        (isStandalone() ? "" : '<button class="iconbtn big" data-open="install">📱 加到手機主畫面</button>') +
+        '<button class="iconbtn big" data-open="sync">⇄ 搬到另一台裝置</button></div>' +
+      '<div class="hint">進度只存在這台裝置上。換手機、或想在電腦上接著用，按「搬到另一台裝置」。</div>' +
       "<h3>播放平台</h3>" +
       '<div class="fld"><label>主要平台</label><select id="setPlatform">' +
         opt("kkbox", S.platform, "KKBOX") + opt("youtube", S.platform, "YouTube") + "</select>" +
@@ -1274,7 +1288,8 @@
       '<div class="rowbtns"><button class="iconbtn" id="setExport">匯出進度</button>' +
       '<button class="iconbtn" id="setImport">匯入進度</button>' +
       '<button class="iconbtn" id="setReset">清除全部進度</button></div>' +
-      '<div class="hint">進度、收藏與設定都存在這台裝置的瀏覽器裡（localStorage），不會上傳。換裝置或清除瀏覽器資料會遺失。</div>';
+      '<div class="hint">進度、收藏與設定都存在這台裝置的瀏覽器裡（localStorage），不會上傳。清除瀏覽器資料會遺失——' +
+        "換裝置前先用上面的<b>「搬到另一台裝置」</b>，或在這裡匯出一份備份。</div>";
   }
 
   /* ---------------- 主題 ---------------- */
@@ -1309,13 +1324,226 @@
   /* ---------------- 抽屜 ---------------- */
   function openDrawer(which) {
     var d = $("#drawer");
-    d.innerHTML = '<button class="iconbtn" id="drawerClose" style="float:right">✕ 關閉</button>' + (which === "fav"
+    var body = which === "fav"
       ? '<h3>★ 重聽區</h3><p class="hint">對應課程 §2.2 建議建立的 <code>古典課程｜重聽區</code> 播放清單。</p>' + favHTML()
-      : settingsHTML());
+      : which === "install" ? installHTML()
+      : which === "sync" ? syncOutHTML()
+      : which === "syncin" ? syncInHTML()
+      : settingsHTML();
+    // 從設定點進去的子畫面，留一條回設定的路
+    var back = (which === "install" || which === "sync")
+      ? '<button class="iconbtn" data-open="settings">← 回到設定</button>' : "";
+    d.innerHTML = '<button class="iconbtn" id="drawerClose" style="float:right">✕ 關閉</button>' + back + body;
     d.classList.add("open"); $("#scrim").classList.add("on");
     d.setAttribute("data-which", which);
   }
   function closeDrawer() { $("#drawer").classList.remove("open"); $("#scrim").classList.remove("on"); }
+
+  /* ---------------- 在手機上使用：加到主畫面、搬到另一台裝置 ---------------- */
+  // 網站的正式網址。從單一檔案版（dist/）或本機檔案開啟時，搬家連結與 QR code
+  // 要指向這裡——否則另一台裝置拿到的是一個 file:// 路徑，打不開。
+  var SITE_URL = "https://erich0793.github.io/classical-music/";
+  function siteBase() {
+    return /^https?:$/.test(location.protocol) ? location.origin + location.pathname : SITE_URL;
+  }
+
+  function isStandalone() {
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      window.navigator.standalone === true;
+  }
+  function deviceKind() {
+    var ua = navigator.userAgent || "";
+    // iPadOS 13 以後自稱 Macintosh，只能靠觸控點數分辨
+    if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return "ios";
+    if (/Android/.test(ua)) return "android";
+    return "desktop";
+  }
+  // Android Chrome／電腦版 Chrome 會在條件符合時發出這個事件；先攔下來，
+  // 等使用者按我們自己的按鈕才跳出安裝視窗。iPhone 沒有這個事件，只能教步驟。
+  var installEvt = null;
+  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); installEvt = e; });
+  window.addEventListener("appinstalled", function () { installEvt = null; toast("已加到主畫面"); });
+
+  function qrSVG(text, label) {
+    if (typeof qrcode !== "function") return "";
+    try {
+      var q = qrcode(0, text.length > 700 ? "L" : "M");
+      q.addData(text); q.make();
+      return '<div class="qr" role="img" aria-label="' + esc(label) + '">' +
+        q.createSvgTag({ cellSize: 4, margin: 16, scalable: true }) + "</div>";
+    } catch (e) { return ""; }
+  }
+
+  function installHTML() {
+    var h = "<h3>加到手機主畫面</h3>";
+    if (isStandalone()) {
+      return h + '<div class="fsprev"><b>✓ 已經裝好了。</b>你現在就是從主畫面的圖示打開的。</div>';
+    }
+    h += "<p>裝好之後，主畫面上會多一個 <b>「聆聽課程」</b> 圖示，點一下就打開，不用再找書籤。" +
+      "<b>沒有網路也打得開</b>（但聽音樂還是要連到 KKBOX／YouTube）。</p>";
+    var kind = deviceKind();
+    if (installEvt) {
+      h += '<div class="rowbtns"><button class="iconbtn on big" id="installNow">＋ 加到主畫面</button></div>' +
+        '<div class="hint">按下去會跳出一個確認視窗，按「安裝」就好了。</div>';
+    } else if (kind === "ios") {
+      h += '<ol class="steps">' +
+        "<li>確認是用 <b>Safari</b> 打開這個網站</li>" +
+        "<li>按畫面下方的 <b>分享按鈕</b>（一個方框，上面有向上的箭頭）</li>" +
+        "<li>往下滑，選 <b>「加入主畫面」</b></li>" +
+        "<li>按右上角的 <b>「加入」</b></li></ol>";
+    } else if (kind === "android") {
+      h += '<ol class="steps">' +
+        "<li>按右上角的 <b>⋮</b>（三個點）</li>" +
+        "<li>選 <b>「加到主畫面」</b>或<b>「安裝應用程式」</b></li>" +
+        "<li>按 <b>「安裝」</b>或<b>「新增」</b></li></ol>";
+    } else {
+      h += "<p>你現在用的是電腦。最簡單的做法是<b>用手機相機掃下面這個方塊</b>，在手機上打開網站，再照手機上的說明加到主畫面。</p>" +
+        qrSVG(SITE_URL, "網站網址的 QR code") +
+        '<div class="hint">要在電腦上也裝成一個獨立視窗：Chrome 或 Edge 網址列右側會有一個「安裝」圖示。</div>';
+    }
+    return h;
+  }
+
+  /* 搬家連結：把進度壓進網址本身，另一台裝置打開就能合併進來。
+     不經過任何伺服器——連結就是資料。格式刻意與儲存方式脫鉤，
+     而且以「第幾週＋第幾項」為鍵，課程內容日後增刪也不會讓舊連結錯位。
+       { v:1, c:{ "":{d:[週…], t:[週,位元遮罩,…], k:[…]}, "taiwan":{…} }, f:[收藏…], l:{釘選} }
+     字級、主題、播放平台是「這台裝置」的偏好（手機和電腦本來就可能想要不同的字級），不搬。 */
+  function packState() {
+    var c = {};
+    var grp = function (p) { return c[p] || (c[p] = { d: [], t: {}, k: {} }); };
+    Object.keys(S.done).forEach(function (key) {
+      var m = S.done[key] && key.match(/^(?:([a-z]+):)?(\d+)$/);
+      if (m) grp(m[1] || "").d.push(+m[2]);
+    });
+    [["tasks", "t"], ["checks", "k"]].forEach(function (pair) {
+      Object.keys(S[pair[0]]).forEach(function (key) {
+        var m = S[pair[0]][key] && key.match(/^(?:([a-z]+):)?(\d+):(\d+)$/);
+        if (!m || +m[3] > 40) return;
+        var g = grp(m[1] || "")[pair[1]];
+        g[m[2]] = (g[m[2]] || 0) + Math.pow(2, +m[3]);
+      });
+    });
+    Object.keys(c).forEach(function (p) {
+      ["t", "k"].forEach(function (f) {
+        var flat = [];
+        Object.keys(c[p][f]).forEach(function (n) { flat.push(+n, c[p][f][n]); });
+        c[p][f] = flat;
+      });
+    });
+    var o = { v: 1, c: c, f: Object.keys(S.fav).filter(function (k) { return S.fav[k]; }) };
+    if (Object.keys(S.links).length) o.l = S.links;
+    return o;
+  }
+  // 展開成與 localStorage 相同的鍵，合併與計數都用這個
+  function unpackState(o) {
+    var out = { done: {}, tasks: {}, checks: {}, fav: {}, links: {} };
+    var c = (o && o.c) || {};
+    Object.keys(c).forEach(function (p) {
+      var pre = p ? p + ":" : "";
+      (c[p].d || []).forEach(function (n) { out.done[pre + n] = true; });
+      [["t", "tasks"], ["k", "checks"]].forEach(function (pair) {
+        var a = c[p][pair[0]] || [];
+        for (var i = 0; i + 1 < a.length; i += 2) {
+          for (var b = 0; b <= 40; b++) {
+            if (Math.floor(a[i + 1] / Math.pow(2, b)) % 2 === 1) out[pair[1]][pre + a[i] + ":" + b] = true;
+          }
+        }
+      });
+    });
+    (o.f || []).forEach(function (id) { if (typeof id === "string") out.fav[id] = true; });
+    Object.keys(o.l || {}).forEach(function (q) {
+      if (/^https:\/\//.test(o.l[q])) out.links[q] = o.l[q];
+    });
+    return out;
+  }
+  function encodeSync(o) {
+    return btoa(unescape(encodeURIComponent(JSON.stringify(o))))
+      .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function decodeSync(s) {
+    try {
+      s = s.replace(/-/g, "+").replace(/_/g, "/");
+      while (s.length % 4) s += "=";
+      var o = JSON.parse(decodeURIComponent(escape(atob(s))));
+      return o && o.v === 1 && typeof o.c === "object" ? o : null;
+    } catch (e) { return null; }
+  }
+  function syncURL() { return siteBase() + "?sync=" + encodeSync(packState()); }
+
+  // 「古典音樂 3 週、12 項任務……」：人看得懂的摘要，兩個方向的畫面都用
+  function syncSummaryHTML(u) {
+    var rows = courseList().map(function (id) {
+      var pre = id === "classical" ? "" : id + ":";
+      var mine = function (map) {
+        return Object.keys(map).filter(function (k) {
+          return pre ? k.indexOf(pre) === 0 : !/^[a-z]+:/.test(k);
+        }).length;
+      };
+      var n = { d: mine(u.done), t: mine(u.tasks), k: mine(u.checks) };
+      if (!n.d && !n.t && !n.k) return "";
+      return "<li><b>" + esc(COURSES[id].label) + "</b>　完成 " + n.d + " " + COURSES[id].unitWord +
+        "、任務 " + n.t + " 項、自我檢核 " + n.k + " 項</li>";
+    }).join("");
+    var nf = Object.keys(u.fav).length, nl = Object.keys(u.links).length;
+    if (nf) rows += "<li><b>★ 重聽區</b>　" + nf + " 首</li>";
+    if (nl) rows += "<li><b>🔗 釘選連結</b>　" + nl + " 個</li>";
+    return rows ? '<ul class="sumlist">' + rows + "</ul>" : "";
+  }
+
+  function syncOutHTML() {
+    var h = "<h3>搬到另一台裝置</h3>";
+    var sum = syncSummaryHTML(unpackState(packState()));
+    if (!sum) {
+      return h + '<div class="fsprev">這台裝置上<b>還沒有任何進度</b>可以搬。勾過任務、按過 ★ 之後再回來這裡。</div>';
+    }
+    var url = syncURL();
+    var canShare = !!navigator.share;
+    h += "<p>在另一台裝置上<b>打開下面這個連結</b>，進度就會搬過去。</p>" +
+      qrSVG(url, "搬家連結的 QR code") +
+      '<div class="hint" style="text-align:center">手機：打開相機，對準這個方塊</div>' +
+      '<div class="rowbtns">' +
+        (canShare ? '<button class="iconbtn on big" id="syncShare">傳給自己（LINE、Email…）</button>' : "") +
+        '<button class="iconbtn' + (canShare ? "" : " on") + ' big" id="syncCopy">複製連結</button></div>' +
+      '<input type="text" id="syncUrl" class="syncurl" readonly value="' + esc(url) + '" aria-label="搬家連結">' +
+      "<h3>連結裡有什麼</h3>" + sum +
+      '<div class="hint"><b>只會增加，不會刪除。</b>另一台裝置上原本勾過的都會留著。<br>' +
+      "這個連結是「現在這一刻」的進度。之後在這台裝置上的新進度不會自動跟過去，要再搬一次就再產生一次。<br>" +
+      "字級、主題、播放平台是每台裝置自己的設定，不會跟著搬。</div>";
+    return h;
+  }
+
+  var pendingSync = null;
+  function syncInHTML() {
+    var h = "<h3>收到另一台裝置的進度</h3>";
+    if (!pendingSync) {
+      return h + '<div class="fsprev"><b>這個搬家連結讀不出來。</b>' +
+        "最常見的原因是複製時少了一段。請回到原來那台裝置，在 ⚙ 設定 → 搬到另一台裝置，重新產生一次連結。</div>";
+    }
+    var u = unpackState(pendingSync);
+    return h + "<p>另一台裝置傳來的內容：</p>" + (syncSummaryHTML(u) || '<p class="hint">（連結裡沒有任何進度）</p>') +
+      '<div class="rowbtns"><button class="iconbtn on big" id="syncMerge">合併到這台裝置</button>' +
+      '<button class="iconbtn big" id="syncSkip">不要</button></div>' +
+      '<div class="hint"><b>這台裝置原本的進度都會保留</b>，只會多出另一台有、這台還沒有的部分。字級與主題不會改。</div>';
+  }
+  function mergeSync(o) {
+    var u = unpackState(o), added = 0;
+    ["done", "tasks", "checks", "fav"].forEach(function (f) {
+      Object.keys(u[f]).forEach(function (k) { if (!S[f][k]) { S[f][k] = true; added++; } });
+    });
+    // 釘選連結兩邊都有時以這台為準：那是使用者在這台上親手貼的
+    Object.keys(u.links).forEach(function (q) { if (!S.links[q]) { S.links[q] = u.links[q]; added++; } });
+    save();
+    return added;
+  }
+  // 開啟時若網址帶著 ?sync=…，先記下來、把它從網址列拿掉（免得重新整理又問一次），再詢問
+  function takeSyncFromURL() {
+    var m = (location.search || "").match(/[?&]sync=([^&#]*)/);
+    if (!m) return false;
+    pendingSync = decodeSync(decodeURIComponent(m[1]));
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) {}
+    return true;
+  }
 
   /* ---------------- 事件 ---------------- */
   document.addEventListener("click", function (e) {
@@ -1405,7 +1633,33 @@
        點在「重聽區」「設定」這幾個字上時 e.target 會是那個 span，id 為空，
        按鈕就沒反應——只有點到圖示才有用。 */
     if (t.closest("#favBtn") || t.closest("#favBtn2")) { openDrawer("fav"); return; }
-    if (t.closest('[data-open="settings"]') || t.closest("#setBtn")) { openDrawer("settings"); return; }
+    var op = t.closest("[data-open]");
+    if (op || t.closest("#setBtn")) { openDrawer(op ? op.getAttribute("data-open") : "settings"); return; }
+
+    // 「跳到主內容」：這個站用 # 當路由，讓瀏覽器照預設跳到 #content 會被當成換頁
+    if (t.closest(".skip")) { e.preventDefault(); $("#content").focus(); return; }
+
+    if (t.id === "installNow" && installEvt) {
+      var ev = installEvt; installEvt = null;
+      ev.prompt();
+      (ev.userChoice || Promise.resolve({})).then(function (r) {
+        if (r && r.outcome === "accepted") { closeDrawer(); render(); } else openDrawer("install");
+      });
+      return;
+    }
+    if (t.id === "syncCopy") { copyText($("#syncUrl").value, t); return; }
+    if (t.id === "syncShare") {
+      navigator.share({ title: "聆聽課程：搬家連結", text: "在另一台裝置打開這個連結，進度就會搬過去。", url: $("#syncUrl").value })
+        .catch(function () {});
+      return;
+    }
+    if (t.id === "syncMerge" && pendingSync) {
+      var n = mergeSync(pendingSync); pendingSync = null;
+      closeDrawer(); render(); setFavCount();
+      toast(n ? "已合併，新增 " + n + " 項" : "這台裝置已經都有了，沒有新增");
+      return;
+    }
+    if (t.id === "syncSkip") { pendingSync = null; closeDrawer(); return; }
     if (t.id === "scrim" || t.id === "drawerClose") { closeDrawer(); return; }
     if (t.id === "menuBtn") { $("#side").classList.toggle("open"); return; }
     if (t.id === "favCopy") { var txt = favText(); if (txt) { copyText(txt); toast("已複製，可貼進 KKBOX 或 YouTube 逐首搜尋"); } return; }
@@ -1575,6 +1829,15 @@
   applyTheme();
   applyFs();
   view = viewFromHash();
+  viewCourse = COURSE.id;   // 直接從 #taiwan/… 開啟時，之後換回古典課同名檢視才會重繪
   render();
   setFavCount();
+  if (takeSyncFromURL()) openDrawer("syncin");
+
+  // 離線快取只能在 http(s) 上註冊；本機直接開檔或單一檔案版會安靜地略過
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
 })();

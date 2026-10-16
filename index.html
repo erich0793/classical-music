@@ -6,6 +6,33 @@
 <title>聆聽課程｜古典音樂 24 週 · 台灣傳統音樂 8 單元</title>
 <meta name="description" content="兩門互相對照的聆聽課程：古典音樂 24 週、台灣傳統音樂 8 單元。每首曲目附版本推薦與 KKBOX／YouTube 雙連結。">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#8a5a2b">
+
+<!-- 分享預覽：貼到 LINE／Facebook 時出現的那張卡片。
+     og:image 一定要寫完整網址，LINE 不吃相對路徑。換網域時這三個網址要一起改。 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="聆聽課程">
+<meta property="og:title" content="聆聽課程｜古典音樂 24 週 · 台灣傳統音樂 8 單元">
+<meta property="og:description" content="99 首曲目、371 個版本推薦，KKBOX／YouTube 一鍵開啟。免費、免註冊，手機也能用。">
+<meta property="og:url" content="https://erich0793.github.io/classical-music/">
+<meta property="og:image" content="https://erich0793.github.io/classical-music/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="聆聽課程：古典音樂 24 週、台灣傳統音樂 8 單元">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- 加到主畫面：data-pwa 的這幾行在打包成單一檔案（build.js）時會被拿掉，
+     因為單一檔案旁邊沒有這些圖檔。 -->
+<link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png" data-pwa>
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" data-pwa>
+<link rel="manifest" href="manifest.webmanifest" data-pwa>
+<meta name="apple-mobile-web-app-title" content="聆聽課程">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
 <link rel="stylesheet" href="assets/style.css">
 <script>
 /* 字級要在第一次繪製之前就套上，否則選了「最大」的人每次開啟都會先看到
@@ -15,6 +42,9 @@ if(f>0)document.documentElement.style.setProperty("--fs",String(f));}catch(e){}
 </script>
 </head>
 <body>
+
+<!-- 鍵盤使用者按第一下 Tab 就會看到這個，可以直接跳過整排側邊欄 -->
+<a class="skip" href="#content">跳到主內容</a>
 
 <div class="wrap">
   <aside class="side" id="side">
@@ -33,7 +63,7 @@ if(f>0)document.documentElement.style.setProperty("--fs",String(f));}catch(e){}
       <button class="iconbtn" id="favBtn" aria-label="重聽區">★<span class="lbl"> 重聽區</span> (0)</button>
       <button class="iconbtn" id="setBtn" aria-label="設定">⚙<span class="lbl"> 設定</span></button>
     </div>
-    <div id="content"></div>
+    <div id="content" tabindex="-1"></div>
   </main>
 </div>
 
@@ -47,6 +77,7 @@ if(f>0)document.documentElement.style.setProperty("--fs",String(f));}catch(e){}
 <script src="assets/data-weeks.js"></script>
 <script src="assets/data-instruments.js"></script>
 <script src="assets/data-links.js"></script>
+<script src="assets/vendor/qrcode.min.js"></script>
 <script src="assets/tw/data-tw-core.js"></script>
 <script src="assets/tw/data-tw-instruments.js"></script>
 <script src="assets/tw/data-tw-works.js"></script>
