@@ -203,8 +203,10 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
 .chk li{font-size:calc(14px*var(--fs));line-height:1.7}
 .chk li>label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .chk input{margin-top:6px;flex:none;width:15px;height:15px;accent-color:var(--acc);cursor:pointer}
-.chk li.must span::before{content:"必做";font-size:calc(10.5px*var(--fs));font-weight:700;background:var(--acc);color:#fff;padding:1px 6px;border-radius:5px;margin-right:7px;vertical-align:2px}
-.chk li.dn span{opacity:.5;text-decoration:line-through}
+/* 只對任務文字本身（label 裡那個 span）。寫成 .chk li.must span 的話，任務底下作答欄裡的
+   每個 span 也會被蓋上「必做」、勾完任務時連你寫的答案都被劃掉。 */
+.chk li.must>label>span::before{content:"必做";font-size:calc(10.5px*var(--fs));font-weight:700;background:var(--acc);color:#fff;padding:1px 6px;border-radius:5px;margin-right:7px;vertical-align:2px}
+.chk li.dn>label>span,.chk li.dn>span{opacity:.5;text-decoration:line-through}
 
 /* ---------- 可摺疊概念區 ---------- */
 .theory{border:1px solid var(--line);border-radius:10px;background:var(--bg2);margin:14px 0 18px;padding:0 15px}
@@ -523,6 +525,53 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
   background:var(--bg);color:var(--mut);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   font-size:calc(11.5px*var(--fs))}
 .drawer .syncurl + h3{margin-top:20px}
+
+/* ---------- 作答欄 ----------
+   對齊任務文字（checkbox 寬度＋間距），讓它看起來屬於上面那一項任務。 */
+.askbox{margin:6px 0 4px 25px}
+.askbtn{
+  display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;
+  border:1px dashed var(--acc2);border-radius:9px;background:var(--bg);color:var(--acc);
+  padding:7px 12px;min-height:40px;font-size:calc(13px*var(--fs));line-height:1.5;
+}
+.askbtn b{font-weight:700}
+.askbtn span{color:var(--mut);font-size:calc(12px*var(--fs))}
+.askbtn:hover{border-style:solid;background:var(--sel)}
+.askbtn.sm{display:inline-flex;flex-direction:row;min-height:32px;padding:4px 10px;margin-top:6px}
+.askval{
+  background:var(--sel);border-radius:9px;padding:9px 12px;
+  font-size:calc(13.5px*var(--fs));line-height:1.75;white-space:normal;word-break:break-word;
+}
+.askl{display:block;font-size:calc(11px*var(--fs));color:var(--acc);font-weight:700;letter-spacing:.06em;margin-bottom:2px}
+.askq{display:block;font-size:calc(13px*var(--fs));color:var(--acc);font-weight:650}
+.askq span{display:block;margin-bottom:5px}
+.askta{
+  display:block;width:100%;min-height:76px;resize:vertical;
+  border:1.5px solid var(--acc2);border-radius:9px;background:var(--bg2);color:var(--fg);
+  padding:9px 11px;font:inherit;font-weight:400;font-size:calc(15px*var(--fs));line-height:1.7;
+}
+.askta:focus{outline:2px solid var(--acc);outline-offset:1px;border-color:var(--acc)}
+.askta::placeholder{color:var(--mut);opacity:.75}
+.askfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+.askfoot .hint{margin:0}
+@media(max-width:520px){ .askbox{margin-left:32px} }
+
+/* 對照表最上方的「你寫的」 */
+.yours{border:1.5px solid var(--acc2);border-radius:10px;padding:12px 14px;margin:0 0 16px;background:var(--bg)}
+.yours-hd{font-weight:700;color:var(--acc);font-size:calc(14px*var(--fs));margin-bottom:8px}
+.yours-hd .hint{margin-left:8px;font-weight:400}
+.yq + .yq{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.yql{font-size:calc(12px*var(--fs));color:var(--mut)}
+.yqa{font-size:calc(14px*var(--fs));line-height:1.75;margin-top:2px;word-break:break-word}
+.yqa.none{color:var(--mut)}
+
+/* 列印：印出來在紙上寫的人，沒寫過的作答欄留幾條橫線；寫過的直接印出來 */
+@media print{
+  .askbtn,.askfoot,.askbtn.sm{display:none!important}
+  .askbox.empty{height:4.6em;border-bottom:1px solid #999;
+    background:repeating-linear-gradient(transparent 0 1.5em,#ccc 1.5em calc(1.5em + 1px))}
+  .askval{background:none;border:1px solid #ccc}
+}
 
 </style>
 <!-- 鍵盤使用者按第一下 Tab 就會看到這個，可以直接跳過整排側邊欄 -->
@@ -3017,6 +3066,67 @@ window.PINNED = {
 
 </script>
 <script>
+/* 作答欄：哪些聆聽任務旁邊要有一個「寫下答案」的欄位。
+
+   挑選標準只有一條——任務要你「產出」一個具體的東西：一個數字、一串清單、
+   一個時間點、一句話、一個判斷。只說「感受」「只聽，不分析」的任務不放，
+   放了反而把一個刻意不要求作答的練習變成作業。
+
+   鍵是「週次:任務序號」（從 0 算），與勾選進度用同一套編號。
+     match  任務原文裡的一小段字。build.js 會檢查它真的出現在那一項任務裡——
+            日後在中間插入或刪掉一項任務、編號跟著位移時，建置會直接失敗，
+            不會讓作答欄默默掛到別的任務底下。
+     ask    要寫什麼。顯示在輸入框上方，一句話講清楚。
+     eg     格式範例，顯示成輸入框裡的淡色提示（可省略）。
+            只示範「怎麼寫」，用 ＿ 留空，絕對不放可能是答案的內容：
+            「小鳥 → 長笛」本身就是《彼得與狼》的答案，「0:52」看起來像真的時間點，
+            放了等於先把答案（或一個錯的答案）告訴你。 */
+window.ASKS = {
+  classical: {
+    "1:0":  { match: "Britten Op. 34", ask: "依出場順序，寫下每一段的樂器家族", eg: "例：＿、＿、＿……（每段一個家族，用頓號隔開）" },
+    "1:1":  { match: "彼得與狼", ask: "每個角色是哪一件樂器？", eg: "例：角色 → 樂器（一行一個）" },
+    "2:2":  { match: "30 秒內判定其織體類型", ask: "五次的判定", eg: "例：曲名 → 單音／主音／複音（一行一次）" },
+    "3:0":  { match: "數出主題共出現幾次", ask: "主題出現幾次？每一次變了什麼？", eg: "例：第 2 次 → ＿＿（一行一次）" },
+    "3:1":  { match: "給愛麗絲", ask: "主題每次回來的時間點", eg: "例：＿:＿＿、＿:＿＿、＿:＿＿" },
+    "4:2":  { match: "判定大調或小調", ask: "十段的判定，最後算正確率", eg: "例：大、小……　正確率 ＿／10" },
+    "5:0":  { match: "四季》之〈春〉第一樂章", ask: "合奏主題（ritornello）每次回來的時間點", eg: "例：＿:＿＿、＿:＿＿……" },
+    "5:2":  { match: "大鍵琴獨奏開始的位置", ask: "大鍵琴獨奏從幾分幾秒開始？", eg: "例：＿:＿＿" },
+    "6:0":  { match: "每次聽到主題出現就在紙上畫一筆", ask: "三遍各數到幾次？", eg: "例：第一遍 ＿ 次、第二遍 ＿ 次、第三遍 ＿ 次" },
+    "8:0":  { match: "再現部開始", ask: "再現部從幾分幾秒開始？", eg: "例：＿:＿＿" },
+    "8:1":  { match: "這次找第二主題", ask: "第二主題出現在幾分幾秒？", eg: "例：＿:＿＿" },
+    "8:2":  { match: "標出發展部的起訖", ask: "發展部從幾分幾秒到幾分幾秒？", eg: "例：＿:＿＿ → ＿:＿＿" },
+    "9:0":  { match: "每個樂章結束時暫停", ask: "四個樂章，各用一句話寫它的性格", eg: "例：第一樂章 → ＿＿（一行一個樂章）" },
+    "10:0": { match: "找出裝飾奏的位置", ask: "裝飾奏從幾分幾秒開始？", eg: "例：＿:＿＿" },
+    "14:0": { match: "idée fixe", ask: "第五樂章裡，扭曲版的主題出現在幾分幾秒？聽起來像什麼？" },
+    "14:1": { match: "數出〈漫步〉出現幾次", ask: "〈漫步〉出現幾次？你聽的是鋼琴版還是管弦樂版？", eg: "例：＿ 次，鋼琴版／管弦樂版" },
+    "14:2": { match: "對照第 5 週的 Vivaldi", ask: "跟 Vivaldi《四季》比，差在哪裡？" },
+    "17:0": { match: "莫爾道河", ask: "六個段落各在幾分幾秒？", eg: "例：溪流匯合 ＿:＿＿（一行一段）" },
+    "18:1": { match: "波麗露", ask: "每一次的主奏樂器，依序寫下", eg: "例：第 1 次 → ＿＿（一行一次，共 18 次）" },
+    "21:1": { match: "Reich", ask: "你在幾分幾秒察覺「事情變了」？" },
+    "21:2": { match: "Shostakovich 第 5 號末樂章", ask: "你的判斷：真誠的勝利，還是反諷？為什麼？" },
+    "22:0": { match: "Beethoven 第 5 號交響曲第一樂章", ask: "三個版本：演奏者、樂章長度、三個形容詞", eg: "例：演奏者　＿:＿＿　形容詞、形容詞、形容詞（一行一個版本）" },
+    "22:1": { match: "Chopin 夜曲", ask: "兩位鋼琴家，差在哪裡？" },
+    "22:2": { match: "建立一份個人筆記", ask: "你偏好什麼樣的演出取向？" },
+    "23:0": { match: "一個古樂器，一個現代樂器", ask: "古樂器與現代樂器，差在哪裡？" },
+    "24:1": { match: "哪個時期／作曲家／編制佔比最高", ask: "佔比最高的時期、作曲家、編制" }
+  },
+  taiwan: {
+    "1:0": { match: "數一數洞簫換了幾次氣", ask: "洞簫換了幾次氣？", eg: "例：＿ 次" },
+    "2:0": { match: "嗩吶、鑼、鼓、鈸", ask: "四種聲音各是什麼樣子？", eg: "例：嗩吶 → 聽起來像＿＿（一行一個）" },
+    "2:1": { match: "你猜得到嗎", ask: "猜得到嗎？為什麼？" },
+    "3:0": { match: "人聲與月琴如何輪流", ask: "人聲和月琴是怎麼輪流的？" },
+    "3:1": { match: "恆春調〉與〈五孔小調", ask: "兩首的差別" },
+    "3:2": { match: "你覺得它「好聽」嗎", ask: "好聽嗎？如果不覺得，「不好聽」的是哪一項？" },
+    "4:0": { match: "跟著數每句幾個字", ask: "每句幾個字？真的是七字四句嗎？" },
+    "5:2": { match: "回頭聽〈平板〉", ask: "平板的樂句怎麼開始、怎麼結束？跟老山歌差在哪裡？" },
+    "6:0": { match: "寫下三個你聽到的差異", ask: "三個差異", eg: "例：1. ＿＿（一行一個）" },
+    "8:0": { match: "器樂多還是歌樂多", ask: "器樂多還是歌樂多？漢人樂種多還是原住民族多？" },
+    "8:2": { match: "做一次版本比較", ask: "兩個傳承者的版本，差在哪裡？" }
+  }
+};
+
+</script>
+<script>
 /*! qrcode-generator 2.0.4 (https://github.com/kazuhikoarase/qrcode-generator)
    Copyright (c) 2009 Kazuhiko Arase — MIT License.
    "QR Code" is a registered trademark of DENSO WAVE INCORPORATED.
@@ -4219,6 +4329,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     // 哪一個排在前面、用實心樣式。沒有 KKBOX 的人可以改成 youtube。
     platform: "kkbox",
     done: {}, tasks: {}, checks: {}, fav: {},
+    // 作答欄寫下的內容，鍵與 tasks 相同（「週次:序號」，台灣課加 taiwan: 前綴）
+    answers: {},
     // 使用者手動改過哪些設定。改過的就不再被「切換課程時套用該課預設」覆蓋。
     touched: {},
     // 每週的概念區塊是否收起（{ 週次: false } = 已收起）。預設展開，
@@ -4228,10 +4340,14 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     // 這種連結帶有專輯／歌曲 ID，手機上點擊會由 Universal Link 直接開啟 App。
     links: {}
   };
+  /* 每次都給一份全新的預設值。原本用 Object.assign({}, DEFAULTS) 是淺拷貝，
+     S.links／S.answers 會和 DEFAULTS 指向同一個物件——之後寫進去的東西其實寫進了
+     DEFAULTS，「清除全部進度」第二次按下去就清不掉了。 */
+  function fresh() { return JSON.parse(JSON.stringify(DEFAULTS)); }
   var S = load();
   function load() {
-    try { return Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem(LS) || "{}")); }
-    catch (e) { return Object.assign({}, DEFAULTS); }
+    try { return Object.assign(fresh(), JSON.parse(localStorage.getItem(LS) || "{}")); }
+    catch (e) { return fresh(); }
   }
   function save() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} }
 
@@ -4439,7 +4555,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         foldHTML("f-bg", "▸ <b>作品背景</b>", bgBody) +
         foldHTML("f-ver", "▸ <b>其他 " + rest.length + " 個版本</b>" +
           (S.hiresFirst && rest.length ? '<span class="hint">上面那個是建議首選</span>' : ""), restBody) +
-        (w.answer ? answerHTML(w.answer) : "") +
+        (w.answer ? answerHTML(w.answer, yoursHTML(id, wk)) : "") +
       "</div></div>";
   }
 
@@ -4456,7 +4572,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   /* 對照表（答案）。第 1 週的任務要求「不看曲目說明作答，聽完後對照計算正確率」，
      但這份對照表原本站上根本沒有——任務等於做不完。
      預設收起：先看到答案就沒有練習效果了。 */
-  function answerHTML(a) {
+  function answerHTML(a, yours) {
     if (!a) return "";
     function block(x) {
       return (x.sub ? "<h4>" + esc(x.sub) + "</h4>" : "") +
@@ -4467,7 +4583,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }
     return '<details class="fold ans"><summary>' + (a.label || "🔒 <b>對照表（答案）</b>") +
       '<span class="hint">' + (a.hint || "聽完再打開") + '</span></summary><div class="foldbd">' +
-      (a.parts ? a.parts.map(block).join("") : block(a)) + "</div></details>";
+      (yours || "") + (a.parts ? a.parts.map(block).join("") : block(a)) + "</div></details>";
   }
 
   /* 把本週指派給這首曲目的聆聽任務，直接放在播放按鈕正上方。
@@ -4483,7 +4599,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         var k = ck(wk.n) + ":" + i, on = !!S.tasks[k];
         return '<li class="' + (i === 0 ? "must " : "") + (on ? "dn" : "") + '">' +
           '<label><input type="checkbox" data-task="' + k + '"' + (on ? " checked" : "") + ">" +
-          "<span>" + wk.tasks[i] + "</span></label></li>";
+          "<span>" + wk.tasks[i] + "</span></label>" + askHTML(k) + "</li>";
       }).join("") + "</ul>";
   }
 
@@ -4500,6 +4616,108 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       d.classList.toggle("done", !left);
     });
   }
+
+  /* ---------------- 作答欄 ----------------
+     不少任務要你「寫下」「記下」聽到什麼，然後打開 🔒 對照表核對——但站上原本
+     沒有地方可以寫，只能叫人準備紙筆。這裡補上：寫的東西自動存在這台裝置，
+     打開對照表時，你寫的答案會出現在標準答案正上方。
+     先自己想、再對答案（retrieval practice），是整個學習迴圈裡效果差最多的一步。
+     哪些任務有作答欄、要寫什麼，見 assets/data-asks.js。 */
+  var ASK_KEY = /^(?:([a-z]+):)?(\d+):(\d+)$/;
+  function askByKey(key) {
+    var m = String(key).match(ASK_KEY);
+    if (!m) return null;
+    return ((window.ASKS || {})[m[1] || "classical"] || {})[m[2] + ":" + m[3]] || null;
+  }
+  function nl2br(s) { return s.replace(/\n/g, "<br>"); }
+
+  function askHTML(key) {
+    var a = askByKey(key);
+    if (!a) return "";
+    return '<div class="askbox' + (S.answers[key] ? "" : " empty") + '" data-ask="' + key + '">' +
+      askInner(key, false) + "</div>";
+  }
+  function askInner(key, editing) {
+    var a = askByKey(key), v = S.answers[key] || "";
+    if (editing) {
+      // 包在 <label> 裡，同一項任務同時出現在曲目卡片與本週總覽時也不必處理重複的 id
+      return '<label class="askq"><span>✎ ' + esc(a.ask) + "</span>" +
+        '<textarea class="askta" data-askta="' + key + '" rows="3" maxlength="2000" placeholder="' +
+        esc(a.eg || "寫在這裡") + '">' + esc(v) + "</textarea></label>" +
+        '<div class="askfoot"><span class="hint">邊打邊存，存在這台裝置上</span>' +
+        '<button class="iconbtn" data-askdone="' + key + '">完成</button></div>';
+    }
+    if (!v) {
+      return '<button class="askbtn" data-askedit="' + key + '"><b>✎ 寫下答案</b><span>' + esc(a.ask) + "</span></button>";
+    }
+    return '<div class="askval"><span class="askl">你寫的</span>' + nl2br(esc(v)) + "</div>" +
+      '<button class="askbtn sm" data-askedit="' + key + '"><b>✎ 修改</b></button>';
+  }
+
+  /* 對照表最上方的「你寫的」。只列這首曲目、這一週、有作答欄的任務。 */
+  function yoursHTML(workId, wk) {
+    if (!wk || !wk.tw) return "";
+    var keys = [];
+    wk.tw.forEach(function (ids, i) {
+      var k = ck(wk.n) + ":" + i;
+      if (ids.indexOf(workId) > -1 && askByKey(k)) keys.push(k);
+    });
+    if (!keys.length) return "";
+    return '<div class="yours" data-yours="' + keys.join(" ") + '">' + yoursInner(keys) + "</div>";
+  }
+  function yoursInner(keys) {
+    var any = keys.some(function (k) { return S.answers[k]; });
+    if (!any) {
+      // 還沒寫就打開了：不擋，但把「先寫」的入口放在答案前面
+      return '<div class="yours-hd">先寫再看</div>' +
+        '<p class="hint" style="margin:0 0 10px">你還沒寫下答案。<b>先自己寫，再看下面的對照表</b>——直接看答案的話，這個練習就白做了。</p>' +
+        '<div class="rowbtns" style="margin-top:0">' + keys.map(function (k) {
+          return '<button class="iconbtn on" data-askgo="' + k + '">✎ 先寫下來' +
+            (keys.length > 1 ? "：" + esc(askByKey(k).ask) : "") + "</button>";
+        }).join("") + "</div>";
+    }
+    return '<div class="yours-hd">你寫的答案<span class="hint">跟下面的對照表比一比</span></div>' +
+      keys.map(function (k) {
+        var v = S.answers[k];
+        return '<div class="yq"><div class="yql">' + esc(askByKey(k).ask) + "</div>" +
+          (v ? '<div class="yqa">' + nl2br(esc(v)) + "</div>"
+             : '<div class="yqa none">還沒寫　<button class="askbtn sm" data-askgo="' + k + '"><b>✎ 寫</b></button></div>') +
+          "</div>";
+      }).join("");
+  }
+
+  // 一項任務可能同時出現在好幾個地方（曲目卡片、本週總覽、首頁卡片），全部同步
+  function refreshAsk(key, except) {
+    $$('.askbox[data-ask="' + key + '"]').forEach(function (b) {
+      if (b === except || b.classList.contains("editing")) return;
+      b.innerHTML = askInner(key, false);
+      b.classList.toggle("empty", !S.answers[key]);
+    });
+    $$(".yours").forEach(function (y) {
+      var keys = y.getAttribute("data-yours").split(" ");
+      if (keys.indexOf(key) > -1) y.innerHTML = yoursInner(keys);
+    });
+  }
+  function editAsk(box) {
+    var key = box.getAttribute("data-ask");
+    box.classList.add("editing");
+    box.innerHTML = askInner(key, true);
+    var ta = box.querySelector("textarea");
+    growTA(ta);
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+  }
+  function closeAsk(box) {
+    var key = box.getAttribute("data-ask");
+    flushAnswers();
+    box.classList.remove("editing");
+    box.innerHTML = askInner(key, false);
+    box.classList.toggle("empty", !S.answers[key]);
+    refreshAsk(key, box);
+  }
+  function growTA(ta) { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight + 2, 420) + "px"; }
+  var answerT = null;
+  function flushAnswers() { if (answerT) { clearTimeout(answerT); answerT = null; save(); } }
 
   /* ---------------- 渲染：週 ---------------- */
   function tableHTML(t) {
@@ -4593,7 +4811,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       h += wk.tasks.map(function (t, i) {
         var k = ck(wk.n) + ":" + i, on = !!S.tasks[k];
         return '<li class="' + (i === 0 ? "must " : "") + (on ? "dn" : "") + '">' +
-          '<label><input type="checkbox" data-task="' + k + '"' + (on ? " checked" : "") + "><span>" + t + "</span></label></li>";
+          '<label><input type="checkbox" data-task="' + k + '"' + (on ? " checked" : "") + "><span>" + t + "</span></label>" +
+          askHTML(k) + "</li>";
       }).join("") + "</ul>";
     }
     if (wk.checks && wk.checks.length) {
@@ -4742,7 +4961,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             done0 ? "✓ <b>必做任務</b>　已完成" : "▸ <b>必做任務</b>　還有 1 項",
             '<ul class="chk"><li class="must' + (done0 ? " dn" : "") + '">' +
               '<label><input type="checkbox" data-task="' + k0 + '"' + (done0 ? " checked" : "") + ">" +
-              "<span>" + next.tasks[0] + "</span></label></li></ul>")
+              "<span>" + next.tasks[0] + "</span></label>" + askHTML(k0) + "</li></ul>")
         : "";
       h += '<div class="tw-work"><div class="tw-label">本' + COURSE.unitWord + '核心必聽' +
         (COURSE.id === "classical" ? "（15 分鐘最低標準）" : "") + "</div>" +
@@ -5597,11 +5816,16 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     });
     var o = { v: 1, c: c, f: Object.keys(S.fav).filter(function (k) { return S.fav[k]; }) };
     if (Object.keys(S.links).length) o.l = S.links;
+    var ans = {};
+    Object.keys(S.answers).forEach(function (k) {
+      if (ASK_KEY.test(k) && typeof S.answers[k] === "string" && S.answers[k].trim()) ans[k] = S.answers[k].slice(0, 2000);
+    });
+    if (Object.keys(ans).length) o.a = ans;
     return o;
   }
   // 展開成與 localStorage 相同的鍵，合併與計數都用這個
   function unpackState(o) {
-    var out = { done: {}, tasks: {}, checks: {}, fav: {}, links: {} };
+    var out = { done: {}, tasks: {}, checks: {}, fav: {}, links: {}, answers: {} };
     var c = (o && o.c) || {};
     Object.keys(c).forEach(function (p) {
       var pre = p ? p + ":" : "";
@@ -5618,6 +5842,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     (o.f || []).forEach(function (id) { if (typeof id === "string") out.fav[id] = true; });
     Object.keys(o.l || {}).forEach(function (q) {
       if (/^https:\/\//.test(o.l[q])) out.links[q] = o.l[q];
+    });
+    Object.keys(o.a || {}).forEach(function (k) {
+      if (ASK_KEY.test(k) && typeof o.a[k] === "string" && o.a[k].trim()) out.answers[k] = o.a[k].slice(0, 2000);
     });
     return out;
   }
@@ -5649,7 +5876,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       return "<li><b>" + esc(COURSES[id].label) + "</b>　完成 " + n.d + " " + COURSES[id].unitWord +
         "、任務 " + n.t + " 項、自我檢核 " + n.k + " 項</li>";
     }).join("");
-    var nf = Object.keys(u.fav).length, nl = Object.keys(u.links).length;
+    var nf = Object.keys(u.fav).length, nl = Object.keys(u.links).length, na = Object.keys(u.answers || {}).length;
+    if (na) rows += "<li><b>✎ 寫下的答案</b>　" + na + " 則</li>";
     if (nf) rows += "<li><b>★ 重聽區</b>　" + nf + " 首</li>";
     if (nl) rows += "<li><b>🔗 釘選連結</b>　" + nl + " 個</li>";
     return rows ? '<ul class="sumlist">' + rows + "</ul>" : "";
@@ -5663,9 +5891,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }
     var url = syncURL();
     var canShare = !!navigator.share;
+    // 超過這個長度，QR code 會密到手機相機很難對焦（中文作答一個字就佔 4 個字元）
+    var qrOK = url.length <= 1800;
     h += "<p>在另一台裝置上<b>打開下面這個連結</b>，進度就會搬過去。</p>" +
-      qrSVG(url, "搬家連結的 QR code") +
-      '<div class="hint" style="text-align:center">手機：打開相機，對準這個方塊</div>' +
+      (qrOK
+        ? qrSVG(url, "搬家連結的 QR code") + '<div class="hint" style="text-align:center">手機：打開相機，對準這個方塊</div>'
+        : '<div class="fsprev">內容比較多（含你寫下的答案），<b>QR code 放不下</b>。請用下面的按鈕把連結傳給自己，在另一台裝置上點開。</div>') +
       '<div class="rowbtns">' +
         (canShare ? '<button class="iconbtn on big" id="syncShare">傳給自己（LINE、Email…）</button>' : "") +
         '<button class="iconbtn' + (canShare ? "" : " on") + ' big" id="syncCopy">複製連結</button></div>' +
@@ -5697,6 +5928,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     });
     // 釘選連結兩邊都有時以這台為準：那是使用者在這台上親手貼的
     Object.keys(u.links).forEach(function (q) { if (!S.links[q]) { S.links[q] = u.links[q]; added++; } });
+    // 作答兩邊都寫過而且不一樣：兩份都留，不替使用者決定哪一份才算數
+    Object.keys(u.answers).forEach(function (k) {
+      var mine = S.answers[k], theirs = u.answers[k];
+      if (!mine) { S.answers[k] = theirs; added++; }
+      else if (mine.indexOf(theirs) === -1) { S.answers[k] = mine + "\n——另一台裝置寫的——\n" + theirs; added++; }
+    });
     save();
     return added;
   }
@@ -5824,6 +6061,28 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       return;
     }
     if (t.id === "syncSkip") { pendingSync = null; closeDrawer(); return; }
+
+    // 作答欄
+    var ae = find("data-askedit");
+    if (ae) { editAsk(ae.closest(".askbox")); return; }
+    var ad = find("data-askdone");
+    if (ad) { closeAsk(ad.closest(".askbox")); return; }
+    var ag = find("data-askgo");
+    if (ag) {
+      // 從對照表裡按「先寫下來」：把對照表收起來（寫的時候不該看得到答案），
+      // 打開同一首曲目的任務摺疊列，直接進入編輯
+      var key = ag.getAttribute("data-askgo");
+      var scope = ag.closest(".work") || document;
+      var ansFold = ag.closest("details.ans");
+      if (ansFold) ansFold.open = false;
+      var box = scope.querySelector('.askbox[data-ask="' + key + '"]') || $('.askbox[data-ask="' + key + '"]');
+      if (box) {
+        for (var d = box.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) d.open = true;
+        editAsk(box);
+        box.scrollIntoView({ block: "center" });
+      }
+      return;
+    }
     if (t.id === "scrim" || t.id === "drawerClose") { closeDrawer(); return; }
     if (t.id === "menuBtn") { $("#side").classList.toggle("open"); return; }
     if (t.id === "favCopy") { var txt = favText(); if (txt) { copyText(txt); toast("已複製，可貼進 KKBOX 或 YouTube 逐首搜尋"); } return; }
@@ -5858,7 +6117,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         });
         save(); render(); openDrawer("settings"); toast("已匯入 " + n + " 個連結");
       } else {
-        S = Object.assign({}, DEFAULTS, data);
+        S = Object.assign(fresh(), data);
         save(); applyTheme(); applyFs(); render(); openDrawer("settings");
         setFavCount();
         toast("已匯入進度");
@@ -5873,7 +6132,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }
     if (t.id === "setReset") {
       if (confirm("清除全部進度、收藏與設定？此動作無法復原。")) {
-        S = Object.assign({}, DEFAULTS, { done: {}, tasks: {}, checks: {}, fav: {} });
+        S = fresh();
         save(); applyTheme(); applyFs(); render(); closeDrawer();
         setFavCount();
       }
@@ -5957,6 +6216,23 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   $("#q").addEventListener("keydown", function (e) {
     if (e.key === "Escape") { this.value = ""; onSearchInput(); }
   });
+  document.addEventListener("input", function (e) {
+    var ta = e.target;
+    if (!ta || !ta.hasAttribute || !ta.hasAttribute("data-askta")) return;
+    var key = ta.getAttribute("data-askta"), v = ta.value;
+    if (v.trim()) S.answers[key] = v; else delete S.answers[key];
+    growTA(ta);
+    clearTimeout(answerT);
+    answerT = setTimeout(function () { answerT = null; save(); }, 400);
+    refreshAsk(key, ta.closest(".askbox"));
+  });
+  document.addEventListener("focusout", function (e) {
+    if (e.target && e.target.hasAttribute && e.target.hasAttribute("data-askta")) flushAnswers();
+  });
+  // 手機切到 KKBOX／YouTube 時頁面會進背景，這時候就要存——不能等使用者按「完成」
+  window.addEventListener("pagehide", flushAnswers);
+  document.addEventListener("visibilitychange", function () { if (document.hidden) flushAnswers(); });
+
   window.addEventListener("hashchange", function () {
     var v = viewFromHash();   // 會順帶切換 COURSE，所以課程也要一起比對
     if (v !== view || COURSE.id !== viewCourse) {

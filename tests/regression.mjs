@@ -468,6 +468,131 @@ group("搬到另一台裝置");
   for (const x of [a, b, c, e]) await x.context().close();
 }
 
+/* ---------- J2. 作答欄 ---------- */
+group("作答欄");
+{
+  const p = await page({ mobile: true });
+  await go(p, "#week-1");
+  ok("第 1 週兩項要作答的任務都有作答欄（曲目卡片與本週總覽各一份）", await p.$$eval(".askbox", (b) => b.length) === 4);
+  ok("還沒寫時，按鈕上直接寫出要寫什麼", /寫下答案[\s\S]*依出場順序/.test(await p.$eval('.askbox[data-ask="1:0"]', (b) => b.innerText)));
+  ok("不需要作答的任務沒有作答欄", !(await p.$('.askbox[data-ask="1:2"]')));
+
+  await p.click(".work .ttl"); await p.waitForTimeout(100);
+  await p.evaluate(() => { document.querySelector(".work details.ans").open = true; });
+  ok("還沒寫就打開對照表：最上面先提醒「先寫再看」", /先寫再看/.test(await p.$eval(".work .yours", (y) => y.innerText)));
+  await p.click(".work .yours [data-askgo]"); await p.waitForTimeout(150);
+  const st = await p.evaluate(() => ({
+    ans: document.querySelector(".work details.ans").open,
+    task: document.querySelector(".work details.f-task").open,
+    focus: document.activeElement.getAttribute("data-askta")
+  }));
+  ok("按「先寫下來」：對照表收起、任務展開、游標直接在輸入框裡", !st.ans && st.task && st.focus === "1:0", JSON.stringify(st));
+  await p.keyboard.type("弦、木管\n銅管");
+  await p.waitForTimeout(500);
+  const saved = await p.evaluate(() => JSON.parse(localStorage.getItem("cmc.v1")).answers);
+  ok("邊打邊存（不用按儲存）", saved && saved["1:0"] === "弦、木管\n銅管", JSON.stringify(saved));
+  ok("同一項任務在本週總覽裡的那一份同步更新", /弦、木管[\s\S]*銅管/.test(await p.evaluate(() =>
+    [...document.querySelectorAll('.askbox[data-ask="1:0"]')].filter((b) => !b.classList.contains("editing")).map((b) => b.innerText).join(""))));
+  await p.click('.work [data-askdone="1:0"]'); await p.waitForTimeout(100);
+  await p.evaluate(() => { document.querySelector(".work details.ans").open = true; });
+  const y = await p.evaluate(() => {
+    const body = document.querySelector(".work details.ans .foldbd");
+    return { text: body.querySelector(".yours").innerText, first: body.firstElementChild.className };
+  });
+  ok("打開對照表：你寫的答案在最上面，緊接著才是標準答案", y.first === "yours" && /你寫的答案[\s\S]*弦、木管[\s\S]*銅管/.test(y.text), y.text.replace(/\n/g, " | "));
+  await p.reload(); await p.waitForSelector(".card");
+  ok("重新整理後答案還在", /弦、木管/.test(await p.$eval('.askbox[data-ask="1:0"]', (b) => b.innerText)));
+
+  // 版面：任務列的「必做」標籤與劃線不能波及作答欄
+  await p.evaluate(() => localStorage.setItem("cmc.v1", JSON.stringify({ tasks: { "1:0": true }, checks: { "1:0": true }, answers: { "1:0": "弦" } })));
+  await p.reload(); await p.waitForSelector(".card");
+  const look = await p.evaluate(() => {
+    const deco = (e) => getComputedStyle(e).textDecorationLine;
+    return {
+      badges: [...document.querySelectorAll(".askbox span")].filter((e) => getComputedStyle(e, "::before").content.includes("必做")).length,
+      struck: [...document.querySelectorAll(".chk li.dn .askbox *")].filter((e) => deco(e).includes("line-through")).length,
+      task: deco(document.querySelector(".chk li.dn > label > span")),
+      check: deco(document.querySelector(".chk li.dn > span"))
+    };
+  });
+  ok("「必做」標籤只出現在任務文字上，不會蓋到作答欄裡", look.badges === 0, look.badges);
+  ok("勾完任務時任務文字劃掉，但你寫的答案不會被劃掉", look.task === "line-through" && look.struck === 0, JSON.stringify(look));
+  ok("自我檢核勾完時一樣會劃掉", look.check === "line-through");
+
+  // 切到 KKBOX／YouTube（頁面進背景）時，還在等待中的內容要立刻存
+  // 用本週總覽裡那一份（曲目卡片裡的那份在收起的摺疊列中，看不到也點不到）
+  const box = p.locator('.askbox[data-ask="1:0"]').last();
+  await box.locator("[data-askedit]").click();
+  await box.locator(".askta").fill("剛打完還沒停");
+  await p.evaluate(() => window.dispatchEvent(new Event("pagehide")));
+  ok("頁面進背景的瞬間就存好，不必等", (await p.evaluate(() => JSON.parse(localStorage.getItem("cmc.v1")).answers["1:0"])) === "剛打完還沒停");
+  await box.locator(".askta").fill("   ");
+  await p.waitForTimeout(500);
+  ok("清空內容等於刪掉這則答案", !(await p.evaluate(() => "1:0" in JSON.parse(localStorage.getItem("cmc.v1")).answers)));
+
+  // 搬家連結是別人傳來的資料：答案內容必須一律當文字顯示，不能變成網頁元素
+  const evil = '<img src=x onerror="window.__pwned=1"><b>粗體</b>';
+  await p.evaluate((v) => localStorage.setItem("cmc.v1", JSON.stringify({ answers: { "1:0": v } })), evil);
+  await p.reload(); await p.waitForSelector(".card");
+  await p.click(".work .ttl");
+  await p.evaluate(() => { document.querySelector(".work details.ans").open = true; });
+  await p.waitForTimeout(150);
+  const safe = await p.evaluate(() => ({
+    pwned: !!window.__pwned,
+    imgs: document.querySelectorAll(".askbox img, .yours img").length,
+    shown: document.querySelector(".yours .yqa").textContent
+  }));
+  ok("答案裡的 HTML 原樣顯示成文字，不會被執行", !safe.pwned && safe.imgs === 0 && safe.shown.includes("<img"), JSON.stringify(safe));
+
+  // 每一筆作答設定都真的出現在畫面上（不會掛在一個不存在或不顯示的任務底下）
+  const asks = await p.evaluate(() => window.ASKS);
+  const missing = [];
+  for (const [cid, map] of Object.entries(asks)) {
+    for (const key of Object.keys(map)) {
+      const [n] = key.split(":");
+      const hash = cid === "classical" ? `#week-${n}` : `#taiwan/unit-${n}`;
+      const full = (cid === "classical" ? "" : cid + ":") + key;
+      await p.goto(U + hash); await p.waitForSelector("#content .card");
+      if (!(await p.$(`.askbox[data-ask="${full}"]`))) missing.push(cid + " " + key);
+    }
+  }
+  const total = Object.values(asks).reduce((a, m) => a + Object.keys(m).length, 0);
+  ok(`全部 ${total} 個作答欄都出現在對應的${"週次／單元"}裡`, !missing.length, missing.join(" "));
+
+  await p.emulateMedia({ media: "print" });
+  await p.evaluate(() => localStorage.setItem("cmc.v1", "{}"));
+  await go(p, "#week-1"); await p.reload(); await p.waitForSelector(".card");
+  const pr = await p.evaluate(() => {
+    const b = document.querySelector(".askbox.empty");
+    return { btn: getComputedStyle(b.querySelector(".askbtn")).display, h: b.getBoundingClientRect().height };
+  });
+  ok("列印時沒寫過的作答欄變成幾條空白橫線，可以直接在紙上寫", pr.btn === "none" && pr.h > 40, JSON.stringify(pr));
+  await p.context().close();
+
+  // 搬家：答案跟著搬；兩邊都寫過不同內容時兩份都留
+  const a = await page({ mobile: true, state: { answers: { "1:0": "A 寫的", "3:0": "主題 6 次" }, done: { 1: true } } });
+  await go(a, "");
+  await a.click('.devhelp [data-open="sync"]'); await a.waitForTimeout(150);
+  const link = await a.$eval("#syncUrl", (e) => e.value);
+  ok("搬家內容列出寫下的答案", /寫下的答案\s*2 則/.test(await a.$eval("#drawer .sumlist", (e) => e.innerText)));
+  const b2 = await page({ mobile: true, state: { answers: { "1:0": "B 寫的" } } });
+  await go(b2, "");
+  await b2.goto(link.replace(/^https?:\/\/[^/]+\/(classical-music\/)?/, U)); await b2.waitForSelector(".card"); await b2.waitForTimeout(150);
+  await b2.click("#syncMerge"); await b2.waitForTimeout(150);
+  const merged = await b2.evaluate(() => JSON.parse(localStorage.getItem("cmc.v1")).answers);
+  ok("另一台沒寫過的答案直接搬過來", merged["3:0"] === "主題 6 次");
+  ok("兩邊都寫過不一樣的內容：兩份都留下，不替你決定哪份算數", /B 寫的[\s\S]*另一台裝置[\s\S]*A 寫的/.test(merged["1:0"] || ""), merged["1:0"]);
+
+  const long = {};
+  for (let i = 0; i < 3; i++) long[`${[1, 3, 8][i]}:0`] = "這段答案寫得很長".repeat(40);
+  const c2 = await page({ mobile: true, state: { answers: long } });
+  await go(c2, "");
+  await c2.click('.devhelp [data-open="sync"]'); await c2.waitForTimeout(150);
+  const big = await c2.evaluate(() => ({ qr: document.querySelectorAll("#drawer .qr").length, msg: /QR code 放不下/.test(document.querySelector("#drawer").innerText), url: document.querySelector("#syncUrl").value.length }));
+  ok("答案寫很多、QR code 放不下時，改說明用傳送或複製", big.qr === 0 && big.msg, JSON.stringify(big));
+  for (const x of [a, b2, c2]) await x.context().close();
+}
+
 /* ---------- K. 單一檔案版 ---------- */
 group("單一檔案版（dist/）");
 {

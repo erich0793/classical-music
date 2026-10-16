@@ -201,8 +201,10 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
 .chk li{font-size:calc(14px*var(--fs));line-height:1.7}
 .chk li>label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .chk input{margin-top:6px;flex:none;width:15px;height:15px;accent-color:var(--acc);cursor:pointer}
-.chk li.must span::before{content:"必做";font-size:calc(10.5px*var(--fs));font-weight:700;background:var(--acc);color:#fff;padding:1px 6px;border-radius:5px;margin-right:7px;vertical-align:2px}
-.chk li.dn span{opacity:.5;text-decoration:line-through}
+/* 只對任務文字本身（label 裡那個 span）。寫成 .chk li.must span 的話，任務底下作答欄裡的
+   每個 span 也會被蓋上「必做」、勾完任務時連你寫的答案都被劃掉。 */
+.chk li.must>label>span::before{content:"必做";font-size:calc(10.5px*var(--fs));font-weight:700;background:var(--acc);color:#fff;padding:1px 6px;border-radius:5px;margin-right:7px;vertical-align:2px}
+.chk li.dn>label>span,.chk li.dn>span{opacity:.5;text-decoration:line-through}
 
 /* ---------- 可摺疊概念區 ---------- */
 .theory{border:1px solid var(--line);border-radius:10px;background:var(--bg2);margin:14px 0 18px;padding:0 15px}
@@ -521,3 +523,50 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
   background:var(--bg);color:var(--mut);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   font-size:calc(11.5px*var(--fs))}
 .drawer .syncurl + h3{margin-top:20px}
+
+/* ---------- 作答欄 ----------
+   對齊任務文字（checkbox 寬度＋間距），讓它看起來屬於上面那一項任務。 */
+.askbox{margin:6px 0 4px 25px}
+.askbtn{
+  display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;
+  border:1px dashed var(--acc2);border-radius:9px;background:var(--bg);color:var(--acc);
+  padding:7px 12px;min-height:40px;font-size:calc(13px*var(--fs));line-height:1.5;
+}
+.askbtn b{font-weight:700}
+.askbtn span{color:var(--mut);font-size:calc(12px*var(--fs))}
+.askbtn:hover{border-style:solid;background:var(--sel)}
+.askbtn.sm{display:inline-flex;flex-direction:row;min-height:32px;padding:4px 10px;margin-top:6px}
+.askval{
+  background:var(--sel);border-radius:9px;padding:9px 12px;
+  font-size:calc(13.5px*var(--fs));line-height:1.75;white-space:normal;word-break:break-word;
+}
+.askl{display:block;font-size:calc(11px*var(--fs));color:var(--acc);font-weight:700;letter-spacing:.06em;margin-bottom:2px}
+.askq{display:block;font-size:calc(13px*var(--fs));color:var(--acc);font-weight:650}
+.askq span{display:block;margin-bottom:5px}
+.askta{
+  display:block;width:100%;min-height:76px;resize:vertical;
+  border:1.5px solid var(--acc2);border-radius:9px;background:var(--bg2);color:var(--fg);
+  padding:9px 11px;font:inherit;font-weight:400;font-size:calc(15px*var(--fs));line-height:1.7;
+}
+.askta:focus{outline:2px solid var(--acc);outline-offset:1px;border-color:var(--acc)}
+.askta::placeholder{color:var(--mut);opacity:.75}
+.askfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+.askfoot .hint{margin:0}
+@media(max-width:520px){ .askbox{margin-left:32px} }
+
+/* 對照表最上方的「你寫的」 */
+.yours{border:1.5px solid var(--acc2);border-radius:10px;padding:12px 14px;margin:0 0 16px;background:var(--bg)}
+.yours-hd{font-weight:700;color:var(--acc);font-size:calc(14px*var(--fs));margin-bottom:8px}
+.yours-hd .hint{margin-left:8px;font-weight:400}
+.yq + .yq{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.yql{font-size:calc(12px*var(--fs));color:var(--mut)}
+.yqa{font-size:calc(14px*var(--fs));line-height:1.75;margin-top:2px;word-break:break-word}
+.yqa.none{color:var(--mut)}
+
+/* 列印：印出來在紙上寫的人，沒寫過的作答欄留幾條橫線；寫過的直接印出來 */
+@media print{
+  .askbtn,.askfoot,.askbtn.sm{display:none!important}
+  .askbox.empty{height:4.6em;border-bottom:1px solid #999;
+    background:repeating-linear-gradient(transparent 0 1.5em,#ccc 1.5em calc(1.5em + 1px))}
+  .askval{background:none;border:1px solid #ccc}
+}

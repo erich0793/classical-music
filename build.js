@@ -93,6 +93,30 @@ let html = read("index.html");
     }
   }
 
+  // 作答欄（data-asks.js）以「週次:任務序號」掛在任務底下。任務在中間被插入或刪掉時
+  // 編號會位移，作答欄就會默默掛到別的任務上——所以每一筆都帶一小段任務原文，這裡逐一比對。
+  {
+    const box = { window: { COURSES: {} } };
+    new Function("window", read("assets/data-weeks.js"))(box.window);
+    new Function("window", read("assets/tw/data-tw-core.js") + "\n" + read("assets/tw/data-tw-units.js"))(box.window);
+    new Function("window", read("assets/data-asks.js"))(box.window);
+    const weeksOf = { classical: box.window.WEEKS, taiwan: (box.window.COURSES.taiwan || {}).weeks };
+    const strip = (s) => String(s).replace(/<[^>]+>/g, "");
+    for (const [cid, asks] of Object.entries(box.window.ASKS || {})) {
+      const weeks = weeksOf[cid];
+      if (!weeks) { problems.push(`data-asks.js：沒有「${cid}」這門課`); continue; }
+      for (const [key, a] of Object.entries(asks)) {
+        const [n, i] = key.split(":").map(Number);
+        const wk = weeks.find((w) => w.n === n);
+        const task = wk && (wk.tasks || [])[i];
+        if (!task) { problems.push(`data-asks.js ${cid} ${key}：找不到這一項任務`); continue; }
+        if (!a.ask) problems.push(`data-asks.js ${cid} ${key}：缺少 ask（要寫什麼）`);
+        if (!a.match || !strip(task).includes(a.match))
+          problems.push(`data-asks.js ${cid} ${key}：任務原文裡找不到「${a.match}」——任務編號可能位移了。這一項目前是：「${strip(task).slice(0, 40)}…」`);
+      }
+    }
+  }
+
   if (problems.length) {
     console.error("搜尋字串檢查未通過：");
     problems.forEach((x) => console.error("  " + x));
