@@ -66,9 +66,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
 /* ---------- 課程切換器 ----------
    一次只顯示一門課的單元，側邊欄才不會被兩門課灌爆。 */
-.cswitch{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:0 0 14px;
+/* 課程數由 JS 決定，這裡用 grid-auto-flow:column 讓兩門或三門都能平均分配；
+   三門並排時每顆只剩約 75px，所以圖示放在名稱上方、名稱用短名（tab）。 */
+.cswitch{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:5px;margin:0 0 14px;
   background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px}
-.cbtn{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 6px;
+.cbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:7px 4px;text-align:center;
   border-radius:7px;font-size:calc(12.5px*var(--fs));font-weight:600;color:var(--mut);
   transition:background-color .15s,color .15s;min-height:40px;line-height:1.25}
 .cbtn:hover{color:var(--acc)}
@@ -302,7 +304,9 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
   border:1px solid var(--line);border-radius:11px;padding:14px 15px;background:var(--bg2)}
 .instfig{flex:none;width:76px;height:76px;color:var(--fg);
   background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:6px}
-.instbody{min-width:0}
+/* overflow-wrap:anywhere 讓長的英文字（「（pizzicato）」「Cannonball」）在不得已時可以斷開。
+   break-word 不行：它不影響最小寬度的計算，卡片照樣會被撐到比 320px 的螢幕還寬。 */
+.instbody{min-width:0;overflow-wrap:anywhere}
 .instname{font-size:calc(15.5px*var(--fs));font-weight:700;margin-bottom:6px}
 .instalias{font-size:calc(11.5px*var(--fs));font-weight:400;color:var(--mut);margin-left:8px}
 .instrow{font-size:calc(13px*var(--fs));line-height:1.7;margin-top:3px}
@@ -331,7 +335,7 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
   border-top:1px dashed var(--line);padding-top:10px}
 
 @media(max-width:520px){
-  .instgrid{grid-template-columns:1fr}
+  .instgrid{grid-template-columns:minmax(0,1fr)}
   .instcard{gap:11px;padding:12px 13px}
   .instfig{width:62px;height:62px}
   .cmpside .instfig{width:76px;height:76px}
@@ -570,3 +574,14 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
     background:repeating-linear-gradient(transparent 0 1.5em,#ccc 1.5em calc(1.5em + 1px))}
   .askval{background:none;border:1px solid #ccc}
 }
+
+/* ---------- 首頁：其他課程 ---------- */
+/* minmax(0,1fr)：否則格線會照最長那顆按鈕的寬度撐開，「切換到台灣傳統音樂 →」
+   在最大字級下就把整個區塊推出 320px 的螢幕 */
+.others{margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.oc .iconbtn{white-space:normal;max-width:100%;text-align:left}
+.oc{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg);
+  display:grid;gap:6px;justify-items:start}
+.oc-t{display:flex;align-items:center;gap:8px;font-size:calc(15px*var(--fs))}
+.oc-t .ci{color:var(--acc);font-size:calc(16px*var(--fs))}
+.oc-p{font-size:calc(13.5px*var(--fs));color:var(--mut);line-height:1.75}

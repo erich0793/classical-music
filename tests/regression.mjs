@@ -87,12 +87,18 @@ group("每一頁都能正常顯示");
 {
   const p = await page();
   await go(p, "");
-  const classical = await p.$$eval("#nav [data-go]", (b) => b.map((x) => x.getAttribute("data-go")));
-  await go(p, "#taiwan");
-  const taiwan = await p.$$eval("#nav [data-go]", (b) => b.map((x) => x.getAttribute("data-go")));
-  const views = [...new Set(classical)].map((v) => (v === "home" ? "" : "#" + v))
-    .concat([...new Set(taiwan)].map((v) => "#taiwan/" + (v === "home" ? "" : v)));
-  ok("兩門課的導覽列都列出頁面", classical.length > 30 && taiwan.length > 12, `古典 ${classical.length}、台灣 ${taiwan.length}`);
+  // 課程清單從切換器讀，不寫死——以後再加一門課，這段測試不用改
+  const courses = await p.$$eval(".cswitch [data-course]", (b) => b.map((x) => x.getAttribute("data-course")));
+  const views = [], navCount = {};
+  for (const cid of courses) {
+    const base = cid === "classical" ? "#" : "#" + cid + "/";
+    await go(p, cid === "classical" ? "" : "#" + cid);
+    const nav = await p.$$eval("#nav [data-go]", (b) => b.map((x) => x.getAttribute("data-go")));
+    navCount[cid] = nav.length;
+    [...new Set(nav)].forEach((v) => views.push(v === "home" ? (cid === "classical" ? "" : "#" + cid) : base + v));
+  }
+  ok(`三門課都在：${courses.join("、")}`, courses.join() === "classical,taiwan,jazz", courses.join());
+  ok("每門課的導覽列都列出頁面", navCount.classical > 30 && navCount.taiwan > 12 && navCount.jazz > 16, JSON.stringify(navCount));
 
   const blank = [], literal = [];
   for (const v of views) {
@@ -241,7 +247,7 @@ group("字級");
   const bad = [];
   for (const w of [320, 390]) for (const [f] of STEPS) {
     const p = await page({ mobile: true, width: w, state: { fs: f } });
-    for (const v of ["", "#week-1", "#p-orch", "#taiwan/unit-1", "#p-glossary"]) {
+    for (const v of ["", "#week-1", "#p-orch", "#taiwan/unit-1", "#p-glossary", "#jazz", "#jazz/unit-3", "#jazz/p-inst"]) {
       await go(p, v);
       const o = await p.evaluate(() => {
         const de = document.documentElement;
@@ -302,7 +308,7 @@ group("鍵盤與觸控");
 
   const m = await page({ mobile: true });
   const small = [];
-  for (const v of ["#week-1", "#taiwan/unit-1", "#taiwan/p-search", "#p-orch"]) {
+  for (const v of ["#week-1", "#taiwan/unit-1", "#taiwan/p-search", "#p-orch", "#jazz/p-inst", "#jazz/p-listen"]) {
     await go(m, v);
     const n = await m.evaluate(() => [...document.querySelectorAll("details.fold > summary")]
       .filter((e) => { const h = e.getBoundingClientRect().height; return h > 0 && h < 40; }).length);
@@ -350,11 +356,11 @@ group("加到主畫面");
   await ctx.setOffline(true);
   const off = [];
   // 每次換一個 ?n= 讓瀏覽器真的重新載入文件，而不是只換 # 後面那段
-  for (const [i, v] of ["", "#week-8", "#taiwan/unit-3", "#p-orch"].entries()) {
+  for (const [i, v] of ["", "#week-8", "#taiwan/unit-3", "#p-orch", "#jazz/unit-5"].entries()) {
     await p.goto(U + "?n=" + i + v).catch(() => {});
     if (!(await p.waitForSelector("#content .card", { timeout: 6000 }).then(() => true).catch(() => false))) off.push(v || "首頁");
   }
-  ok("斷網時首頁、週次、台灣課、參考頁都打得開", !off.length, off.join(" "));
+  ok("斷網時首頁、週次、台灣課、參考頁、爵士課都打得開", !off.length, off.join(" "));
   const hasStyle = await p.evaluate(() => getComputedStyle(document.body).fontFamily.includes("Noto Sans TC"));
   ok("斷網時樣式也在（不是一片沒排版的白底黑字）", hasStyle);
   ok("斷網瀏覽時沒有程式錯誤", !errs.length, errs.slice(0, 2).join(" | "));
@@ -405,7 +411,7 @@ group("LINE／Facebook 分享預覽");
 group("搬到另一台裝置");
 {
   const A = { done: { 1: true, 2: true, "taiwan:1": true }, tasks: { "1:0": true, "1:2": true, "3:1": true, "taiwan:2:0": true },
-    checks: { "1:0": true }, fav: { "britten-guide": true }, links: { "Britten Young Person's Guide Rattle": "https://www.kkbox.com/tw/tc/album/TEST" }, fs: 1.3, theme: "dark" };
+    checks: { "1:0": true }, fav: { "britten-ypg": true, "miles-sowhat": true }, links: { "Britten Young Person's Guide Rattle": "https://www.kkbox.com/tw/tc/album/TEST" }, fs: 1.3, theme: "dark" };
   const a = await page({ mobile: true, state: A });
   await go(a, "");
   await a.click('.devhelp [data-open="sync"]'); await a.waitForTimeout(200);
@@ -430,7 +436,8 @@ group("搬到另一台裝置");
   ok("合併後兩邊的完成週次都在", ["1", "2", "5", "taiwan:1"].every((k) => s.done[k]), Object.keys(s.done).join(","));
   ok("合併後兩邊勾過的任務都在，沒有重複", ["1:0", "1:2", "3:1", "9:1", "taiwan:2:0"].every((k) => s.tasks[k]) && Object.keys(s.tasks).length === 5,
     Object.keys(s.tasks).join(","));
-  ok("★ 重聽區與釘選連結也搬過來了", s.fav["britten-guide"] && Object.keys(s.links).length === 1);
+  ok("★ 重聽區（含爵士課的收藏）與釘選連結也搬過來了", s.fav["britten-ypg"] && s.fav["miles-sowhat"] && Object.keys(s.links).length === 1,
+    Object.keys(s.fav).join(","));
   ok("字級、主題是這台裝置自己的，不被覆蓋", s.fs === 1 && s.theme === "light", `fs=${s.fs} theme=${s.theme}`);
   ok("合併後畫面告訴你新增了幾項", /已合併，新增 \d+ 項/.test(await b.$eval("#toast", (t) => t.textContent)), await b.$eval("#toast", (t) => t.textContent));
 
@@ -447,8 +454,9 @@ group("搬到另一台裝置");
   await e.click('.devhelp [data-open="sync"]'); await e.waitForTimeout(150);
   ok("還沒有進度時，直接告訴你沒有東西可以搬", /還沒有任何進度/.test(await e.$eval("#drawer", (d) => d.innerText)));
 
-  // 最壞情況：兩門課全部勾完、全部收藏。QR code 要還能畫得出來
-  await e.evaluate(() => {
+  // 最壞情況：三門課全部勾完、每一首都收藏。QR code 要還能畫得出來，
+  // 而且另一台裝置要一首不差地收到——收藏在連結裡是 4 字元雜湊，這同時驗證沒有撞號
+  const total = await e.evaluate(() => {
     const s = { done: {}, tasks: {}, checks: {}, fav: {}, links: {} };
     for (const id of Object.keys(window.COURSES)) {
       const C = window.COURSES[id], pre = id === "classical" ? "" : id + ":";
@@ -457,14 +465,24 @@ group("搬到另一台裝置");
         (w.tasks || []).forEach((_, i) => { s.tasks[pre + w.n + ":" + i] = true; });
         (w.checks || []).forEach((_, i) => { s.checks[pre + w.n + ":" + i] = true; });
       });
-      Object.keys(C.works).slice(0, 20).forEach((k) => { s.fav[k] = true; });
+      Object.keys(C.works).forEach((k) => { s.fav[k] = true; });
     }
     localStorage.setItem("cmc.v1", JSON.stringify(s));
+    return { done: Object.keys(s.done).length, tasks: Object.keys(s.tasks).length, checks: Object.keys(s.checks).length, fav: Object.keys(s.fav).length };
   });
   await e.reload(); await e.waitForSelector(".card");
   await e.click('.devhelp [data-open="sync"]'); await e.waitForTimeout(200);
-  const full = await e.evaluate(() => ({ len: document.querySelector("#syncUrl").value.length, qr: document.querySelectorAll("#drawer .qr svg").length }));
-  ok("兩門課全部完成＋40 首收藏，連結仍 < 1600 字元、QR code 畫得出來", full.len < 1600 && full.qr === 1, full.len + " 字元");
+  const full = await e.evaluate(() => ({ url: document.querySelector("#syncUrl").value, qr: document.querySelectorAll("#drawer .qr svg").length }));
+  ok(`三門課全部完成＋全部 ${total.fav} 首收藏，連結仍 < 1600 字元、QR code 畫得出來`, full.url.length < 1600 && full.qr === 1, full.url.length + " 字元");
+  const f2 = await page({ mobile: true });
+  await f2.goto(full.url.replace(/^https?:\/\/[^/]+\/(classical-music\/)?/, U)); await f2.waitForSelector(".card"); await f2.waitForTimeout(150);
+  await f2.click("#syncMerge"); await f2.waitForTimeout(150);
+  const got = await f2.evaluate(() => {
+    const s = JSON.parse(localStorage.getItem("cmc.v1"));
+    return { done: Object.keys(s.done).length, tasks: Object.keys(s.tasks).length, checks: Object.keys(s.checks).length, fav: Object.keys(s.fav).length };
+  });
+  ok("另一台裝置一項不差地收到：週次、任務、檢核、每一首收藏", JSON.stringify(got) === JSON.stringify(total), `寄出 ${JSON.stringify(total)}　收到 ${JSON.stringify(got)}`);
+  await f2.context().close();
   for (const x of [a, b, c, e]) await x.context().close();
 }
 
@@ -550,7 +568,7 @@ group("作答欄");
   for (const [cid, map] of Object.entries(asks)) {
     for (const key of Object.keys(map)) {
       const [n] = key.split(":");
-      const hash = cid === "classical" ? `#week-${n}` : `#taiwan/unit-${n}`;
+      const hash = cid === "classical" ? `#week-${n}` : `#${cid}/unit-${n}`;
       const full = (cid === "classical" ? "" : cid + ":") + key;
       await p.goto(U + hash); await p.waitForSelector("#content .card");
       if (!(await p.$(`.askbox[data-ask="${full}"]`))) missing.push(cid + " " + key);
@@ -593,6 +611,105 @@ group("作答欄");
   for (const x of [a, b2, c2]) await x.context().close();
 }
 
+/* ---------- J3. 爵士課與三門課的串接 ---------- */
+group("爵士課與三門課的串接");
+{
+  const p = await page({ mobile: true });
+  await go(p, "#jazz");
+  const home = await p.evaluate(() => ({
+    h2: [...document.querySelectorAll("#content .card h2")].map((e) => e.textContent).join(" ／ "),
+    units: document.querySelectorAll("#nav [data-week]").length,
+    mods: [...document.querySelectorAll("#nav .navmod")].map((e) => e.textContent).filter((t) => /模組/.test(t)).length,
+    others: [...document.querySelectorAll(".others .oc [data-course]")].map((b) => b.getAttribute("data-course")).join(),
+    tab: (document.querySelector(".cbtn.on") || {}).textContent
+  }));
+  ok("爵士課首頁、12 個單元、4 個模組", /爵士樂聆聽課程/.test(home.h2) && home.units === 12 && home.mods === 4, JSON.stringify(home));
+  ok("爵士課首頁列出另外兩門課，各有切換按鈕", home.others === "classical,taiwan", home.others);
+  ok("課程切換器標示目前在爵士樂", /爵士樂/.test(home.tab || ""), home.tab);
+  for (const [h, want] of [["", "taiwan,jazz"], ["#taiwan", "classical,jazz"]]) {
+    await go(p, h);
+    const o = await p.$$eval(".others .oc [data-course]", (b) => b.map((x) => x.getAttribute("data-course")).join());
+    ok(`${h || "古典課"}首頁也列出另外兩門課`, o === want, o);
+  }
+  await go(p, "#jazz");
+  await p.click('.others [data-course="classical"]'); await p.waitForTimeout(200);
+  ok("從爵士課首頁按「切換到古典音樂」就切過去", /古典音樂系統聆聽課程/.test(await p.$$eval("#content .card h2", (h) => h.map((x) => x.textContent).join())));
+
+  // 三顆課程按鈕在側邊欄裡並排，最大字級下也不能有字被切掉
+  for (const f of [1, 1.75]) {
+    const d = await page({ state: { fs: f } });
+    await go(d, "");
+    const clip = await d.$$eval(".cbtn", (bs) => bs.filter((b) => b.scrollWidth > b.clientWidth + 1).map((b) => b.textContent));
+    ok(`字級 ×${f}：三個課程按鈕的名稱都完整顯示`, !clip.length, clip.join(" "));
+    await d.context().close();
+  }
+
+  // 預設：爵士課用 KKBOX，而且不依音質重排（原始錄音放最上面）
+  const q = await page({ mobile: true });
+  await go(q, "#taiwan");
+  ok("（前提）台灣課預設 YouTube", (await q.evaluate(() => JSON.parse(localStorage.getItem("cmc.v1")).platform)) === "youtube");
+  await q.evaluate(() => { document.querySelector('.cbtn[data-course="jazz"]').click(); });
+  await q.waitForTimeout(200);
+  const st = await q.evaluate(() => JSON.parse(localStorage.getItem("cmc.v1")));
+  ok("切到爵士課：主要平台回到 KKBOX、不做 Hi-Res 優先排序", st.platform === "kkbox" && st.hiresFirst === false, `platform=${st.platform} hiresFirst=${st.hiresFirst}`);
+  await go(q, "#jazz/unit-3");
+  await q.evaluate(() => document.querySelector('.work[data-work="hawkins-bodysoul"] .ttl').click());
+  await q.waitForTimeout(100);
+  ok("〈Body and Soul〉最上面就是 1939 年 Hawkins 的原始錄音", /Coleman Hawkins/.test(await q.$eval('.work[data-work="hawkins-bodysoul"] .vlist.top', (e) => e.innerText)));
+
+  // 樂器辨識：兩個家族收成摺疊列、三組對照
+  await go(q, "#jazz/p-inst");
+  const inst = await q.evaluate(() => {
+    document.querySelectorAll("#p-inst > details.fold").forEach((d) => { d.open = true; });
+    return {
+      folds: [...document.querySelectorAll("#p-inst > details.fold > summary")].map((s) => s.innerText.replace(/\s+/g, " ")),
+      figs: document.querySelectorAll("#p-inst .instcard .instfig svg").length,
+      titled: [...document.querySelectorAll("#p-inst .instfig svg")].every((s) => (s.querySelector("title") || {}).textContent),
+      cmp: document.querySelectorAll("#p-inst .cmpbody").length
+    };
+  });
+  ok("樂器辨識：前排與節奏組兩組，摘要列寫出全部樂器名",
+    inst.folds.some((t) => /中音薩克斯風、次中音薩克斯風、高音薩克斯風/.test(t)) && inst.folds.some((t) => /鋼琴、低音提琴、爵士鼓、吉他/.test(t)), inst.folds.join(" | "));
+  ok("11 件樂器都有線稿（沿用古典課的 4 張也在）、每張都有無障礙標題", inst.figs === 11 && inst.titled, `${inst.figs} 張`);
+  ok("三組最容易搞混的樂器對照", inst.cmp === 3, inst.cmp);
+
+  // 三門課有同名的頁面（p-inst、p-start、p-glossary…），切換時要換成對的那一頁
+  const r = await page();
+  const look = async (h) => { await go(r, h); return r.evaluate(() => document.querySelector("#content").innerText); };
+  ok("#taiwan/p-inst 是台灣課的樂器辨識", /What Am I Hearing/.test(await look("#taiwan/p-inst")));
+  ok("#jazz/p-inst 是爵士課的樂器辨識", /Who Is Playing/.test(await look("#jazz/p-inst")));
+  ok("#p-inst 是古典課的樂器的演變", /樂器的演變/.test(await look("#p-inst")));
+  ok("#jazz/p-start 是爵士課的入門十首", /Take Five/.test(await look("#jazz/p-start")));
+  ok("#taiwan/p-start 是台灣課的入門十首", /思想起/.test(await look("#taiwan/p-start")));
+  ok("#jazz/p-glossary 是爵士課的名詞速查", /walking bass/.test(await look("#jazz/p-glossary")));
+
+  // 搜尋：在古典課搜爵士樂手，要告訴你另一門課有結果
+  await go(r, "");
+  await r.fill("#q", "Coltrane"); await r.waitForTimeout(400);
+  ok("在古典課搜「Coltrane」，提示爵士課有結果", !!(await r.$('#content .banner [data-course="jazz"]')));
+  await r.fill("#q", ""); await r.waitForTimeout(300);
+
+  // 重聽區：三門課的收藏分組顯示
+  const f = await page({ state: { fav: { "britten-ypg": true, "nk-meihua": true, "miles-sowhat": true } } });
+  await go(f, "");
+  await f.click("#favBtn"); await f.waitForTimeout(200);
+  const groups = await f.$$eval("#drawer .navmod", (g) => g.map((x) => x.textContent.replace(/\s+/g, " ").trim()));
+  ok("重聽區依三門課分組", groups.length === 3 && /爵士樂/.test(groups.join()), groups.join(" | "));
+
+  // 作答欄：〈So What〉的兩項作答出現在它的段落地圖上方
+  await go(r, "#jazz/unit-3");
+  await r.evaluate(() => document.querySelector('.work[data-work="miles-sowhat"] .ttl').click());
+  await r.evaluate(() => { document.querySelector('.work[data-work="miles-sowhat"] details.ans').open = true; });
+  ok("爵士課的作答欄也接上對照表", (await r.$eval('.work[data-work="miles-sowhat"] .yours', (y) => y.getAttribute("data-yours"))) === "jazz:3:1 jazz:3:2");
+
+  // 全部完成時，首頁換成爵士課自己的收尾文字
+  const done = {}; for (let n = 1; n <= 12; n++) done["jazz:" + n] = true;
+  const z = await page({ state: { done } });
+  await go(z, "#jazz");
+  ok("爵士課全部完成：首頁顯示這門課自己的下一步", /全部完成了[\s\S]*偏向哪一個時期/.test(await z.$eval(".thisweek", (e) => e.innerText)));
+  for (const x of [p, q, r, f, z]) await x.context().close();
+}
+
 /* ---------- K. 單一檔案版 ---------- */
 group("單一檔案版（dist/）");
 {
@@ -602,6 +719,8 @@ group("單一檔案版（dist/）");
   const shown = await p.waitForSelector("#content .card", { timeout: 4000 }).then(() => true).catch(() => false);
   ok("dist/index.html 直接點兩下就能開", shown);
   ok("單一檔案版沒有程式錯誤", !p.errors.length, p.errors.slice(0, 2).join(" | "));
+  await go2dist(p, "#jazz/unit-2");
+  ok("單一檔案版也包含爵士課", /藍調：十二小節的骨架/.test(await p.$eval("#content .card h2", (e) => e.textContent)));
   const d = fs.readFileSync(path.join(ROOT, "dist/index.html"), "utf8");
   ok("單一檔案版拿掉了找不到的圖檔連結，網站圖示改為內嵌", !/<[^>]+\sdata-pwa>/.test(d) && /rel="icon" href="data:image\/svg\+xml,/.test(d));
   await go2dist(p);

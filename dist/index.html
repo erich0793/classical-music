@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>聆聽課程｜古典音樂 24 週 · 台灣傳統音樂 8 單元</title>
-<meta name="description" content="兩門互相對照的聆聽課程：古典音樂 24 週、台灣傳統音樂 8 單元。每首曲目附版本推薦與 KKBOX／YouTube 雙連結。">
+<title>聆聽課程｜古典音樂 · 台灣傳統音樂 · 爵士樂</title>
+<meta name="description" content="三門互相對照的聆聽課程：古典音樂 24 週、台灣傳統音樂 8 單元、爵士樂 12 單元。每首曲目附版本推薦與 KKBOX／YouTube 雙連結。">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#8a5a2b">
 
@@ -12,13 +12,13 @@
      og:image 一定要寫完整網址，LINE 不吃相對路徑。換網域時這三個網址要一起改。 -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="聆聽課程">
-<meta property="og:title" content="聆聽課程｜古典音樂 24 週 · 台灣傳統音樂 8 單元">
-<meta property="og:description" content="99 首曲目、371 個版本推薦，KKBOX／YouTube 一鍵開啟。免費、免註冊，手機也能用。">
+<meta property="og:title" content="聆聽課程｜古典音樂 · 台灣傳統音樂 · 爵士樂">
+<meta property="og:description" content="三門課、133 首曲目、424 個版本推薦，KKBOX／YouTube 一鍵開啟。免費、免註冊，手機也能用。">
 <meta property="og:url" content="https://erich0793.github.io/classical-music/">
 <meta property="og:image" content="https://erich0793.github.io/classical-music/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="聆聽課程：古典音樂 24 週、台灣傳統音樂 8 單元">
+<meta property="og:image:alt" content="聆聽課程：古典音樂 24 週、台灣傳統音樂 8 單元、爵士樂 12 單元">
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary_large_image">
 
@@ -99,9 +99,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
 /* ---------- 課程切換器 ----------
    一次只顯示一門課的單元，側邊欄才不會被兩門課灌爆。 */
-.cswitch{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:0 0 14px;
+/* 課程數由 JS 決定，這裡用 grid-auto-flow:column 讓兩門或三門都能平均分配；
+   三門並排時每顆只剩約 75px，所以圖示放在名稱上方、名稱用短名（tab）。 */
+.cswitch{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:5px;margin:0 0 14px;
   background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px}
-.cbtn{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 6px;
+.cbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:7px 4px;text-align:center;
   border-radius:7px;font-size:calc(12.5px*var(--fs));font-weight:600;color:var(--mut);
   transition:background-color .15s,color .15s;min-height:40px;line-height:1.25}
 .cbtn:hover{color:var(--acc)}
@@ -335,7 +337,9 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
   border:1px solid var(--line);border-radius:11px;padding:14px 15px;background:var(--bg2)}
 .instfig{flex:none;width:76px;height:76px;color:var(--fg);
   background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:6px}
-.instbody{min-width:0}
+/* overflow-wrap:anywhere 讓長的英文字（「（pizzicato）」「Cannonball」）在不得已時可以斷開。
+   break-word 不行：它不影響最小寬度的計算，卡片照樣會被撐到比 320px 的螢幕還寬。 */
+.instbody{min-width:0;overflow-wrap:anywhere}
 .instname{font-size:calc(15.5px*var(--fs));font-weight:700;margin-bottom:6px}
 .instalias{font-size:calc(11.5px*var(--fs));font-weight:400;color:var(--mut);margin-left:8px}
 .instrow{font-size:calc(13px*var(--fs));line-height:1.7;margin-top:3px}
@@ -364,7 +368,7 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
   border-top:1px dashed var(--line);padding-top:10px}
 
 @media(max-width:520px){
-  .instgrid{grid-template-columns:1fr}
+  .instgrid{grid-template-columns:minmax(0,1fr)}
   .instcard{gap:11px;padding:12px 13px}
   .instfig{width:62px;height:62px}
   .cmpside .instfig{width:76px;height:76px}
@@ -603,6 +607,17 @@ th{background:var(--sel);font-weight:700;font-size:calc(13px*var(--fs));white-sp
     background:repeating-linear-gradient(transparent 0 1.5em,#ccc 1.5em calc(1.5em + 1px))}
   .askval{background:none;border:1px solid #ccc}
 }
+
+/* ---------- 首頁：其他課程 ---------- */
+/* minmax(0,1fr)：否則格線會照最長那顆按鈕的寬度撐開，「切換到台灣傳統音樂 →」
+   在最大字級下就把整個區塊推出 320px 的螢幕 */
+.others{margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.oc .iconbtn{white-space:normal;max-width:100%;text-align:left}
+.oc{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg);
+  display:grid;gap:6px;justify-items:start}
+.oc-t{display:flex;align-items:center;gap:8px;font-size:calc(15px*var(--fs))}
+.oc-t .ci{color:var(--acc);font-size:calc(16px*var(--fs))}
+.oc-p{font-size:calc(13.5px*var(--fs));color:var(--mut);line-height:1.75}
 
 </style>
 <script>
@@ -3162,6 +3177,36 @@ window.ASKS = {
     "6:0": { match: "寫下三個你聽到的差異", ask: "三個差異", eg: "例：1. ＿＿（一行一個）" },
     "8:0": { match: "器樂多還是歌樂多", ask: "器樂多還是歌樂多？漢人樂種多還是原住民族多？" },
     "8:2": { match: "做一次版本比較", ask: "兩個傳承者的版本，差在哪裡？" }
+  },
+  jazz: {
+    "1:2":  { match: "喊「One more time!」之後", ask: "Basie 喊了「One more time!」之後，樂團做了什麼？" },
+    "2:0":  { match: "又唱了一次同一句", ask: "第一句是不是唱了兩次？Armstrong 的短號在哪裡「回一句」？" },
+    "2:1":  { match: "回到這個小動機", ask: "Rollins 回到那個小動機幾次？他怎麼變它？" },
+    "3:0":  { match: "什麼時候已經完全離開", ask: "他什麼時候還在奏原曲？什麼時候已經完全離開？" },
+    "3:1":  { match: "記下獨奏的順序", ask: "獨奏的順序：誰先、誰後、什麼樂器？", eg: "例：1. ＿＿（樂器）　2. ＿＿……" },
+    "3:2":  { match: "這次找橋段", ask: "橋段（B 段）從幾分幾秒開始？", eg: "例：＿:＿＿" },
+    "3:3":  { match: "哪一個聽起來比較「怪」", ask: "哪一個版本比較「怪」？怪在哪裡？" },
+    "4:0":  { match: "先只跟短號", ask: "三條線（短號、單簧管、長號）各在做什麼？", eg: "例：單簧管 → ＿＿（一行一個）" },
+    "4:2":  { match: "Black Bottom Stomp", ask: "斷奏出現在哪裡？這首哪裡比較「有設計」？" },
+    "5:0":  { match: "前 15 秒", ask: "停了幾次？最高的音在哪裡？像在說話還是在唱歌？" },
+    "5:1":  { match: "一問一答的段落", ask: "一問一答的段落從幾分幾秒開始？", eg: "例：＿:＿＿" },
+    "5:2":  { match: "Potato Head Blues", ask: "跟單元 4 的集體即興比，差在哪裡？" },
+    "6:0":  { match: "輪流說話的地方", ask: "兩組聲部在哪裡輪流說話？", eg: "例：＿:＿＿　薩克斯風 → 銅管（一行一處）" },
+    "6:1":  { match: "Strange Fruit", ask: "她的聲音在哪幾個地方變得最冷、最平？" },
+    "6:2":  { match: "How High the Moon", ask: "你認出了哪幾首？" },
+    "7:1":  { match: "哪一段比較像「寫好的」", ask: "哪一段像寫好的？哪一段像當場說的？" },
+    "8:1":  { match: "回到起點", ask: "它在哪裡又回到起點？", eg: "例：＿:＿＿" },
+    "8:2":  { match: "數得出來嗎", ask: "數得住嗎？在哪裡數亂了？" },
+    "9:0":  { match: "誰在「問」？誰在「答」？", ask: "誰在問？誰在答？" },
+    "9:2":  { match: "哪一首比較容易跟著哼", ask: "哪一首比較容易哼？為什麼？" },
+    "10:0": { match: "Tommy Flanagan", ask: "Flanagan 的獨奏跟 Coltrane 比，哪裡比較「卡」？" },
+    "10:1": { match: "唸誦和那個低音型是什麼關係", ask: "唸誦和那個四音低音型是什麼關係？" },
+    "10:2": { match: "你覺得它是快還是慢", ask: "你覺得它是快還是慢？為什麼？" },
+    "11:0": { match: "它和單元 6 的 Ellington，差在哪裡", ask: "跟 Ellington 比，差在哪裡？" },
+    "11:2": { match: "兩人的唱法有什麼共同點", ask: "兩人的唱法有什麼共同點？" },
+    "12:0": { match: "是同一個思路嗎", ask: "是同一個思路嗎？為什麼？" },
+    "12:1": { match: "你聽到了幾段不同的音型", ask: "主旋律出現之前，你聽到了幾段不同的音型？", eg: "例：＿ 段" },
+    "12:2": { match: "你偏向哪一個時期", ask: "你偏向哪一個時期？" }
   }
 };
 
@@ -3191,6 +3236,22 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   T.brand = "台灣傳統音樂聆聽課程";
   T.brandSub = "8 單元 · YouTube 優先";
   T.foot = "樂種歸屬與版本推薦屬編者判斷。傳統音樂多為口傳，同一曲調在不同館閣、劇團、部落之間本就有差異。";
+  T.tab = "台灣傳統";
+
+  // 首頁上這門課自己的介紹，以及在另外兩門課首頁上的一句話
+  T.home = {
+    intro: "8 個單元，從南管到原住民族歌謠。<b>沒有固定進度</b>——一個單元想聽多久都可以。每首曲目附版本建議與備用搜尋字串，" +
+      "預設連往 <b>YouTube</b>（台灣傳統音樂在商業串流平台上收錄極不完整，YouTube 才是真正找得到東西的地方）。",
+    stats: [["8", "單元"], ["7", "個樂種"], ["$works", "首曲目"], ["$versions", "個版本建議"]],
+    guide: "<b>不知道從哪開始？</b>直接看<b>〈先聽這 10 首〉</b>。十首依衝擊力排序，約 90 分鐘，聽完主要地貌就大致完整了。",
+    buttons: [["p-start", "十　先聽這 10 首", true], ["p-cross", "橋　與古典音樂課的對照"], ["all", "顯示全部（一頁瀏覽／列印）"]],
+    note: "<b>先說清楚一件事：找不到指定版本是常態，不是你的問題。</b>" +
+      "傳統音樂多為口傳，同一曲調在不同館閣、劇團、部落之間本就不同，商業平台的收錄也極不完整。" +
+      "每首曲目下方都準備了多個備用搜尋字串，找到哪個聽哪個。",
+    pitch: "8 個單元，從南管到原住民族歌謠。<b>布農族 Pasibutbut 是複音最極端的例子，歌仔戲七字調就是主題與變奏。</b>",
+    done: "接下來是第 8 單元規劃的事：檢視 ★ 重聽區，看看你偏向器樂還是歌樂、漢人樂種還是原住民族——" +
+      "<b>那就是你的起點</b>。然後挑一個樂種深入，或去現場聽一次。"
+  };
 
   /* 這門課的預設與古典課不同，理由寫在設定頁：
      1. KKBOX 的台灣傳統音樂曲庫很薄，YouTube 才是真正找得到東西的地方
@@ -4249,7 +4310,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             { label: "Ravel《波麗露》", sub: "古典課第 18 週", q: "Ravel Bolero Dudamel", qa: "hifi" },
             { label: "北管〈風入松〉", sub: "本課單元 2", q: "北管 風入松", qa: "hifi" } ] } ] }
       ] },
-      { note: "<b>★ 重聽區跨課程共用。</b>兩門課的收藏放在一起，你可以直接看出自己偏向哪一邊——那個比例本身就是資訊。" }
+      { note: "<b>爵士課也有一頁對照</b>，其中兩組與本課直接相關：<b>七字調的「一曲多用」對上比波普的「舊和弦配新旋律」</b>，以及<b>客家山歌的對唱對上硬式比波普的一問一答</b>。切到爵士課，看〈與另外兩門課的對照〉。" },
+      { note: "<b>★ 重聽區跨課程共用。</b>所有課程的收藏放在一起，你可以直接看出自己偏向哪一邊——那個比例本身就是資訊。" }
     ]
   },
 
@@ -4312,24 +4374,1337 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 
 </script>
 <script>
+/* 爵士樂．課程骨架
+   分層標記沿用另外兩門課：【史】史實層／【析】分析層／【選】策展層。
+   爵士史裡流傳最廣的故事有不少是傳說（誰發明了 scat、誰第一個吹出某個樂句），
+   凡屬軼事而非可查證的錄音事實，一律標【析】並寫明「據說」。 */
+(function () {
+  var C = (window.COURSES = window.COURSES || {});
+  var J = (C.jazz = C.jazz || {});
+
+  J.id = "jazz";
+  J.label = "爵士樂";
+  J.short = "爵";
+  // 降記號：藍調音就是「被降低的音」，這門課最核心的那個聲音
+  J.icon = "♭";
+  J.unitWord = "單元";
+  J.brand = "爵士樂聆聽課程";
+  J.brandSub = "12 單元 · KKBOX 適配版";
+  J.foot = "版本推薦、錄音年份與音質標記屬編者整理，實際曲庫與音質請以 KKBOX App 內顯示為準。";
+  J.tab = "爵士樂";
+
+  /* 預設與古典課不同的一項：不做 Hi-Res 優先排序。
+     爵士最重要的錄音集中在 1920–60 年代，同一首曲子的「原始錄音」幾乎一定是
+     最該先聽的那個——依音質排序會把 1939 年的〈Body and Soul〉排到某個
+     近年翻唱版本後面，那正好與這門課的用意相反。 */
+  J.defaults = { platform: "kkbox", hiresFirst: false };
+
+  J.core = {
+    meta: {
+      title: "爵士樂聆聽課程",
+      subtitle: "12 個單元 · 從紐奧良到融合爵士",
+      version: "v1.0"
+    },
+
+    quality: {
+      hires: { label: "Hi-Res 優先", short: "HR", desc: "1950 年代末以後的立體聲錄音，多已有 24bit 重製；在 KKBOX 上出現 Hi-Res 標記的機率最高" },
+      hifi: { label: "Hi-Fi 無損", short: "HiFi", desc: "1950 年代的錄音（多為單聲道或早期立體聲）之數位重製，通常為無損等級" },
+      historic: { label: "歷史錄音", short: "歷史", desc: "1920–40 年代的 78 轉唱片錄音。雜訊多、低音少，但這是爵士誕生的現場，沒有替代品" }
+    },
+
+    tiers: {
+      "史": { name: "史實層", en: "Historical Fact", desc: "可查證的客觀事實（錄音日期、唱片公司、樂手、事件）", verify: "可由唱片資料（discography）與文獻查證" },
+      "析": { name: "分析層", en: "Analytical", desc: "樂評與學界的通說或主流詮釋，非唯一定論", verify: "可查證「有此說法」，但說法本身仍有爭議" },
+      "選": { name: "策展層", en: "Curatorial", desc: "編者的教學判斷，無客觀對錯", verify: "不可查證，屬編者選擇" }
+    },
+
+    video: {
+      name: "YouTube 搜尋",
+      searchLabel: "搜尋本單元主題",
+      searchBase: "https://www.youtube.com/results?search_query=",
+      why: "爵士的教學影片很多，但品質參差，沒有單一權威頻道。用主題關鍵字搜尋，挑有實際示範演奏的。"
+    },
+
+    modules: [
+      { id: "j1", label: "模組一", title: "聽爵士的基本工具", weeks: [1, 2, 3],
+        goal: "爵士和古典最大的差別不是樂器，是兩件事：搖擺（節奏怎麼走）和即興（每一次都不一樣）。先把這兩件事和它們依附的骨架聽懂，後面九個單元就有了座標。" },
+      { id: "j2", label: "模組二", title: "爵士的誕生與搖擺年代", weeks: [4, 5, 6],
+        goal: "1920–40 年代。從紐奧良「三條線一起即興」，到阿姆斯壯把獨奏者推到台前，再到大樂團讓爵士成為全美國的舞曲。" },
+      { id: "j3", label: "模組三", title: "現代爵士", weeks: [7, 8, 9],
+        goal: "1940–60 年代。爵士從跳舞的音樂變成聽的音樂：比波普把速度與和聲推到極限，酷派與調式往反方向做減法，硬式比波普再把藍調與教會音樂找回來。" },
+      { id: "j4", label: "模組四", title: "打破邊界", weeks: [10, 11, 12],
+        goal: "1959 年之後，爵士同時往三個方向擴張：往內（柯川的和聲與靈性）、往外（自由爵士拿掉和弦）、往旁邊（拉丁、巴西、搖滾與電子）。" }
+    ],
+
+    // 首頁上這門課自己的介紹，以及在另外兩門課首頁上的一句話
+    home: {
+      intro: "12 個單元，從 1920 年代的紐奧良一路到 1970 年代的融合爵士。每首曲目都附<b>原始錄音與值得比較的版本</b>，可直接連往 KKBOX 或 YouTube。" +
+        "<b>爵士的「版本」和古典不同</b>：古典是同一份樂譜的不同演出，爵士是同一個骨架上每一次<b>重新即興</b>——所以這裡最上面那個通常就是原始錄音。",
+      stats: [["12", "單元"], ["$works", "首曲目"], ["$versions", "個版本"], ["4", "個模組"]],
+      guide: "<b>每一個單元怎麼用</b><br>" +
+        "1. 先讀「本單元概念」，<b>知道這次要聽的是哪一件事</b>（節奏組？藍調的骨架？誰在獨奏？）<br>" +
+        "2. 每首只聽最上面那個版本就好，聽<b>兩到三遍</b>，每一遍照任務只注意一件事<br>" +
+        "3. 時間不夠就只做第一項「必做」——爵士最需要的是<b>反覆聽同一首</b>，不是聽很多首",
+      buttons: [["p-start", "十　先聽這 10 首", true], ["p-listen", "耳　怎麼聽一首爵士樂"], ["p-cross", "橋　與另外兩門課的對照"], ["all", "顯示全部（一頁瀏覽／列印）"]],
+      pitch: "12 個單元，從紐奧良到融合爵士。<b>藍調的十二小節反覆就是主題與變奏，紐奧良的集體即興就是複音</b>——古典課的四項聆聽工具，在這門課全部用得上。",
+      done: "接下來是第 12 單元規劃的事：檢視 ★ 重聽區，看看你偏向哪一個時期——紐奧良、搖擺、比波普、調式還是融合。<b>那就是你的起點</b>。然後挑一位樂手，把他最重要的三張專輯從頭聽完。"
+    },
+
+    glossary: [
+      { t: "搖擺（swing）", d: "把兩個等長的八分音符彈成「長—短」，並把重拍放在第 2、4 拍。這是爵士節奏感的核心，但很難只用文字說清楚——<b>單元 1 整個在聽這件事</b>。" },
+      { t: "節奏組（rhythm section）", d: "鋼琴、低音提琴、鼓（有時加吉他）。在獨奏者背後提供時間與和聲的那一組人。" },
+      { t: "walking bass", d: "低音提琴每拍一個音、像在走路的低音線。搖擺爵士最穩定的那個聲音。" },
+      { t: "comping", d: "鋼琴或吉他在獨奏者背後的伴奏（accompanying 的縮寫）。不規則、短促，像在跟獨奏者對話。" },
+      { t: "藍調（blues）", d: "兩個意思：一種 <b>12 小節的曲式</b>（三個和弦的固定框架），以及一種<b>聲音</b>（藍調音：比大調音階略低、介於大小調之間的音）。" },
+      { t: "標準曲（standard）", d: "爵士樂手共用的曲庫，多半來自 1920–50 年代的百老匯與好萊塢歌曲。樂手熟記它們的和弦，可以不經排練直接上台合奏。" },
+      { t: "chorus", d: "在爵士裡指「把整首曲子的骨架走完一輪」。一個獨奏者可能吹一個 chorus，也可能吹十個。（和流行歌的「副歌」意思不同。）" },
+      { t: "主題（head）", d: "曲子的旋律本身。小編制爵士的標準流程是：主題 → 輪流獨奏 → 主題。" },
+      { t: "橋段（bridge）", d: "32 小節 AABA 曲式中的 B 段——前面兩次 A 之後「換一個地方」的那 8 小節。找得到橋段，就不會在一首爵士樂裡迷路。" },
+      { t: "即興（improvisation）", d: "當場創作旋律。爵士的即興不是亂吹：它<b>建立在曲子的和弦與曲式上</b>，像在同一張地圖上每一次走不同的路。" },
+      { t: "scat", d: "用沒有意義的音節（ba-da-ba-doo）即興演唱，把人聲當成樂器。Louis Armstrong 讓它流行，Ella Fitzgerald 把它推到極致。" },
+      { t: "呼叫與回應（call and response）", d: "一句問、一句答。來自非裔美國人的教會與勞動歌，在大樂團的聲部之間、硬式比波普的主題裡都隨處可見。" },
+      { t: "比波普（bebop）", d: "1940 年代中在紐約發展的風格：極快、和聲複雜、小編制。爵士從舞曲變成聆聽的藝術，就從這裡開始。" },
+      { t: "調式（modal）", d: "不再快速換和弦，而是在一個音階上停留很久。Miles Davis《Kind of Blue》（1959）是代表作。" },
+      { t: "弱音器（mute）", d: "塞進銅管樂器喇叭口的配件，改變音色。Miles Davis 招牌的 Harmon 弱音器，聲音像被摀住、帶金屬的嗡鳴。" },
+      { t: "clave", d: "拉丁音樂的節奏骨架：一個 3＋2（或 2＋3）的不對稱節奏型，所有樂器都圍繞它排列。" },
+      { t: "融合爵士（fusion）", d: "1960 年代末起，把電吉他、電鋼琴、合成器與搖滾節奏帶進爵士的風格。" }
+    ],
+
+    caveats: [
+      { t: "「誰發明了爵士」沒有答案", d: "爵士是在紐奧良這座港口城市，由非裔美國人的藍調、靈歌、銅管樂隊與拉格泰姆混合而成的，不是一個人的發明。Jelly Roll Morton 自稱「爵士的發明者」，那是誇大。" },
+      { t: "第一張爵士唱片是白人樂團錄的", d: "1917 年第一張被稱為爵士的唱片，由白人樂團 Original Dixieland Jass Band 錄製。<b>爵士史裡，創造者與最早獲得商業回報的人常常不是同一群人</b>——Benny Goodman 被稱為「搖擺之王」也有同樣的爭議。本課程如實陳述，不迴避。" },
+      { t: "傳說不等於史實", d: "「Armstrong 唱到一半歌詞紙掉了，所以發明了 scat」之類的故事流傳極廣，但無法查證。本課程把這類軼事標為【析】並寫明「據說」。" },
+      { t: "作者歸屬的爭議", d: "部分名曲的作者署名有爭議，例如〈Blue in Green〉唱片上署名 Miles Davis，Bill Evans 日後表示是他寫的。本課程兩說並陳。" },
+      { t: "早期錄音的音質", d: "1920–40 年代的 78 轉唱片雜訊多、低音少，鼓聲常常幾乎錄不到。<b>請不要因此跳過</b>——這是爵士誕生的現場，沒有替代品。" },
+      { t: "「融合是不是爵士」", d: "這個爭論從 1970 年代持續至今，本課程不作裁定。同樣的話在 1940 年代也被拿來批評比波普。" },
+      { t: "版本與重發", d: "同一個錄音常被收進許多不同的合輯與重發版，串流平台上的專輯名稱可能與本課程寫的不同。<b>找演奏者＋曲名＋年份</b>最準。" }
+    ]
+  };
+})();
+
+</script>
+<script>
+/* 爵士樂．樂器線稿
+   與另外兩門課同一套做法：手繪內嵌 SVG，用 currentColor 描邊（深色模式自動變色），
+   .hl 標出辨識關鍵。小號、長號、單簧管、低音提琴直接沿用古典課的線稿——
+   同一件樂器在兩門課裡長得一樣，這本身就是要讓人看見的事。 */
+(function () {
+  var C = (window.COURSES = window.COURSES || {});
+  var J = (C.jazz = C.jazz || {});
+  var K = (C.classical && C.classical.instSVG) || {};
+
+  var S = function (title, body) {
+    return '<svg viewBox="0 0 100 100" role="img" aria-label="' + title + '"><title>' + title + "</title>" + body + "</svg>";
+  };
+  // 以中心縮放，用來畫「同一個形狀、不同尺寸」的真實比例對照
+  var G = function (sc, ty, body) {
+    return '<g transform="translate(50 ' + ty + ") scale(" + sc + ') translate(-50 -50)">' + body + "</g>";
+  };
+
+  /* 薩克斯風家族共用一個 J 字形的管身。中音與次中音的形狀幾乎相同，
+     差在尺寸，以及次中音的吹管（脖子）多一個彎——對照圖照真實比例縮放。 */
+  var SAX_BODY =
+    '<path d="M42 22 L37 74 C36 90 66 94 70 76 L75 58 L62 58 L63 70 C63 80 52 82 51 72 L48 22 Z"/>' +
+    '<path d="M62 58 L75 58 L86 46 C80 43 66 43 61 47 Z" class="hl"/>' +
+    '<circle cx="43.5" cy="32" r="2.2"/><circle cx="42.5" cy="42" r="2.2"/>' +
+    '<circle cx="41.5" cy="52" r="2.2"/><circle cx="40.5" cy="62" r="2.2"/>' +
+    '<path d="M46 76 C48 80 54 80 56 77" stroke-width="1.2"/>';
+  var ALTO_NECK =
+    '<path d="M45 22 C45 15 41 11 34 11" stroke-width="2.8"/>' +
+    '<path d="M34 8 L26 10 L27 14 L34 14 Z"/>';
+  // 次中音：吹管先往上拱、再彎下來接吹嘴——這個「駝峰」是一眼分辨的地方
+  var TENOR_NECK =
+    '<path d="M45 22 C45 12 40 6 34 8 C31 9 30 12 28 13" stroke-width="2.8" class="hl"/>' +
+    '<path d="M28 10 L20 13 L22 17 L29 15 Z"/>';
+
+  var SVG = {
+    trumpet: K.trumpet || "",
+    trombone: K.trombone || "",
+    clarinet: K.clarinet || "",
+    bass: K.bass || "",
+
+    /* 加弱音器的小號：沿用小號線稿，喇叭口塞進一個 Harmon 弱音器。
+       辨識關鍵改成弱音器本身，所以把原本喇叭口的填色拿掉。 */
+    mute: (K.trumpet || "")
+      .replace(/小號線稿/g, "加弱音器的小號線稿")
+      .replace(' class="hl"', "")
+      .replace("</svg>",
+        '<path d="M70 41 C80 39 88 42 90 50 C88 58 80 61 70 59 C67 55 67 45 70 41 Z" class="hl"/>' +
+        '<path d="M90 50 H97" stroke-width="2.4"/><circle cx="97" cy="50" r="2"/></svg>'),
+
+    alto: S("中音薩克斯風線稿", ALTO_NECK + SAX_BODY),
+    tenor: S("次中音薩克斯風線稿", TENOR_NECK + SAX_BODY.replace(' class="hl"', "")),
+
+    /* 高音薩克斯風：直的。與單簧管最大的差別是管身一路愈來愈粗（圓錐管），
+       單簧管則粗細幾乎不變、只在最下面張開 */
+    soprano: S("高音薩克斯風線稿",
+      '<path d="M48 4 H52 L53 13 H47 Z"/>' +
+      '<path d="M47 13 H53 L58 84 C60 88 62 92 63 95 H37 C38 92 40 88 42 84 Z" class="hl"/>' +
+      '<circle cx="50" cy="26" r="2"/><circle cx="50" cy="37" r="2.2"/>' +
+      '<circle cx="50" cy="49" r="2.4"/><circle cx="50" cy="61" r="2.6"/>' +
+      '<circle cx="50" cy="73" r="2.8"/>'),
+
+    /* 爵士鼓：一個人同時操作好幾件。辨識關鍵是右上那片大的 ride 鈸——
+       搖擺的「叮、叮ㄉ叮」就是它 */
+    drums: S("爵士鼓線稿",
+      '<circle cx="50" cy="72" r="18"/><circle cx="50" cy="72" r="5" stroke-width="1.4"/>' +
+      '<ellipse cx="50" cy="47" rx="9" ry="3"/><path d="M41 47 V53 C41 56 59 56 59 53 V47" />' +
+      '<ellipse cx="23" cy="60" rx="10" ry="3"/><path d="M13 60 V65 C13 68 33 68 33 65 V60"/>' +
+      '<path d="M23 68 V92 M18 92 L23 84 L28 92"/>' +
+      '<ellipse cx="11" cy="38" rx="8" ry="1.8"/><ellipse cx="11" cy="41" rx="8" ry="1.8"/>' +
+      '<path d="M11 43 V92 M6 92 L11 86 L16 92"/>' +
+      '<ellipse cx="80" cy="32" rx="16" ry="3.2" class="hl"/>' +
+      '<path d="M80 35 V92 M74 92 L80 86 L86 92"/>'),
+
+    /* 平台鋼琴（側面）：琴蓋掀開。鍵盤是辨識關鍵——但真正要聽的是它的兩個角色 */
+    piano: S("鋼琴線稿",
+      '<path d="M18 44 H82 C90 44 93 50 88 56 H18 Z"/>' +
+      '<path d="M20 44 L86 20" stroke-width="2"/><path d="M62 44 L66 28" stroke-width="1.4"/>' +
+      '<path d="M4 44 H18 V51 H4 Z" class="hl"/>' +
+      '<path d="M7 44 V48 M10 44 V48 M13 44 V48 M16 44 V48" stroke-width="1"/>' +
+      '<path d="M22 56 V84 M82 56 V84 M50 56 V76"/>' +
+      '<path d="M45 76 H55 M47 76 V86 M53 76 V86"/>'),
+
+    /* 空心 archtop 吉他：爵士吉他的典型樣子，有 f 孔、琴身大而深 */
+    guitar: S("爵士吉他線稿",
+      '<path d="M50 40 C38 40 32 46 34 54 C35 58 33 60 32 64 C30 76 38 95 50 95 C62 95 70 76 68 64 C67 60 65 58 66 54 C68 46 62 40 50 40 Z" class="hl"/>' +
+      '<path d="M47 40 V9 H53 V40"/>' +
+      '<path d="M46 9 L45 2 H55 L54 9"/>' +
+      '<path d="M47 15 H53 M47 21 H53 M47 27 H53 M47 33 H53" stroke-width="0.9"/>' +
+      '<path d="M41 60 C39 66 40 72 42 76 M59 60 C61 66 60 72 58 76" stroke-width="1.3"/>' +
+      '<path d="M45 82 H55 L53 89 H47 Z"/>' +
+      '<path d="M48.5 9 V82 M51.5 9 V82" stroke-width="0.7"/>')
+  };
+  // 中音／次中音對照用：同一個管身照真實比例縮放（中音約為次中音的八成）
+  SVG.altoSmall = S("中音薩克斯風線稿", G(0.8, 58, ALTO_NECK + SAX_BODY));
+  SVG.tenorBig = SVG.tenor;
+
+  J.instruments = [
+    { group: "前排：旋律樂器", groupNote: "負責主旋律與獨奏",
+      id: "trumpet", svg: SVG.trumpet, name: "小號", alias: "trumpet",
+      look: "<b>三個直立的活塞</b>，喇叭口朝前",
+      sound: "明亮、直接。爵士最常見的領頭樂器——Louis Armstrong、Dizzy Gillespie、Miles Davis",
+      where: "單元 5（Armstrong）、單元 7（Gillespie）、單元 3、8（Miles Davis）" },
+    { group: "前排：旋律樂器", id: "mute", svg: SVG.mute, name: "加弱音器的小號", alias: "muted trumpet",
+      look: "喇叭口<b>塞著一個金屬的弱音器</b>",
+      sound: "像被摀住、帶金屬的嗡鳴，又近又私密。<b>Miles Davis 的招牌聲音</b>",
+      where: "單元 3〈'Round Midnight〉的 Miles Davis 版、單元 4 King Oliver 的「哇哇」聲" },
+    { group: "前排：旋律樂器", id: "trombone", svg: SVG.trombone, name: "長號", alias: "trombone",
+      look: "<b>沒有按鍵，用滑管</b>前後推拉",
+      sound: "低、厚，<b>能做出連續的滑音</b>——紐奧良爵士的長號就靠這個把一句推向下一句",
+      where: "單元 4（集體即興）、單元 6（大樂團）" },
+    { group: "前排：旋律樂器", id: "clarinet", svg: SVG.clarinet, name: "單簧管", alias: "clarinet",
+      look: "黑色直管，頂端有吹嘴，<b>管身粗細幾乎不變</b>",
+      sound: "圓潤、靈活。紐奧良與搖擺年代的主角之一，比波普之後就少見了",
+      where: "單元 4（集體即興）、單元 6（Benny Goodman）" },
+    { group: "前排：旋律樂器", id: "alto", svg: SVG.alto, name: "中音薩克斯風", alias: "alto saxophone",
+      look: "<b>彎成 J 字形的金屬管</b>，喇叭口朝上。四種薩克斯風裡最常見的尺寸",
+      sound: "明亮、靈活，偏高。Charlie Parker、Cannonball Adderley、Paul Desmond",
+      where: "單元 7〈Ko-Ko〉、單元 8〈Take Five〉、單元 10〈Lonely Woman〉" },
+    { group: "前排：旋律樂器", id: "tenor", svg: SVG.tenor, name: "次中音薩克斯風", alias: "tenor saxophone",
+      look: "比中音大一號，<b>吹管（脖子）多一個彎</b>",
+      sound: "低、厚，帶沙啞的氣聲。<b>爵士最具代表性的聲音之一</b>",
+      where: "單元 3〈Body and Soul〉、單元 2〈Blue Seven〉、單元 10 Coltrane" },
+    { group: "前排：旋律樂器", id: "soprano", svg: SVG.soprano, name: "高音薩克斯風", alias: "soprano saxophone",
+      look: "<b>直的</b>，像金屬做的單簧管，但<b>管身一路愈來愈粗</b>",
+      sound: "最高、最尖，帶一點鼻音",
+      where: "單元 10〈My Favorite Things〉" },
+
+    { group: "節奏組", groupNote: "在獨奏者背後提供時間與和聲",
+      id: "piano", svg: SVG.piano, name: "鋼琴", alias: "piano",
+      look: "平台鋼琴，琴蓋掀開",
+      sound: "<b>一人分飾兩角</b>：獨奏時是旋律樂器；替別人伴奏（comping）時，丟出不規則的短和弦",
+      where: "單元 1（Basie）、單元 3（Monk）、單元 8（Bill Evans）" },
+    { group: "節奏組", id: "bass", svg: SVG.bass, name: "低音提琴", alias: "double bass",
+      look: "最大的提琴，立在地上",
+      sound: "<b>爵士裡幾乎都用手指撥</b>（pizzicato），很少用弓。walking bass 每拍一個音",
+      where: "單元 1，以及每一個單元的最底下" },
+    { group: "節奏組", id: "drums", svg: SVG.drums, name: "爵士鼓", alias: "drum kit",
+      look: "一個人同時操作好幾件：大鼓、小鼓、hi-hat、<b>ride 鈸</b>",
+      sound: "<b>ride 鈸的「叮、叮ㄉ叮」是搖擺的骨架</b>；hi-hat 踩在第 2、4 拍",
+      where: "單元 1、單元 7（Max Roach）、單元 9（Art Blakey）" },
+    { group: "節奏組", id: "guitar", svg: SVG.guitar, name: "吉他", alias: "archtop guitar",
+      look: "爵士常用<b>空心、有 f 孔</b>的 archtop 吉他",
+      sound: "搖擺年代多半在節奏組裡每拍刷一下和弦，後來才成為獨奏樂器",
+      where: "單元 1（Count Basie 樂團的 Freddie Green）" }
+  ];
+
+  J.instCompare = [
+    { title: "中音 vs. 次中音薩克斯風（看尺寸與脖子——本圖為真實比例）",
+      a: { svg: SVG.altoSmall, name: "中音 alto", d: "較小，<b>吹管幾乎直接接到吹嘴</b>" },
+      b: { svg: SVG.tenorBig, name: "次中音 tenor", d: "大一號，<b>吹管先往上拱、再彎下來</b>" },
+      note: "形狀幾乎一樣，所以看圖只能靠比例與脖子。<b>聽才是真的判準</b>：中音明亮、偏高；次中音低、厚、帶沙啞的氣聲。Charlie Parker 吹中音，Coleman Hawkins 與 John Coltrane（多數時候）吹次中音。" },
+
+    { title: "單簧管 vs. 高音薩克斯風（兩個都是直的）",
+      a: { svg: SVG.clarinet, name: "單簧管 clarinet", d: "黑色木管，<b>粗細幾乎不變</b>，只在最下面張開" },
+      b: { svg: SVG.soprano, name: "高音薩克斯風 soprano", d: "金屬管，<b>一路愈來愈粗</b>" },
+      note: "聲音上：單簧管圓潤柔軟；高音薩克斯風更尖、更亮，帶鼻音。紐奧良與搖擺年代用單簧管，<b>Coltrane 的〈My Favorite Things〉之後</b>，高音薩克斯風才在爵士裡多起來。" },
+
+    { title: "開放 vs. 加弱音器的小號（看喇叭口）",
+      a: { svg: SVG.trumpet, name: "開放 open", d: "喇叭口<b>開著</b>" },
+      b: { svg: SVG.mute, name: "加弱音器 muted", d: "喇叭口<b>塞著弱音器</b>" },
+      note: "同一把樂器、兩種聲音：開放的小號明亮、直接打到你臉上；加了 Harmon 弱音器，聲音像被摀住、帶金屬嗡鳴、彷彿貼在耳邊。<b>單元 3〈'Round Midnight〉的 Miles Davis 版就是後者</b>。" }
+  ];
+})();
+
+</script>
+<script>
+/* 爵士樂．曲目資料庫
+   欄位沿用另外兩門課。兩處用法不同：
+   - en 放「專輯 · 年份」而不是英文曲名——爵士的曲名本來就是英文，
+     重複一次沒有意義；專輯與年份才是在串流平台上找到它的關鍵。
+   - composer 放「領銜樂手」。爵士的署名單位是演出者，不是作曲者：
+     同一首〈Body and Soul〉，Hawkins 版和 Coltrane 版是兩件不同的作品。
+   versions 的第一個幾乎一定是原始錄音，所以這門課預設不依音質重排（見 core）。 */
+(function () {
+  var J = (window.COURSES = window.COURSES || {}).jazz;
+  J.works = {
+
+  /* ---------- 單元 1：搖擺與節奏組 ---------- */
+  "basie-oneoclock": {
+    title: "〈One O'Clock Jump〉", en: "Decca · 1937", composer: "Count Basie Orchestra",
+    q: "Count Basie One O'Clock Jump",
+    bg: "Count Basie 樂團的招牌曲，1937 年 7 月為 Decca 錄製。這首是 <b>12 小節藍調</b>，結構很特別：<b>開頭是 Basie 的鋼琴與節奏組，中間是一段接一段的獨奏，大家最熟的那段旋律反而在最後才出現</b>。它不是先寫好的曲子，而是樂團在演出中靠耳朵慢慢「長」出來的幾個重複短樂句（riff），稱為 head arrangement。",
+    pick: "<b>這首要聽的不是旋律，是背景。</b>獨奏者換了一個又一個，但底下的低音提琴、吉他、鼓從頭到尾沒有變——那就是搖擺。",
+    form: "12 小節藍調",
+    answer: {
+      label: "🔒 <b>聽點對照</b>",
+      head: ["段落", "聽什麼"],
+      rows: [
+        ["開頭", "Basie 的鋼琴＋節奏組。鋼琴彈得很少，<b>留白本身就是他的風格</b>"],
+        ["中段", "一段接一段的獨奏（薩克斯風、小號、長號……），<b>每一段都走完一輪 12 小節</b>"],
+        ["結尾", "全團用幾個很短的重複樂句（riff）互相疊上去——<b>最有名的旋律在這裡才出現</b>"]
+      ],
+      note: "如果你第一遍覺得「好像沒有旋律」，那就聽對了。這首的主角是節奏組：Basie（鋼琴）、Freddie Green（吉他）、Walter Page（低音提琴）、Jo Jones（鼓），當時被稱為 <b>All-American Rhythm Section</b>。"
+    },
+    versions: [
+      { p: "Count Basie Orchestra", l: "Decca（原始錄音）", y: 1937, qa: "historic", t: ["ref"], q: "Count Basie One O'Clock Jump 1937", w: "原始錄音。音質受限，但這就是搖擺年代的聲音。" },
+      { p: "Count Basie Orchestra", l: "後期錄音或現場", y: 0, qa: "hifi", t: ["live"], q: "Count Basie Orchestra One O'Clock Jump live", w: "Basie 樂團演奏這首數十年，後期錄音音質好得多，節奏組更容易聽清楚。" }
+    ]
+  },
+
+  "basie-aprilparis": {
+    title: "〈April in Paris〉", en: "April in Paris · 1955", composer: "Count Basie Orchestra",
+    q: "Count Basie April in Paris",
+    bg: "原為 Vernon Duke 1932 年的百老匯歌曲，Basie 樂團 1955 年的版本（編曲 Wild Bill Davis）讓它成為搖擺大樂團的代表作之一。<b>結尾 Basie 喊了一聲「One more time!」，樂團就把結尾再奏一次</b>——這種當場的決定，正是爵士與古典最不同的地方：樂譜上沒有寫，但每個人都知道該怎麼接。",
+    pick: "和〈One O'Clock Jump〉連著聽：相隔 18 年，同一個樂團、同一種節奏組，錄音技術差很多——<b>這次你應該聽得清楚低音提琴了</b>。",
+    form: "32 小節（標準曲）",
+    versions: [
+      { p: "Count Basie Orchestra", l: "Clef／Verve", y: 1955, qa: "hifi", t: ["ref", "entry"], q: "Count Basie April in Paris 1955", w: "原始錄音，搖擺大樂團入門最友善的一首。" },
+      { p: "Ella Fitzgerald & Louis Armstrong", l: "Verve《Ella and Louis》", y: 1956, qa: "hifi", t: [], q: "Ella Fitzgerald Louis Armstrong April in Paris Ella and Louis", w: "同一首歌的人聲版本。爵士標準曲的另一種樣子。" }
+    ]
+  },
+
+  /* ---------- 單元 2：藍調 ---------- */
+  "bessie-stlouis": {
+    title: "〈St. Louis Blues〉", en: "Columbia · 1925", composer: "Bessie Smith",
+    q: "Bessie Smith St Louis Blues",
+    bg: "W. C. Handy 1914 年發表的〈St. Louis Blues〉是最早廣為流傳的藍調歌曲之一。1925 年 1 月，「藍調皇后」Bessie Smith 為 Columbia 錄下這個版本，伴奏只有兩個人：<b>Louis Armstrong 的短號與 Fred Longshaw 的簧風琴</b>。每唱完一句，Armstrong 就用短號回一句——<b>人聲和樂器在對話</b>。",
+    pick: "這首要聽的是<b>歌詞的形狀</b>：同一句唱兩次，第三句回答。這就是藍調的 AAB。",
+    form: "藍調（AAB 歌詞）",
+    versions: [
+      { p: "Bessie Smith（Louis Armstrong 短號）", l: "Columbia", y: 1925, qa: "historic", t: ["ref"], q: "Bessie Smith St Louis Blues Louis Armstrong 1925", w: "原始錄音。藍調人聲的源頭之一。" },
+      { p: "Louis Armstrong", l: "Columbia《Louis Armstrong Plays W.C. Handy》", y: 1954, qa: "hifi", t: [], q: "Louis Armstrong St Louis Blues Plays W.C. Handy", w: "29 年後，當年的伴奏者自己唱——同一首藍調，換成搖擺樂團的版本。" }
+    ]
+  },
+
+  "rollins-blueseven": {
+    title: "〈Blue Seven〉", en: "Saxophone Colossus · 1956", composer: "Sonny Rollins",
+    q: "Sonny Rollins Blue Seven",
+    bg: "收在 1956 年錄音的《Saxophone Colossus》（Prestige），被視為 Rollins 最重要的專輯，同一張還有〈St. Thomas〉。樂手：Tommy Flanagan 鋼琴、Doug Watkins 低音提琴、Max Roach 鼓。<b>1958 年作曲家暨樂評 Gunther Schuller 專文分析這首</b>，指出 Rollins 的獨奏不是一串隨意的樂句，而是圍繞主題裡的一個小動機不斷發展——<b>像古典作曲家在發展部裡做的事</b>。",
+    pick: "<b>先記住主題開頭那幾個音</b>，然後聽 Rollins 怎麼一次又一次把它拿回來。",
+    form: "12 小節藍調",
+    answer: {
+      label: "🔒 <b>聽點對照</b>",
+      text: "開頭由<b>低音提琴獨自</b>走出藍調的節奏，然後 Rollins 奏出主題——一個很短、有點怪的動機。<b>他的整段獨奏一直回到這個動機</b>：拆開、移高、放慢、加花，再組回來。",
+      note: "這就是 Schuller 那篇評論〈Sonny Rollins and the Challenge of Thematic Improvisation〉的論點。對照古典課第 8 週的「發展部」：素材被拆解、變形、重組——<b>差別只在這裡是當場發生的</b>。"
+    },
+    versions: [
+      { p: "Sonny Rollins", l: "Prestige《Saxophone Colossus》", y: 1956, qa: "hifi", t: ["ref"], q: "Sonny Rollins Blue Seven Saxophone Colossus 1956", w: "原始錄音（Rudy Van Gelder 錄音室）。" }
+    ]
+  },
+
+  "miles-allblues": {
+    title: "〈All Blues〉", en: "Kind of Blue · 1959", composer: "Miles Davis",
+    q: "Miles Davis All Blues",
+    bg: "《Kind of Blue》的第四首。<b>這是一首藍調，但是 6/8 拍</b>——每小節六拍，聽起來像在搖晃，而不是在走路。骨架仍然是 12 小節，只是第 9、10 小節換上了不一樣的和弦顏色。",
+    pick: "和〈Blue Seven〉連著聽：同樣是藍調，<b>拍子一換，整首的性格就變了</b>。",
+    form: "12 小節藍調（6/8 拍）",
+    versions: [
+      { p: "Miles Davis", l: "Columbia《Kind of Blue》", y: 1959, qa: "hires", t: ["ref", "entry"], q: "Miles Davis All Blues Kind of Blue", w: "原始錄音，有高解析重製版。" }
+    ]
+  },
+
+  /* ---------- 單元 3：標準曲、曲式與即興 ---------- */
+  "hawkins-bodysoul": {
+    title: "〈Body and Soul〉", en: "Bluebird · 1939", composer: "Coleman Hawkins",
+    q: "Coleman Hawkins Body and Soul",
+    bg: "1930 年的百老匯歌曲（Johnny Green 作曲）。1939 年 10 月，次中音薩克斯風手 Coleman Hawkins 錄下這首——據說是錄音結束前臨時加錄的。<b>他幾乎一開始就離開原曲旋律，整整兩輪都在和弦上即興</b>，結果成了暢銷唱片。它常被視為爵士史的轉折點：<b>一般聽眾第一次為一段幾乎聽不到原曲旋律的即興買單</b>。",
+    pick: "<b>先聽 Billie Holiday 的版本（下面第二個）記住原曲旋律</b>，再回來聽 Hawkins——你才聽得出他離開了多遠。",
+    form: "32 小節 AABA",
+    versions: [
+      { p: "Coleman Hawkins", l: "Bluebird（RCA Victor）", y: 1939, qa: "historic", t: ["ref"], q: "Coleman Hawkins Body and Soul 1939", w: "原始錄音。爵士即興史上最重要的三分鐘之一。" },
+      { p: "Billie Holiday", l: "Okeh", y: 1940, qa: "historic", t: ["entry"], q: "Billie Holiday Body and Soul 1940", w: "人聲版本。先聽這個記住原曲旋律。" },
+      { p: "John Coltrane", l: "Atlantic《Coltrane's Sound》", y: 1960, qa: "hifi", t: [], q: "John Coltrane Body and Soul Coltrane's Sound", w: "21 年後的另一位次中音薩克斯風手：同一首曲子，連和弦都被重新改寫。" }
+    ]
+  },
+
+  "miles-sowhat": {
+    title: "〈So What〉", en: "Kind of Blue · 1959", composer: "Miles Davis",
+    q: "Miles Davis So What",
+    bg: "《Kind of Blue》（1959 年 3、4 月錄音，Columbia）的第一首。這張專輯是史上最暢銷的爵士專輯之一，樂手陣容本身就是一部爵士史：<b>Miles Davis（小號）、John Coltrane（次中音薩克斯風）、Cannonball Adderley（中音薩克斯風）、Bill Evans（鋼琴）、Paul Chambers（低音提琴）、Jimmy Cobb（鼓）</b>。據說 Davis 錄音前幾乎沒有排練，只給樂手簡單的音階草稿。",
+    life: "常出現在電影、廣告與咖啡館的背景音樂裡——這可能是你聽過、卻不知道名字的那首爵士樂。",
+    pick: "主題是一問一答：<b>低音提琴先「問」一句，管樂用兩個音回答</b>，節奏就像在說「so what」。",
+    form: "32 小節 AABA（調式）",
+    answer: {
+      label: "🔒 <b>段落地圖（答案）</b>",
+      head: ["段落", "誰", "聽什麼"],
+      rows: [
+        ["前奏", "鋼琴＋低音提琴", "沒有固定節拍，像在暖身"],
+        ["主題", "全體", "低音提琴問、管樂答。<b>A 段 8 小節 ×2 → B 段（整個升高半音）8 小節 → A 段 8 小節</b>"],
+        ["獨奏 1", "Miles Davis　小號", "音很少、空間很多"],
+        ["獨奏 2", "John Coltrane　次中音薩克斯風", "音密得多，一口氣往上衝"],
+        ["獨奏 3", "Cannonball Adderley　中音薩克斯風", "比較明亮、帶藍調味"],
+        ["獨奏 4", "Bill Evans　鋼琴", "很短，管樂在背後輕輕奏著「so what」"],
+        ["主題", "全體", "回到開頭的一問一答，淡出"]
+      ],
+      note: "<b>同一個框架，四個人四種說法。</b>Davis 的「少」與 Coltrane 的「多」接在一起，是這張專輯最常被拿來討論的對比。"
+    },
+    versions: [
+      { p: "Miles Davis", l: "Columbia《Kind of Blue》", y: 1959, qa: "hires", t: ["ref", "entry"], q: "Miles Davis So What Kind of Blue", w: "原始錄音，有高解析重製版。" },
+      { p: "Miles Davis（1964 現場）", l: "Columbia《Four & More》", y: 1964, qa: "hifi", t: ["live"], q: "Miles Davis So What Four and More 1964", w: "五年後的現場，速度快了將近一倍——同一首曲子，不同的樂團、不同的年份，完全是另一首。" }
+    ]
+  },
+
+  "monk-roundmidnight": {
+    title: "〈'Round Midnight〉", en: "Blue Note · 1947", composer: "Thelonious Monk",
+    q: "Thelonious Monk Round Midnight",
+    bg: "Thelonious Monk 作曲，是被錄音次數最多的爵士原創曲之一。Monk 自己最早的錄音在 1947 年（Blue Note）。<b>Monk 的鋼琴聽起來常像「彈錯」</b>——不協和的音、出其不意的停頓、敲擊般的觸鍵——但每一個都是刻意的。1955 年 Miles Davis 在新港爵士音樂節演奏這首，演出轟動，促成他與 Columbia 簽約。",
+    pick: "<b>這首最適合做版本比較。</b>先聽 Monk 自己彈，再聽 Miles Davis——同一首曲子，一個稜角分明，一個霧氣瀰漫。",
+    form: "32 小節 AABA",
+    versions: [
+      { p: "Thelonious Monk", l: "Blue Note《Genius of Modern Music》", y: 1947, qa: "historic", t: ["ref"], q: "Thelonious Monk Round Midnight 1947 Blue Note", w: "作曲者自己最早的錄音。" },
+      { p: "Thelonious Monk（鋼琴獨奏）", l: "Riverside《Thelonious Himself》", y: 1957, qa: "hifi", t: [], q: "Thelonious Monk Round Midnight Thelonious Himself", w: "只有一架鋼琴，最能聽清楚 Monk 的和聲與停頓。" },
+      { p: "Miles Davis Quintet（John Coltrane）", l: "Columbia《'Round About Midnight》", y: 1956, qa: "hifi", t: ["entry"], q: "Miles Davis Round Midnight Round About Midnight Columbia", w: "加了弱音器的小號，最有名的詮釋。中段那個突然爆開的管樂過門是這個版本的招牌。" }
+    ]
+  },
+
+  /* ---------- 單元 4：紐奧良 ---------- */
+  "oliver-dippermouth": {
+    title: "〈Dipper Mouth Blues〉", en: "Gennett · 1923", composer: "King Oliver's Creole Jazz Band",
+    q: "King Oliver Dipper Mouth Blues",
+    bg: "1923 年 4 月在印第安那州的 Gennett 錄音室錄製。King Oliver 的 Creole Jazz Band 是當時芝加哥最紅的紐奧良樂團，<b>第二短號是 21 歲的 Louis Armstrong</b>（「Dipper Mouth」就是他的綽號）。<b>Oliver 在曲中那段弱音器短號獨奏太有名，後來的樂手照著吹了幾十年</b>——爵士的即興，有時也會變成曲子固定的一部分。",
+    pick: "<b>音質很差，請先接受這件事。</b>1923 年還是對著一個大喇叭錄音，鼓幾乎錄不到，低音也很少。專心聽前排三種樂器。",
+    texture: "集體即興（複音）",
+    answer: {
+      label: "🔒 <b>聽點對照</b>",
+      head: ["樂器", "角色", "怎麼聽出來"],
+      rows: [
+        ["短號（Oliver、Armstrong）", "主旋律", "最響、最直接，走在中間"],
+        ["單簧管", "在上面繞", "最高、音最多，像在旋律周圍飛"],
+        ["長號", "在下面推", "最低，常用滑音把一句推向下一句"]
+      ],
+      note: "三條線<b>同時即興、各走各的</b>，卻不會互相打架——因為每個人都知道自己的位置。<b>這就是複音</b>：古典課第 2 週的巴赫是寫好的複音，這裡是當場生出來的複音。"
+    },
+    versions: [
+      { p: "King Oliver's Creole Jazz Band", l: "Gennett", y: 1923, qa: "historic", t: ["ref"], q: "King Oliver Creole Jazz Band Dipper Mouth Blues 1923", w: "原始錄音（4 月 Gennett 版）。" },
+      { p: "King Oliver's Creole Jazz Band", l: "Okeh", y: 1923, qa: "historic", t: [], q: "King Oliver Dippermouth Blues Okeh 1923", w: "同年稍後的 Okeh 錄音，曲名常寫成〈Dippermouth Blues〉。兩個都找不到時互為備案。" }
+    ]
+  },
+
+  "morton-blackbottom": {
+    title: "〈Black Bottom Stomp〉", en: "Victor · 1926", composer: "Jelly Roll Morton's Red Hot Peppers",
+    q: "Jelly Roll Morton Black Bottom Stomp",
+    bg: "1926 年 9 月為 Victor 錄製。Jelly Roll Morton 自稱「爵士的發明者」——這當然是誇大，但他常被視為<b>第一位重要的爵士作曲家</b>：他在集體即興之中<b>事先安排好</b>誰在什麼時候獨奏、樂團什麼時候突然停住（斷奏，stop-time）、什麼時候換段落。Victor 那時已改用電氣錄音，音質比單元裡的 Oliver 好得多。",
+    pick: "和〈Dipper Mouth Blues〉連著聽：一樣是紐奧良的集體即興，<b>這首聽起來更「有設計」</b>——哪裡讓你有這種感覺？",
+    texture: "集體即興＋編排",
+    versions: [
+      { p: "Jelly Roll Morton's Red Hot Peppers", l: "Victor", y: 1926, qa: "historic", t: ["ref"], q: "Jelly Roll Morton Red Hot Peppers Black Bottom Stomp 1926", w: "原始錄音。" }
+    ]
+  },
+
+  /* ---------- 單元 5：阿姆斯壯 ---------- */
+  "armstrong-westend": {
+    title: "〈West End Blues〉", en: "Okeh · 1928", composer: "Louis Armstrong and His Hot Five",
+    q: "Louis Armstrong West End Blues",
+    bg: "1928 年 6 月為 Okeh 錄製，曲子是 Armstrong 的老師 King Oliver 寫的。<b>開頭那段十幾秒、完全沒有伴奏的小號獨奏</b>，常被列為爵士史上最重要的錄音片段之一：它宣告了一件事——<b>爵士的主角可以是一個人</b>。鋼琴是 Earl Hines，他和 Armstrong 在這個時期的合作，被視為爵士鋼琴走向獨立的起點。",
+    pick: "<b>前 15 秒聽三遍</b>，再往下聽整首。",
+    form: "12 小節藍調",
+    answer: {
+      label: "🔒 <b>段落地圖（答案）</b>",
+      head: ["段落", "誰", "聽什麼"],
+      rows: [
+        ["開頭", "Armstrong　小號（無伴奏）", "十幾秒的華彩：往上衝、停住、再往下流"],
+        ["主題", "全團", "Armstrong 吹主旋律，其他人在旁邊"],
+        ["第二段", "長號", "低沉、緩慢"],
+        ["第三段", "單簧管＋Armstrong 的 scat", "<b>一問一答</b>：單簧管吹一句，Armstrong 用沒有歌詞的聲音唱一句"],
+        ["第四段", "Earl Hines　鋼琴", "鋼琴獨奏"],
+        ["最後", "全團", "Armstrong 吹出一個<b>拉得極長的高音</b>，接一串往下的樂句"],
+        ["尾奏", "鋼琴＋全團", "安靜地收掉"]
+      ],
+      note: "連著聽單元 4 的〈Dipper Mouth Blues〉：<b>只隔五年，小號從「三條線之一」變成「全場唯一的主角」</b>。"
+    },
+    versions: [
+      { p: "Louis Armstrong and His Hot Five", l: "Okeh", y: 1928, qa: "historic", t: ["ref"], q: "Louis Armstrong Hot Five West End Blues 1928", w: "原始錄音。收在各種 Hot Fives & Sevens 合輯裡。" }
+    ]
+  },
+
+  "armstrong-potatohead": {
+    title: "〈Potato Head Blues〉", en: "Okeh · 1927", composer: "Louis Armstrong and His Hot Seven",
+    q: "Louis Armstrong Potato Head Blues",
+    bg: "1927 年 5 月的 Hot Seven 錄音。最有名的是後段的<b>斷奏獨奏</b>（stop-time chorus）：樂團每隔一下才打一個和弦就停住，<b>把整個空間讓給 Armstrong</b>，他一個人在空檔裡把旋律串起來。",
+    life: "Woody Allen 的電影《曼哈頓》（1979）裡，主角列舉「讓人生值得活下去的事」，其中一項就是 Armstrong 的〈Potato Head Blues〉。",
+    form: "斷奏（stop-time）",
+    versions: [
+      { p: "Louis Armstrong and His Hot Seven", l: "Okeh", y: 1927, qa: "historic", t: ["ref"], q: "Louis Armstrong Hot Seven Potato Head Blues 1927", w: "原始錄音。" }
+    ]
+  },
+
+  "armstrong-wonderful": {
+    title: "〈What a Wonderful World〉", en: "ABC Records · 1967", composer: "Louis Armstrong",
+    q: "Louis Armstrong What a Wonderful World",
+    bg: "1967 年錄製，Armstrong 晚年最廣為人知的歌。在美國起初並不暢銷，在英國卻登上排行榜冠軍；1987 年因電影《早安越南》使用而再度走紅。<b>把它和 40 年前的〈West End Blues〉連著聽</b>：同一個人，從爵士史上最大膽的小號手，變成全世界最溫暖的歌聲。",
+    life: "電影、廣告、婚禮——幾乎每個人都聽過，但很少人知道他四十年前做過什麼。",
+    versions: [
+      { p: "Louis Armstrong", l: "ABC Records", y: 1967, qa: "hifi", t: ["ref", "entry"], q: "Louis Armstrong What a Wonderful World 1967", w: "原始錄音。" }
+    ]
+  },
+
+  /* ---------- 單元 6：大樂團與歌手 ---------- */
+  "ellington-atrain": {
+    title: "〈Take the 'A' Train〉", en: "Victor · 1941", composer: "Duke Ellington Orchestra",
+    q: "Duke Ellington Take the A Train",
+    bg: "Billy Strayhorn 作曲，1941 年 2 月由 Duke Ellington 樂團為 Victor 錄製，成為樂團的招牌曲。「A 線」是紐約的地鐵路線，通往哈林區。<b>Ellington 寫曲的方式與眾不同：他依照每一位團員獨特的音色來寫</b>——不是寫給「小號」，而是寫給「這一位小號手」。這可以和古典課第 18 週拉威爾〈波麗露〉的配器思維對照。",
+    pick: "<b>這首聽的是聲部之間的對話</b>：薩克斯風一組、銅管一組，輪流說話。",
+    form: "32 小節 AABA",
+    versions: [
+      { p: "Duke Ellington Orchestra", l: "Victor", y: 1941, qa: "historic", t: ["ref"], q: "Duke Ellington Take the A Train 1941", w: "原始錄音，Ray Nance 的小號獨奏。" },
+      { p: "Ella Fitzgerald（與 Ellington 樂團）", l: "Verve《Ella Fitzgerald Sings the Duke Ellington Song Book》", y: 1957, qa: "hifi", t: [], q: "Ella Fitzgerald Take the A Train Duke Ellington Song Book", w: "人聲版本，Ella 的 scat 加上 Ellington 樂團本身，音質好得多。" }
+    ]
+  },
+
+  "holiday-strangefruit": {
+    title: "〈Strange Fruit〉", en: "Commodore · 1939", composer: "Billie Holiday",
+    q: "Billie Holiday Strange Fruit",
+    bg: "原是紐約教師 Abel Meeropol 以筆名 Lewis Allan 寫的一首詩，控訴美國南方對黑人的私刑。1939 年 4 月 Billie Holiday 錄下這首歌；<b>她的唱片公司 Columbia 不願發行，改由小廠 Commodore 出版</b>。它常被稱為美國民權運動的先聲之一。<b>這是一首很沉重的歌</b>，請在有心理準備的時候聽。",
+    pick: "<b>先讀下面的歌詞大意，再聽。</b>",
+    answer: {
+      label: "📖 <b>歌詞大意</b>", hint: "先讀再聽",
+      text: "歌詞用美國南方田園最美的意象——木蘭花的香氣、溫柔的風——對照樹上吊著的黑人屍體。<b>「奇異的果實」指的就是被私刑處死的人</b>。全曲沒有一句直接控訴，力量全來自這種冷靜的並置。",
+      note: "Holiday 的唱法與歌詞的寫法一致：<b>不哭喊、不煽情</b>，把字唱得很平、很慢，讓聽的人自己承受。拿這首和她的情歌比較，差別就是本單元想讓你聽到的「咬字與時間感」。"
+    },
+    versions: [
+      { p: "Billie Holiday", l: "Commodore", y: 1939, qa: "historic", t: ["ref"], q: "Billie Holiday Strange Fruit 1939 Commodore", w: "原始錄音。" },
+      { p: "Nina Simone", l: "Philips《Pastel Blues》", y: 1965, qa: "hifi", t: [], q: "Nina Simone Strange Fruit Pastel Blues", w: "26 年後、民權運動高峰期的另一種詮釋。" }
+    ]
+  },
+
+  "goodman-singsingsing": {
+    title: "〈Sing, Sing, Sing〉", en: "Carnegie Hall · 1938", composer: "Benny Goodman Orchestra",
+    q: "Benny Goodman Sing Sing Sing",
+    bg: "Louis Prima 作曲。1938 年 1 月 16 日，Benny Goodman 樂團在紐約卡內基音樂廳演出——<b>爵士第一次以完整音樂會的形式進入古典音樂的殿堂</b>。這首長達十多分鐘的版本以 Gene Krupa 的鼓為核心，是整場的高潮。Goodman 也是最早讓黑人與白人樂手公開同台的知名樂團領班之一（Teddy Wilson、Lionel Hampton）。",
+    life: "Gene Krupa 的鼓聲被大量電影、廣告與搖擺舞比賽使用。",
+    versions: [
+      { p: "Benny Goodman Orchestra（卡內基音樂廳現場）", l: "Columbia", y: 1938, qa: "historic", t: ["ref", "live"], q: "Benny Goodman Sing Sing Sing Carnegie Hall 1938", w: "最有名的版本，1950 年才首度發行。" },
+      { p: "Benny Goodman Orchestra", l: "Victor（錄音室）", y: 1937, qa: "historic", t: [], q: "Benny Goodman Sing Sing Sing 1937 Victor", w: "錄音室版本，比較短。" }
+    ]
+  },
+
+  "ella-howhigh": {
+    title: "〈How High the Moon〉", en: "Ella in Berlin · 1960", composer: "Ella Fitzgerald",
+    q: "Ella Fitzgerald How High the Moon",
+    bg: "收在 1960 年 2 月柏林現場的專輯《Ella in Berlin: Mack the Knife》（Verve）。<b>這是 scat 演唱的經典示範</b>：Ella 在即興段落中不斷引用別的曲子的片段，一邊唱一邊跟觀眾開玩笑。同一場的〈Mack the Knife〉她唱到一半忘了詞，就當場自己編——那段也成了名演。",
+    versions: [
+      { p: "Ella Fitzgerald", l: "Verve《Ella in Berlin》", y: 1960, qa: "hifi", t: ["ref", "live"], q: "Ella Fitzgerald How High the Moon Ella in Berlin 1960", w: "現場錄音。" }
+    ]
+  },
+
+  /* ---------- 單元 7：比波普 ---------- */
+  "parker-koko": {
+    title: "〈Ko-Ko〉", en: "Savoy · 1945", composer: "Charlie Parker",
+    q: "Charlie Parker Ko-Ko",
+    bg: "1945 年 11 月為 Savoy 錄製，常被視為比波普的宣言。<b>它建立在流行歌〈Cherokee〉的和弦上，卻完全不奏原曲旋律</b>——開頭與結尾是 Parker 與 Dizzy Gillespie 編好的快速引子，中間是 Parker 兩輪極快的獨奏，接著是 Max Roach 的鼓。",
+    pick: "<b>跟不上是正常的</b>，第一遍只要感受速度。",
+    form: "借用〈Cherokee〉的和弦（64 小節 AABA）",
+    answer: {
+      label: "🔒 <b>段落地圖（答案）</b>",
+      head: ["段落", "誰", "聽什麼"],
+      rows: [
+        ["前奏", "Parker＋Gillespie", "兩把管樂齊奏編好的快速樂句——不是原曲旋律"],
+        ["獨奏", "Charlie Parker　中音薩克斯風", "兩輪，每輪走完整個〈Cherokee〉的和弦。<b>這是整首的核心</b>"],
+        ["鼓", "Max Roach", "短暫的鼓獨奏"],
+        ["尾奏", "Parker＋Gillespie", "回到前奏的材料，收掉"]
+      ],
+      note: "<b>整首沒有一刻在奏〈Cherokee〉的旋律。</b>比波普樂手常這樣做：借一首舊曲的和弦，寫一條新的旋律（稱為 contrafact）。對照台灣課的歌仔戲「一曲多用」：那邊是同一個曲調配新的詞，這邊是同一組和弦配新的旋律——<b>方向相反，原理相同</b>。"
+    },
+    versions: [
+      { p: "Charlie Parker's Re-Boppers", l: "Savoy", y: 1945, qa: "historic", t: ["ref"], q: "Charlie Parker Ko-Ko 1945 Savoy", w: "原始錄音。" },
+      { p: "Charlie Barnet Orchestra（原曲〈Cherokee〉）", l: "Bluebird", y: 1939, qa: "historic", t: ["entry"], q: "Charlie Barnet Cherokee 1939", w: "〈Ko-Ko〉借用和弦的那首原曲。先聽這個，再聽 Parker 怎麼把它拆掉。" }
+    ]
+  },
+
+  "gillespie-saltpeanuts": {
+    title: "〈Salt Peanuts〉", en: "Guild · 1945", composer: "Dizzy Gillespie",
+    q: "Dizzy Gillespie Salt Peanuts",
+    bg: "Dizzy Gillespie 與鼓手 Kenny Clarke 作曲，1945 年 5 月 Gillespie 與 Charlie Parker 合作錄製（Guild）。<b>主題的核心是一個八度大跳的兩音動機</b>，樂手在曲中用人聲喊出「salt peanuts!」——喊聲的節奏就是那兩個音。Gillespie 是比波普的另一位奠基者，也是最會把複雜音樂變得好笑的人。",
+    versions: [
+      { p: "Dizzy Gillespie All Star Quintette（Charlie Parker）", l: "Guild", y: 1945, qa: "historic", t: ["ref"], q: "Dizzy Gillespie Charlie Parker Salt Peanuts 1945", w: "原始錄音，Parker 與 Gillespie 同台。" },
+      { p: "The Quintet（Massey Hall 現場）", l: "Debut《Jazz at Massey Hall》", y: 1953, qa: "historic", t: ["live"], q: "Jazz at Massey Hall Salt Peanuts 1953", w: "1953 年多倫多的傳奇現場：Parker、Gillespie、Bud Powell、Charles Mingus、Max Roach 同台。" }
+    ]
+  },
+
+  "monk-straightnochaser": {
+    title: "〈Straight, No Chaser〉", en: "Blue Note · 1951", composer: "Thelonious Monk",
+    q: "Thelonious Monk Straight No Chaser",
+    bg: "Monk 作曲的 12 小節藍調，1951 年首次為 Blue Note 錄製。<b>旋律只用一個很短的動機，不斷移到小節裡不同的位置</b>——同樣幾個音，每次落在不同的拍子上，聽起來就像在跌跌撞撞。這是 Monk 幽默感最好的例子，也可以拿來複習單元 2 的藍調。",
+    form: "12 小節藍調",
+    versions: [
+      { p: "Thelonious Monk", l: "Blue Note", y: 1951, qa: "historic", t: ["ref"], q: "Thelonious Monk Straight No Chaser 1951 Blue Note", w: "原始錄音。" },
+      { p: "Thelonious Monk", l: "Columbia《Straight, No Chaser》", y: 1967, qa: "hifi", t: [], q: "Thelonious Monk Straight No Chaser 1967 Columbia", w: "以這首為名的 1967 年專輯，音質好得多。" }
+    ]
+  },
+
+  /* ---------- 單元 8：酷派與調式 ---------- */
+  "miles-blueingreen": {
+    title: "〈Blue in Green〉", en: "Kind of Blue · 1959", composer: "Miles Davis",
+    q: "Miles Davis Blue in Green",
+    bg: "《Kind of Blue》的第三首，全專輯最慢、最安靜的一首。<b>骨架只有 10 小節</b>（不是常見的 12 或 32），頭尾相接成一個圈。唱片上的作曲署名是 Miles Davis，但 Bill Evans 日後表示這首是他寫的——<b>兩說並存，本課程不作裁定</b>。Evans 深受 Debussy 與 Ravel 影響，那種模糊、懸浮的和聲可以直接對照古典課第 18 週的印象派。",
+    answer: {
+      label: "🔒 <b>聽點對照</b>",
+      text: "這首的骨架是 <b>10 小節</b>，而且最後一個和弦會自然地接回第一個——所以很難聽出「一輪」在哪裡結束。<b>如果你覺得它沒有開始也沒有結束，那就聽對了。</b>",
+      note: "對照古典課第 18 週 Debussy《牧神的午後前奏曲》：同樣是拿掉明確的方向感，讓聲音懸在空中。"
+    },
+    versions: [
+      { p: "Miles Davis", l: "Columbia《Kind of Blue》", y: 1959, qa: "hires", t: ["ref"], q: "Miles Davis Blue in Green Kind of Blue", w: "原始錄音，有高解析重製版。" },
+      { p: "Bill Evans Trio", l: "Riverside《Portrait in Jazz》", y: 1960, qa: "hifi", t: [], q: "Bill Evans Trio Blue in Green Portrait in Jazz", w: "Evans 自己的鋼琴三重奏版本——聽聽他心中的這首曲子。" }
+    ]
+  },
+
+  "brubeck-takefive": {
+    title: "〈Take Five〉", en: "Time Out · 1959", composer: "Dave Brubeck Quartet",
+    q: "Dave Brubeck Take Five",
+    bg: "收在 1959 年的《Time Out》（Columbia），整張專輯都在實驗不尋常的拍子。<b>〈Take Five〉是 5/4 拍</b>，由中音薩克斯風手 Paul Desmond 作曲，成為最暢銷的爵士單曲之一。鋼琴 Dave Brubeck 整首幾乎一直重複同一個伴奏型，中段是鼓手 Joe Morello 的獨奏。",
+    life: "廣告、電影、電視節目的常客，旋律多數人一聽就認得。",
+    form: "5/4 拍",
+    answer: {
+      label: "🔒 <b>聽點對照</b>",
+      text: "5/4 拍可以想成 <b>3＋2</b>：「1-2-3、4-5」。鋼琴的伴奏型每 5 拍重複一次，<b>即使在鼓獨奏時也一直在</b>，所以只要跟著鋼琴，就不會數丟。",
+      note: "同一張專輯的〈Blue Rondo à la Turk〉是 9/8 拍（2+2+2+3），想再挑戰可以接著聽。"
+    },
+    versions: [
+      { p: "Dave Brubeck Quartet", l: "Columbia《Time Out》", y: 1959, qa: "hires", t: ["ref", "entry"], q: "Dave Brubeck Quartet Take Five Time Out 1959", w: "原始錄音，有高解析重製版。爵士入門最友善的一首。" }
+    ]
+  },
+
+  "miles-boplicity": {
+    title: "〈Boplicity〉", en: "Birth of the Cool · 1949", composer: "Miles Davis Nonet",
+    q: "Miles Davis Boplicity",
+    bg: "1949 年 4 月為 Capitol 錄製，後來收入專輯《Birth of the Cool》，編曲 Gil Evans。九重奏的編制很特別：<b>除了小號、長號、薩克斯風，還有法國號與低音號</b>——這兩件古典樂團的樂器讓整個聲音變得柔和、圓潤。Gil Evans 後來與 Davis 合作了《Sketches of Spain》等大編制作品。",
+    pick: "和單元 7 的比波普連著聽：同樣是 1940 年代末，<b>一個往快、往熱走，一個往慢、往冷走</b>。",
+    versions: [
+      { p: "Miles Davis Nonet", l: "Capitol《Birth of the Cool》", y: 1949, qa: "historic", t: ["ref"], q: "Miles Davis Boplicity Birth of the Cool 1949", w: "原始錄音。" }
+    ]
+  },
+
+  /* ---------- 單元 9：硬式比波普 ---------- */
+  "blakey-moanin": {
+    title: "〈Moanin'〉", en: "Blue Note · 1958", composer: "Art Blakey and the Jazz Messengers",
+    q: "Art Blakey Jazz Messengers Moanin",
+    bg: "1958 年 10 月為 Blue Note 錄製，鋼琴手 Bobby Timmons 作曲。主題是<b>教會式的一問一答</b>：鋼琴彈一句，管樂用兩個音回答，像會眾在說「阿們」。小號是 20 歲的 Lee Morgan，次中音薩克斯風是 Benny Golson。Art Blakey 的鼓是這個樂團的引擎——他會在獨奏者背後突然用一陣滾奏把音樂往前推。",
+    pick: "<b>這首比比波普好哼得多</b>——那正是硬式比波普的用意。",
+    form: "32 小節 AABA",
+    answer: {
+      label: "🔒 <b>主題的一問一答</b>",
+      head: ["段", "誰問", "誰答"],
+      rows: [
+        ["A", "鋼琴（一句旋律）", "管樂（兩個音，像在說「阿們」）"],
+        ["A", "同上", "同上"],
+        ["B（橋段）", "管樂齊奏另一段旋律", "——"],
+        ["A", "鋼琴", "管樂"]
+      ],
+      note: "對照台灣課單元 5 的客家山歌對唱：同樣是一問一答，<b>一邊來自教會，一邊來自隔著山谷的兩個人</b>。"
+    },
+    versions: [
+      { p: "Art Blakey and the Jazz Messengers", l: "Blue Note《Moanin'》", y: 1958, qa: "hires", t: ["ref", "entry"], q: "Art Blakey Jazz Messengers Moanin 1958 Blue Note", w: "原始錄音，Blue Note 有高解析重製。" }
+    ]
+  },
+
+  "silver-songformyfather": {
+    title: "〈Song for My Father〉", en: "Blue Note · 1964", composer: "Horace Silver",
+    q: "Horace Silver Song for My Father",
+    bg: "1964 年 10 月錄製，收在同名專輯（Blue Note）。Horace Silver 的父親來自<b>維德角</b>（西非外海的島國），這首曲子的靈感來自他到巴西旅行時聽到的音樂。<b>開頭由鋼琴與低音提琴一起彈的重複低音型</b>，帶著 bossa nova 的搖晃感。次中音薩克斯風獨奏是 Joe Henderson。",
+    life: "Steely Dan 1974 年的〈Rikki Don't Lose That Number〉，開頭的低音型借用的就是這首。",
+    versions: [
+      { p: "Horace Silver Quintet", l: "Blue Note《Song for My Father》", y: 1964, qa: "hires", t: ["ref"], q: "Horace Silver Song for My Father 1964 Blue Note", w: "原始錄音。" }
+    ]
+  },
+
+  "adderley-mercy": {
+    title: "〈Mercy, Mercy, Mercy〉", en: "Capitol · 1966", composer: "Cannonball Adderley Quintet",
+    q: "Cannonball Adderley Mercy Mercy Mercy",
+    bg: "1966 年錄製（Capitol），鍵盤手 Joe Zawinul 作曲，用的是<b>電鋼琴</b>。這首「靈魂爵士」（soul jazz）登上了流行排行榜——爵士再一次貼近大眾。Zawinul 後來與 Wayne Shorter 組成 Weather Report（單元 12）。",
+    versions: [
+      { p: "Cannonball Adderley Quintet", l: "Capitol《Mercy, Mercy, Mercy!》", y: 1966, qa: "hifi", t: ["ref"], q: "Cannonball Adderley Mercy Mercy Mercy 1966", w: "原始錄音。" }
+    ]
+  },
+
+  /* ---------- 單元 10：柯川與自由爵士 ---------- */
+  "coltrane-giantsteps": {
+    title: "〈Giant Steps〉", en: "Atlantic · 1959", composer: "John Coltrane",
+    q: "John Coltrane Giant Steps",
+    bg: "1959 年 5 月錄製、1960 年由 Atlantic 發行。<b>和弦換得極快，而且每次都跳到很遠的調</b>（這套進行被稱為「Coltrane changes」），至今仍是爵士樂手練習即興的試金石。常被提起的一個細節：鋼琴手 Tommy Flanagan 錄音時是第一次面對這樣的和弦，他的獨奏聽起來明顯比 Coltrane 吃力。",
+    pick: "<b>不用分析和弦。</b>只要感受：這首的「地面」一直在快速移動。",
+    versions: [
+      { p: "John Coltrane", l: "Atlantic《Giant Steps》", y: 1959, qa: "hires", t: ["ref"], q: "John Coltrane Giant Steps Atlantic 1959", w: "原始錄音，有高解析重製版。" }
+    ]
+  },
+
+  "coltrane-lovesupreme": {
+    title: "《A Love Supreme》〈Acknowledgement〉", en: "Impulse! · 1964", composer: "John Coltrane Quartet",
+    q: "John Coltrane A Love Supreme Acknowledgement",
+    bg: "1964 年 12 月錄製（Impulse!）。全專輯分四段：〈Acknowledgement〉〈Resolution〉〈Pursuance〉〈Psalm〉，是 Coltrane 獻給神的一部靈性組曲。四重奏：McCoy Tyner（鋼琴）、Jimmy Garrison（低音提琴）、Elvin Jones（鼓）。<b>第一段的核心是一個四個音的低音型</b>，最後由樂手們用人聲唸出「a love supreme」。",
+    answer: {
+      label: "🔒 <b>聽點對照</b>",
+      text: "<b>唸誦的四個音節「a-love-su-preme」，就是那個四音低音型的節奏</b>——同一個動機，先由樂器演奏，最後由人聲說出來。段落後半，Coltrane 把這個動機移到一個又一個不同的調上反覆。",
+      note: "最後一段〈Psalm〉也是同一個思路：一般的分析認為，Coltrane 的薩克斯風旋律是在「吹」他印在唱片內頁的一首禱詞，一個音節對一個音。"
+    },
+    versions: [
+      { p: "John Coltrane Quartet", l: "Impulse!", y: 1964, qa: "hires", t: ["ref"], q: "John Coltrane A Love Supreme Part 1 Acknowledgement 1964", w: "原始錄音，有高解析重製版。" }
+    ]
+  },
+
+  "coleman-lonelywoman": {
+    title: "〈Lonely Woman〉", en: "The Shape of Jazz to Come · 1959", composer: "Ornette Coleman",
+    q: "Ornette Coleman Lonely Woman",
+    bg: "收在 1959 年的《The Shape of Jazz to Come》（Atlantic）。<b>這個四重奏沒有鋼琴</b>：Ornette Coleman（中音薩克斯風）、Don Cherry（短號）、Charlie Haden（低音提琴）、Billy Higgins（鼓）。沒有鋼琴，就沒有人負責「定和弦」——樂手不再照固定的和弦進行即興，而是彼此聆聽、隨時轉向。專輯名稱的意思是「未來爵士的樣子」，發行時引起極大爭議。",
+    pick: "<b>這首其實很好聽</b>——旋律哀傷、清楚。它「自由」的地方在底下：鼓很快、低音很慢、旋律自己飄。",
+    versions: [
+      { p: "Ornette Coleman", l: "Atlantic《The Shape of Jazz to Come》", y: 1959, qa: "hires", t: ["ref"], q: "Ornette Coleman Lonely Woman Shape of Jazz to Come 1959", w: "原始錄音。" }
+    ]
+  },
+
+  "coltrane-favoritethings": {
+    title: "〈My Favorite Things〉", en: "Atlantic · 1960", composer: "John Coltrane",
+    q: "John Coltrane My Favorite Things",
+    bg: "原是音樂劇《真善美》（The Sound of Music，1959）裡的歌。Coltrane 1960 年錄製（Atlantic，1961 年發行），改用<b>高音薩克斯風</b>，把一首兩分多鐘的音樂劇歌曲變成十幾分鐘的即興——底下長時間只在兩個和弦之間來回，接近單元 8 的調式手法。這張唱片讓高音薩克斯風重新回到爵士的舞台。",
+    life: "《真善美》的電影版（1965）在台灣也廣為人知。先聽原曲再聽這首，差距會讓你嚇一跳。",
+    versions: [
+      { p: "John Coltrane", l: "Atlantic《My Favorite Things》", y: 1960, qa: "hifi", t: ["ref"], q: "John Coltrane My Favorite Things 1960 Atlantic", w: "原始錄音。" },
+      { p: "Julie Andrews（電影原聲）", l: "RCA", y: 1965, qa: "hifi", t: ["entry"], q: "Julie Andrews My Favorite Things Sound of Music", w: "先聽原曲。" }
+    ]
+  },
+
+  /* ---------- 單元 11：拉丁與巴薩諾瓦 ---------- */
+  "gillespie-manteca": {
+    title: "〈Manteca〉", en: "Victor · 1947", composer: "Dizzy Gillespie Orchestra",
+    q: "Dizzy Gillespie Manteca",
+    bg: "1947 年 12 月為 Victor 錄製，Gillespie 與古巴康加鼓手 <b>Chano Pozo</b>（及編曲者 Gil Fuller）合寫。這是<b>非洲—古巴爵士</b>（Afro-Cuban jazz）的里程碑：古巴的節奏與比波普的和聲，第一次在大樂團裡真正結合。曲名是西班牙文的「豬油」。",
+    pick: "開頭先只聽<b>低音提琴與康加鼓</b>：那個重複的節奏型是整首的地基。",
+    versions: [
+      { p: "Dizzy Gillespie Orchestra（Chano Pozo）", l: "Victor", y: 1947, qa: "historic", t: ["ref"], q: "Dizzy Gillespie Chano Pozo Manteca 1947", w: "原始錄音。" }
+    ]
+  },
+
+  "getz-ipanema": {
+    title: "〈The Girl from Ipanema〉", en: "Getz/Gilberto · 1963", composer: "Stan Getz & João Gilberto",
+    q: "Stan Getz Joao Gilberto The Girl from Ipanema",
+    bg: "收在《Getz/Gilberto》（Verve，1963 年錄音、1964 年發行）。作曲 Antônio Carlos Jobim（他也在錄音裡彈鋼琴），João Gilberto 先用葡萄牙文唱，Astrud Gilberto 接著用英文唱，Stan Getz 吹次中音薩克斯風。這張專輯讓 bossa nova 席捲全球，並<b>獲得 1965 年葛萊美獎年度專輯</b>——第一張獲此獎的爵士專輯。",
+    life: "全世界被播放最多次的歌曲之一，電梯、咖啡館、機場的常客。",
+    versions: [
+      { p: "Stan Getz & João Gilberto（Astrud Gilberto 演唱）", l: "Verve《Getz/Gilberto》", y: 1963, qa: "hires", t: ["ref", "entry"], q: "Stan Getz Joao Gilberto Astrud Gilberto The Girl from Ipanema", w: "原始錄音，有高解析重製版。" },
+      { p: "Antônio Carlos Jobim", l: "Verve《The Composer of Desafinado, Plays》", y: 1963, qa: "hifi", t: [], q: "Antonio Carlos Jobim The Girl from Ipanema instrumental 1963", w: "作曲者自己的器樂版本。" }
+    ]
+  },
+
+  /* ---------- 單元 12：融合 ---------- */
+  "hancock-chameleon": {
+    title: "〈Chameleon〉", en: "Head Hunters · 1973", composer: "Herbie Hancock",
+    q: "Herbie Hancock Chameleon",
+    bg: "收在 1973 年的《Head Hunters》（Columbia），當時最暢銷的爵士專輯之一。Herbie Hancock 曾是 Miles Davis 五重奏的鋼琴手，這張專輯他改用<b>合成器</b>與放克（funk）節奏——開頭那條低音線就是合成器彈的。",
+    versions: [
+      { p: "Herbie Hancock", l: "Columbia《Head Hunters》", y: 1973, qa: "hires", t: ["ref"], q: "Herbie Hancock Chameleon Head Hunters 1973", w: "原始錄音，有高解析重製版。" }
+    ]
+  },
+
+  "weatherreport-birdland": {
+    title: "〈Birdland〉", en: "Heavy Weather · 1977", composer: "Weather Report",
+    q: "Weather Report Birdland",
+    bg: "收在 1977 年的《Heavy Weather》（Columbia），Joe Zawinul 作曲。曲名取自紐約那家以 Charlie Parker 的綽號「Bird」命名的爵士俱樂部。<b>主旋律要等一段時間才完整出現</b>，前面是幾段不同的音型層層鋪陳。電貝斯是 Jaco Pastorius。",
+    life: "後來被 The Manhattan Transfer 填詞演唱，也成了大樂團與學生樂團的常演曲目。",
+    versions: [
+      { p: "Weather Report", l: "Columbia《Heavy Weather》", y: 1977, qa: "hires", t: ["ref"], q: "Weather Report Birdland Heavy Weather 1977", w: "原始錄音。" },
+      { p: "The Manhattan Transfer", l: "Atlantic《Extensions》", y: 1979, qa: "hifi", t: [], q: "Manhattan Transfer Birdland Extensions", w: "填詞的人聲版本——同一首曲子變成 scat 合唱。" }
+    ]
+  }
+
+  };
+})();
+
+</script>
+<script>
+/* 爵士樂．12 個單元
+   欄位與另外兩門課相同（n / m / title / concept / works / tasks / checks / tw…）。
+   tw[i] 是第 i 項任務對應的曲目：任務會直接出現在那首曲目的播放按鈕上方。
+   tw 的長度必須與 tasks 一致，build.js 會檢查。 */
+(function () {
+  var J = (window.COURSES = window.COURSES || {}).jazz;
+
+  J.weeks = [
+  {
+    n: 1, m: "j1", title: "搖擺與節奏組", en: "Swing & the Rhythm Section",
+    tw: [["basie-oneoclock"], ["basie-oneoclock"], ["basie-aprilparis"]],
+    banner: "爵士入門最常卡住的地方，是<b>不知道要聽什麼</b>。這一單元只聽一件事：獨奏者背後的<b>節奏組</b>——鋼琴、吉他、低音提琴、鼓——它們在做什麼。",
+    concept: [
+      { tier: "析", t: "「搖擺」（swing）最直觀的說法：把兩個等長的音彈成<b>「長—短」</b>，像說「噹——ㄉㄚ」而不是「噹ㄉㄚ」。但真正讓音樂搖擺起來的，是<b>重拍放在第 2、4 拍</b>——古典音樂與進行曲多半強調第 1、3 拍。" },
+      { tier: "史", t: "節奏組的分工：<b>低音提琴走 walking bass</b>（每拍一個音，像在走路）；<b>鼓手右手打 ride 鈸</b>（叮、叮ㄉ叮）；<b>左腳踩 hi-hat，落在第 2、4 拍</b>；<b>鋼琴或吉他負責 comping</b>（伴奏）——不規則地丟和弦給獨奏者。" },
+      { tier: "史", t: "Count Basie 樂團的節奏組——Basie（鋼琴）、Freddie Green（吉他）、Walter Page（低音提琴）、Jo Jones（鼓）——在 1930 年代被稱為 <b>All-American Rhythm Section</b>，是搖擺節奏組的範本。Basie 自己的鋼琴彈得極少：<b>留白本身就是他的風格</b>。" }
+    ],
+    table: {
+      head: ["樂器", "在做什麼", "怎麼聽出來"],
+      rows: [
+        ["低音提琴", "走路：每拍一個音", "最低、最穩的「咚、咚、咚、咚」"],
+        ["鼓：ride 鈸", "時間的骨架", "一直在響的金屬聲「叮、叮ㄉ叮」"],
+        ["鼓：hi-hat", "標出第 2、4 拍", "兩片鈸合起來的短促「嚓」"],
+        ["鋼琴／吉他", "伴奏（comping）", "不規則、短促的和弦"]
+      ]
+    },
+    key: "<b>辨識關鍵：跟著打拍子時，拍在 2 和 4。</b>拍在 1 和 3 會像在聽進行曲；改拍 2 和 4，你就在搖擺了。",
+    works: ["basie-oneoclock", "basie-aprilparis"],
+    yt: { q: "爵士 搖擺 節奏組 walking bass 示範" },
+    tasks: [
+      "聽 Count Basie〈One O'Clock Jump〉。<b>只聽低音提琴</b>，用腳跟著它踩：每一拍一下。獨奏者換了一個又一個，它幾乎從頭到尾沒停——這就是 walking bass。聽完展開該曲下方的<b>「🔒 聽點對照」</b>。",
+      "再聽一次，這次<b>在第 2、4 拍拍手</b>（心裡數「1、2、3、4」，拍在 2 和 4）。拍一陣子之後，故意改拍 1 和 3，感受差別。",
+      "聽〈April in Paris〉。注意<b>大樂團一起奏</b>與<b>一個人獨奏</b>怎麼交替，以及 Basie 的鋼琴有多「少」——他常常只彈幾個音就停。最後聽 Basie 喊「One more time!」之後，樂團做了什麼。"
+    ],
+    checks: [
+      "能在一首爵士樂裡，單獨跟上低音提琴的 walking bass",
+      "能在第 2、4 拍拍手，並說出它與拍 1、3 的感覺差異"
+    ],
+    note: { tier: "選", t: "如果你覺得「好像沒在聽音樂、只是在數拍子」——那正是這個單元的設計。<b>節奏組是爵士的地板</b>，地板踩穩了，後面每一位獨奏者才聽得出是在什麼上面說話。" }
+  },
+
+  {
+    n: 2, m: "j1", title: "藍調：十二小節的骨架", en: "The Blues · Twelve Bars",
+    tw: [["bessie-stlouis"], ["rollins-blueseven"], ["miles-allblues"]],
+    banner: "藍調是爵士的地基。<b>記住一個 12 小節的框架</b>，你就能聽懂一半以上的爵士曲子在做什麼。",
+    concept: [
+      { tier: "析", t: "「藍調」（blues）有兩個意思：一種<b>曲式</b>——12 小節、三個和弦的固定框架；以及一種<b>聲音</b>——藍調音，比大調音階略低、介於大小調之間的音。爵士兩者都用。" },
+      { tier: "析", t: "12 小節的骨架（見下表）不必記和弦名稱，只要記住兩個轉彎：<b>第 5 小節「換一個地方」，第 9 小節開始「往回走」</b>。歌詞常是 <b>AAB</b>：第一句唱兩次，第三句回答。" },
+      { tier: "析", t: "<b>這就是主題與變奏。</b>同一個 12 小節框架反覆十幾遍，每一遍（稱為一個 <b>chorus</b>）由不同的人在上面即興。與古典課第 15 週 Brahms 第 4 號末樂章的帕薩卡利亞——同一段 8 小節的主題反覆 30 餘次——是同一個原理。" }
+    ],
+    table: {
+      head: ["小節", "和弦", "聽起來"],
+      rows: [
+        ["1–4", "I", "在家"],
+        ["<b>5–6</b>", "<b>IV</b>", "<b>換一個地方</b>"],
+        ["7–8", "I", "回家"],
+        ["<b>9</b>", "<b>V</b>", "<b>最緊張的地方，開始往回走</b>"],
+        ["10", "IV", "放鬆一點"],
+        ["11–12", "I", "回家，準備下一輪"]
+      ]
+    },
+    key: "<b>12 小節的兩個轉彎：第 5 小節、第 9 小節。</b>每次聽到音樂「換了一個地方」又「繞回來」，就是一輪走完了。（上表是最常見的版本，實際演奏常有變化。）",
+    works: ["bessie-stlouis", "rollins-blueseven"],
+    extraWorks: ["miles-allblues"],
+    yt: { q: "12 bar blues 十二小節藍調 教學" },
+    tasks: [
+      "聽 Bessie Smith〈St. Louis Blues〉（1925）。跟著歌詞：第一句唱完，<b>是不是又唱了一次同一句，第三句才回答？</b>這就是藍調歌詞的 AAB。也注意每句唱完之後，Louis Armstrong 的短號都會「回一句」。",
+      "聽 Sonny Rollins〈Blue Seven〉。開頭先只有低音提琴。<b>記住 Rollins 主題的前幾個音</b>，然後聽他的獨奏怎麼一次又一次回到這個小動機——拆開、變形、再組回來。聽完展開該曲下方的<b>「🔒 聽點對照」</b>。",
+      "延伸：聽 Miles Davis〈All Blues〉。這也是藍調，但每小節<b>六拍</b>（6/8）。試著數 12 小節：每小節「1-2-3-4-5-6」。"
+    ],
+    checks: [
+      "能在一首藍調中數出 12 小節為一輪",
+      "能說出藍調歌詞 AAB 的結構，並舉出一個例子"
+    ],
+    note: { tier: "選", t: "數不出 12 小節很正常——<b>先數「轉彎」就好</b>：聽到和聲突然換了一個方向（第 5 小節），心裡記一下；再聽到它繞回來，就差不多是一輪。" }
+  },
+
+  {
+    n: 3, m: "j1", title: "標準曲、曲式與即興", en: "Standards, Form & Improvisation",
+    tw: [["hawkins-bodysoul"], ["miles-sowhat"], ["miles-sowhat"], ["monk-roundmidnight"]],
+    banner: "爵士樂手不是在「演奏一首歌」，而是<b>在一首歌的骨架上重新說一遍</b>。這個單元學的，就是那副骨架長什麼樣子。",
+    concept: [
+      { tier: "史", t: "「標準曲」（standard）是爵士樂手的共同曲庫，多半來自 1920–50 年代的百老匯與好萊塢歌曲。樂手熟記它們的和弦，可以不經排練直接上台合奏。<b>所以同一首〈Body and Soul〉有上千個版本，每一個都是一件獨立的作品。</b>" },
+      { tier: "析", t: "最常見的曲式是 <b>32 小節 AABA</b>：A 段 8 小節、再一次 A、中間一段不一樣的 B（稱為<b>橋段 bridge</b>），最後回到 A。<b>找得到橋段，你就不會在一首爵士樂裡迷路。</b>" },
+      { tier: "析", t: "小編制爵士的標準流程：<b>主題（head）→ 輪流獨奏 → 主題</b>。開頭和結尾大家一起奏旋律，中間每個人輪流即興，每一輪都走完整個 32 小節。<b>這就是古典課第 3 週的「主題與變奏」，差別在於變奏是當場生出來的。</b>" }
+    ],
+    table: {
+      head: ["段", "小節", "聽起來"],
+      rows: [
+        ["A", "1–8", "主旋律"],
+        ["A", "9–16", "同一段旋律再一次（結尾可能略有不同）"],
+        ["<b>B（橋段）</b>", "17–24", "<b>換一個地方</b>：新的旋律、新的和聲"],
+        ["A", "25–32", "回家"]
+      ]
+    },
+    key: "<b>聽一首爵士樂時，先問兩件事：現在是主題還是獨奏？如果是獨奏，現在輪到誰？</b>這兩個問題答得出來，就不會迷路。",
+    works: ["hawkins-bodysoul", "miles-sowhat", "monk-roundmidnight"],
+    yt: { q: "jazz standard AABA form 爵士 曲式 主題 獨奏" },
+    tasks: [
+      "聽 Coleman Hawkins〈Body and Soul〉（1939）。先聽該曲下方 Billie Holiday 的版本記住原曲旋律，再聽 Hawkins：<b>他什麼時候還在奏原曲，什麼時候已經完全離開？</b>",
+      "聽 Miles Davis〈So What〉。<b>找出主題、獨奏、主題三段</b>，並記下獨奏的順序——四位獨奏者，樂器都不一樣。聽完展開該曲下方的<b>「🔒 段落地圖（答案）」</b>核對。",
+      "再聽一次〈So What〉的主題，這次找<b>橋段</b>：低音提琴「問」、管樂「答」重複兩輪之後，<b>整個音樂升高半音</b>——那就是 B 段。8 小節後它又降回來。",
+      "版本比較：〈'Round Midnight〉先聽 Monk 自己彈，再聽 Miles Davis 1956 年的版本。<b>同一首曲子，哪一個聽起來比較「怪」？怪在哪裡？</b>"
+    ],
+    checks: [
+      "能在一首 AABA 曲子中指出橋段開始的位置",
+      "能說出「主題—獨奏—主題」的流程，並在一首曲子裡指出現在是誰在獨奏"
+    ],
+    after: "<b>模組一完成。</b>你現在有三件工具：<b>搖擺</b>（節奏組在做什麼）、<b>骨架</b>（12 小節藍調與 32 小節 AABA）、<b>流程</b>（主題—獨奏—主題）。接下來九個單元不管聽到什麼，都可以先問：骨架是哪一種？現在是誰在說話？"
+  },
+
+  {
+    n: 4, m: "j2", title: "紐奧良：集體即興", en: "New Orleans · Collective Improvisation",
+    tw: [["oliver-dippermouth"], ["oliver-dippermouth"], ["morton-blackbottom"]],
+    banner: "<b>本模組的錄音都很舊。</b>1920 年代的唱片雜訊多、低音少、鼓幾乎錄不到——請先接受這件事，專心聽前排的樂器。這是爵士誕生的現場，沒有替代品。",
+    concept: [
+      { tier: "析", t: "爵士在 20 世紀初誕生於<b>紐奧良</b>：非裔美國人的藍調與靈歌、街頭與葬禮遊行的銅管樂隊、拉格泰姆鋼琴（ragtime）、加勒比海與歐洲的音樂，在這座港口城市混在一起。<b>它不是一個人的發明。</b>" },
+      { tier: "析", t: "紐奧良爵士的核心是<b>集體即興</b>：小號（或短號）吹主旋律，單簧管在上面繞著飛，長號在底下滑——<b>三條線同時即興、互不相讓</b>。這是<b>複音</b>，與古典課第 2 週的巴赫、台灣課單元 7 的布農族 Pasibutbut 是同一個概念。" },
+      { tier: "史", t: "1917 年第一張被稱為爵士的唱片，由白人樂團 Original Dixieland Jass Band 錄製。King Oliver 的 Creole Jazz Band 在 1923 年的錄音，則是最早完整保存黑人紐奧良樂團聲音的錄音之一。" }
+    ],
+    table: {
+      head: ["前排", "角色", "怎麼聽出來"],
+      rows: [
+        ["小號／短號", "主旋律", "最響、最直接"],
+        ["單簧管", "在上面繞", "最高、音最多"],
+        ["長號", "在下面推", "最低，常用滑音"]
+      ]
+    },
+    key: "<b>辨識關鍵：好幾件管樂器同時在即興，卻不打架。</b>分得出三條線各在做什麼，就聽懂紐奧良爵士了。",
+    works: ["oliver-dippermouth", "morton-blackbottom"],
+    yt: { q: "New Orleans jazz collective improvisation 紐奧良爵士" },
+    tasks: [
+      "聽 King Oliver〈Dipper Mouth Blues〉。<b>先只跟短號，再只跟單簧管，再只跟長號</b>——各聽一遍。三條線一直同時在走，這就是集體即興。聽完展開該曲下方的<b>「🔒 聽點對照」</b>。",
+      "再聽一次，找 King Oliver 的<b>弱音器短號獨奏</b>：聲音像被摀住，會「哇、哇」地變化。這段獨奏太有名，後來的樂手照著吹了幾十年。",
+      "聽 Jelly Roll Morton〈Black Bottom Stomp〉。找出<b>樂團突然全部停住、只剩一件樂器</b>的地方（斷奏，stop-time）。和〈Dipper Mouth Blues〉比，這首哪裡聽起來更「有設計」？"
+    ],
+    checks: [
+      "能在紐奧良爵士中分辨小號、單簧管、長號三條線",
+      "能說出集體即興與古典課「複音」概念的關係"
+    ]
+  },
+
+  {
+    n: 5, m: "j2", title: "阿姆斯壯：獨奏者登場", en: "Louis Armstrong · The Rise of the Soloist",
+    tw: [["armstrong-westend"], ["armstrong-westend"], ["armstrong-potatohead"]],
+    flag: "爵士史最重要的 15 秒",
+    banner: "如果爵士史只能記一個名字，大多數評論者會選 <b>Louis Armstrong</b>。這個單元聽他怎麼把爵士從「大家一起說」變成「一個人站出來說」。",
+    concept: [
+      { tier: "析", t: "Armstrong 做的事可以濃縮成一句：<b>把爵士的重心從集體即興移到個人獨奏</b>。1925–28 年他以 Hot Five、Hot Seven 名義錄的一系列唱片，是這個轉變發生的現場。" },
+      { tier: "析", t: "他也改變了唱歌。<b>scat</b>——用沒有意義的音節即興演唱——因他 1926 年的〈Heebie Jeebies〉而流行。據說是他唱到一半歌詞紙掉了，只好用聲音繼續唱；這個故事流傳極廣，但無法查證。" },
+      { tier: "史", t: "〈West End Blues〉（1928）的開頭是一段<b>完全沒有伴奏的小號獨奏</b>，常被列為爵士史上最重要的錄音片段之一。曲子是他的老師 King Oliver 寫的——<b>五年前，Armstrong 還是 Oliver 樂團裡的第二短號</b>（單元 4）。" }
+    ],
+    key: "<b>連著聽單元 4 與本單元：只隔五年，小號從「三條線之一」變成「全場唯一的主角」。</b>",
+    works: ["armstrong-westend", "armstrong-potatohead"],
+    extraWorks: ["armstrong-wonderful"],
+    yt: { q: "Louis Armstrong West End Blues 分析" },
+    tasks: [
+      "聽〈West End Blues〉<b>前 15 秒</b>——那段無伴奏小號——聽三遍，每一遍只注意一件事：它停了幾次？最高的音在哪裡？聽起來像在「說話」還是在「唱歌」？",
+      "聽完整首〈West End Blues〉。找出 Armstrong 和單簧管<b>一問一答</b>的段落：單簧管吹一句，他用 scat 唱一句。聽完展開該曲下方的<b>「🔒 段落地圖（答案）」</b>。",
+      "聽〈Potato Head Blues〉，找 Armstrong 的<b>斷奏獨奏</b>：樂團每隔一下才打一個和弦，把空間全讓給他。<b>和單元 4 的集體即興比，差在哪裡？</b>"
+    ],
+    checks: [
+      "能說出 Armstrong 對爵士的關鍵貢獻（從集體即興到個人獨奏）",
+      "能辨識 scat 演唱，並說出它與一般歌唱的差別"
+    ]
+  },
+
+  {
+    n: 6, m: "j2", title: "大樂團與歌手", en: "Big Bands & Singers",
+    tw: [["ellington-atrain"], ["holiday-strangefruit"], ["ella-howhigh"]],
+    banner: "1930 年代中到 1940 年代中，<b>爵士是全美國的流行音樂</b>。這個單元聽兩件事：十幾個人的大樂團怎麼「寫」，以及爵士歌手怎麼「說」。",
+    concept: [
+      { tier: "史", t: "這段時期稱為<b>搖擺年代</b>（Swing Era）。大樂團通常 12–17 人：<b>小號、長號、薩克斯風三個聲部</b>，加上節奏組。舞廳是它的主場，跳舞是它的目的。" },
+      { tier: "析", t: "大樂團的關鍵在<b>編曲</b>：聲部之間的<b>呼叫與回應</b>——薩克斯風奏一句，銅管回一句。<b>Duke Ellington 是把整個樂團當成一件樂器來寫的人</b>：他依照每一位團員獨特的音色寫譜。對照古典課第 18 週拉威爾的配器法。" },
+      { tier: "析", t: "爵士歌手的關鍵不是音量或高音，而是<b>咬字與時間感</b>。Billie Holiday 常把字唱得比拍子晚一點點（behind the beat），讓同一句歌詞聽起來像在說話；Ella Fitzgerald 則把人聲當成樂器，用 scat 即興。" }
+    ],
+    key: "<b>聽大樂團時，把它想成三組人在對話：</b>薩克斯風、小號、長號。現在是誰在說話？誰在回應？",
+    works: ["ellington-atrain", "holiday-strangefruit"],
+    extraWorks: ["goodman-singsingsing", "ella-howhigh"],
+    yt: { q: "Duke Ellington big band 大樂團 搖擺年代" },
+    tasks: [
+      "聽 Ellington〈Take the 'A' Train〉。找出<b>薩克斯風聲部</b>與<b>銅管聲部</b>輪流說話的地方：一組奏一句，另一組回應。",
+      "聽 Billie Holiday〈Strange Fruit〉。<b>先讀該曲下方的「📖 歌詞大意」再聽</b>。只注意一件事：她的聲音在哪幾個地方變得最冷、最平？",
+      "延伸：聽 Ella Fitzgerald〈How High the Moon〉（1960 柏林現場）的 scat 段落。她在即興中<b>引用了好幾首別的曲子</b>——你認出了哪幾首？（認不出來也沒關係，聽她怎麼把人聲當樂器用。）"
+    ],
+    checks: [
+      "能在大樂團中分辨薩克斯風聲部與銅管聲部",
+      "能說出 Billie Holiday 的唱法與一般流行歌手的差別"
+    ],
+    after: "<b>模組二完成。</b>你聽過了爵士的前三十年：紐奧良的集體即興、Armstrong 的獨奏、大樂團的舞曲。接下來，爵士要從舞廳走進俱樂部——音樂會變快、變難，也變成「聽」的音樂。"
+  },
+
+  {
+    n: 7, m: "j3", title: "比波普", en: "Bebop",
+    tw: [["parker-koko"], ["parker-koko"], ["gillespie-saltpeanuts"]],
+    banner: "<b>這個單元第一遍一定跟不上，那是正常的。</b>比波普是刻意做得又快又難的音樂——它就是要讓只想跳舞的人跟不上。",
+    concept: [
+      { tier: "史", t: "1940 年代初中期，一群年輕樂手在紐約哈林區的 Minton's Playhouse 等俱樂部，下班後即興合奏（jam session），發展出<b>比波普</b>：Charlie Parker（中音薩克斯風）、Dizzy Gillespie（小號）、Thelonious Monk（鋼琴）、Kenny Clarke 與 Max Roach（鼓）。" },
+      { tier: "析", t: "比波普的三個特徵：<b>極快</b>、<b>和聲更複雜</b>（在原本的和弦上疊更多音、塞進更多和弦）、<b>小編制</b>（五人左右，不再是十幾人的大樂團）。<b>最重要的轉變是：爵士從舞曲變成聽的音樂</b>——這麼快，沒有人能跳舞。" },
+      { tier: "析", t: "比波普樂手常把舊曲子的和弦拿來，<b>寫一條全新的旋律</b>（contrafact）。Parker 的〈Ko-Ko〉就建立在流行歌〈Cherokee〉的和弦上。這和台灣課歌仔戲的「一曲多用」方向相反：那邊是同一個曲調配新的詞，這邊是同一組和弦配新的旋律。" }
+    ],
+    table: {
+      head: ["", "搖擺年代（單元 6）", "比波普（單元 7）"],
+      rows: [
+        ["編制", "12–17 人大樂團", "<b>5 人左右</b>"],
+        ["目的", "跳舞", "<b>聽</b>"],
+        ["速度", "中快", "<b>極快</b>"],
+        ["重心", "編曲、合奏", "<b>個人即興</b>"],
+        ["場所", "舞廳", "<b>小俱樂部</b>"]
+      ]
+    },
+    key: "<b>比波普聽不懂旋律沒關係，先抓住鼓手的 ride 鈸。</b>只要時間的骨架還在，你就沒有迷路。",
+    works: ["parker-koko", "gillespie-saltpeanuts"],
+    extraWorks: ["monk-straightnochaser"],
+    yt: { q: "bebop Charlie Parker 比波普 介紹" },
+    tasks: [
+      "聽 Charlie Parker〈Ko-Ko〉（1945）。<b>不用跟旋律</b>——跟不上是正常的。只做一件事：跟著鼓手的 ride 鈸打拍子，感受那個速度。",
+      "先聽該曲下方的原曲〈Cherokee〉，再聽一次〈Ko-Ko〉：<b>哪一段比較像「寫好的」、哪一段比較像「當場說的」？</b>聽完展開<b>「🔒 段落地圖（答案）」</b>。",
+      "聽 Dizzy Gillespie〈Salt Peanuts〉。樂手在曲中<b>用人聲喊出「salt peanuts!」</b>——注意那個喊聲的節奏，就是旋律開頭那兩個音。"
+    ],
+    checks: [
+      "能說出比波普與搖擺大樂團在編制、目的、速度上的差異",
+      "能在一首比波普中分辨「編好的主題」與「即興獨奏」"
+    ]
+  },
+
+  {
+    n: 8, m: "j3", title: "酷派與調式", en: "Cool Jazz & Modal Jazz",
+    tw: [[], ["miles-blueingreen"], ["brubeck-takefive"]],
+    banner: "上一單元把爵士推到最快、最滿。這一單元往反方向走：<b>更慢、更輕、更多空間</b>。",
+    concept: [
+      { tier: "史", t: "1949–50 年，Miles Davis 九重奏的錄音（後來集結為《Birth of the Cool》）用了<b>法國號與低音號</b>——兩件古典樂團的樂器——讓爵士的聲音變得柔和、圓潤。這個方向被稱為<b>酷派爵士</b>（cool jazz）。" },
+      { tier: "析", t: "1959 年的《Kind of Blue》是<b>調式爵士</b>（modal jazz）的里程碑：不再每一兩拍就換一個和弦，而是<b>在一個音階上停留很久</b>——〈So What〉的 A 段 16 小節只有一個調式。樂手從「追著和弦跑」變成「在一片顏色裡慢慢走」。" },
+      { tier: "析", t: "同一年，Dave Brubeck 四重奏的《Time Out》實驗不尋常的拍子：〈Take Five〉是 <b>5/4 拍</b>。爵士在 1959 年同時往好幾個方向打開——調式、奇數拍，以及下一個模組的自由爵士。" }
+    ],
+    key: "<b>連著聽單元 7 的〈Ko-Ko〉和單元 3 的〈So What〉：</b>前者每幾拍就換一個和弦，後者 16 小節停在同一個顏色上。同樣是小編制爵士，相隔不到 15 年。",
+    works: ["miles-blueingreen", "brubeck-takefive"],
+    extraWorks: ["miles-boplicity"],
+    yt: { q: "modal jazz Kind of Blue 調式爵士 介紹" },
+    tasks: [
+      "回頭聽單元 3 的〈So What〉，這次只注意<b>和聲換得有多慢</b>。然後立刻聽單元 7 的〈Ko-Ko〉。感受「快速換和弦」與「長時間停在一個顏色」的差別。",
+      "聽〈Blue in Green〉。這首曲子<b>好像沒有明顯的開始與結束</b>——試著指出它從哪裡又「回到起點」。聽完展開該曲下方的<b>「🔒 聽點對照」</b>。",
+      "聽〈Take Five〉。跟著數「1-2-3-4-5」：鋼琴的伴奏型每 5 拍重複一次。<b>數得出來嗎？中段鼓獨奏時，還數得住嗎？</b>"
+    ],
+    checks: [
+      "能說出調式爵士與比波普在「和弦換得多快」上的差異",
+      "能在〈Take Five〉中跟著數出 5 拍"
+    ]
+  },
+
+  {
+    n: 9, m: "j3", title: "硬式比波普", en: "Hard Bop",
+    tw: [["blakey-moanin"], ["silver-songformyfather"], ["blakey-moanin"]],
+    banner: "比波普讓爵士變成了藝術，也讓它離一般聽眾愈來愈遠。<b>硬式比波普是把聽眾找回來的那一步</b>：同樣的技術，加上藍調和教會的味道。",
+    concept: [
+      { tier: "析", t: "1950 年代中後期，紐約、底特律、費城的樂手把比波普的技術，和<b>藍調、福音詩歌</b>（gospel）的感覺接回來，稱為<b>硬式比波普</b>（hard bop）。Blue Note 唱片公司是這個風格的大本營。" },
+      { tier: "析", t: "最明顯的特徵是<b>呼叫與回應</b>：一句問、一句答，來自非裔美國人的教會——牧師說一句，會眾回一句。對照<b>台灣課單元 5 的客家山歌對唱</b>：同樣是一問一答，一邊是教會，一邊是隔著山谷。" },
+      { tier: "史", t: "Art Blakey 的 Jazz Messengers 是硬式比波普的「學校」：數十年間培養出大批重要樂手——Lee Morgan、Wayne Shorter、Freddie Hubbard、Wynton Marsalis 都曾是團員。" }
+    ],
+    key: "<b>硬式比波普最好認的地方：你哼得出來。</b>一首 1950 年代末的小編制爵士，如果旋律像教會歌、節奏很穩、聽一遍就記得住——多半就是它。",
+    works: ["blakey-moanin", "silver-songformyfather"],
+    extraWorks: ["adderley-mercy"],
+    yt: { q: "hard bop Art Blakey Blue Note 硬式比波普" },
+    tasks: [
+      "聽 Art Blakey〈Moanin'〉的主題。<b>誰在「問」？誰在「答」？</b>答的那兩個音，像不像有人在說「阿們」？聽完展開該曲下方的<b>「🔒 主題的一問一答」</b>。",
+      "聽 Horace Silver〈Song for My Father〉。注意<b>開頭鋼琴與低音提琴一起彈的重複低音型</b>——它帶著巴西 bossa nova 的搖晃感，單元 11 會再遇到。",
+      "比較單元 7 的〈Ko-Ko〉和這單元的〈Moanin'〉：同樣是五人左右的小編制，<b>哪一首比較容易跟著哼？為什麼？</b>"
+    ],
+    checks: [
+      "能辨識爵士中的呼叫與回應",
+      "能說出硬式比波普與比波普在聽感上的差異"
+    ],
+    after: "<b>模組三完成。</b>從 1940 到 1960 年，爵士在二十年間走了三步：比波普（加速、加難）、酷派與調式（減法、留白）、硬式比波普（找回藍調）。下一個模組，爵士要開始拆掉自己的規則。"
+  },
+
+  {
+    n: 10, m: "j4", title: "柯川與自由爵士", en: "Coltrane & Free Jazz",
+    flag: "整門課門檻最高的一單元",
+    tw: [["coltrane-giantsteps"], ["coltrane-lovesupreme"], ["coleman-lonelywoman"], ["coltrane-favoritethings"]],
+    banner: "<b>聽不慣是正常的</b>——古典課第 20 週的荀貝格也一樣。這個單元的目標不是喜歡上它，而是聽懂它<b>拿掉了什麼</b>。",
+    concept: [
+      { tier: "析", t: "John Coltrane 在五年內走了兩個方向相反的極端：1959 年的〈Giant Steps〉<b>和弦換得極快、跳得極遠</b>，至今仍是爵士樂手的試金石；1964 年的《A Love Supreme》則是<b>一部四段的靈性組曲</b>，獻給神。" },
+      { tier: "史", t: "同一年（1959），Ornette Coleman 的《The Shape of Jazz to Come》<b>拿掉了鋼琴</b>，也拿掉了固定的和弦進行——樂手不再「照和弦即興」，而是彼此聆聽、隨時轉向。這個方向被稱為<b>自由爵士</b>（free jazz）。" },
+      { tier: "析", t: "對照古典課第 20 週的 Schoenberg：兩者都在<b>拿掉一套系統</b>——那邊拿掉調性，這邊拿掉和弦。聽眾的反應也一樣兩極。" }
+    ],
+    key: "<b>聽自由爵士的方法：不要找旋律或和弦，改聽「誰在回應誰」。</b>樂手之間的對話，取代了原本的骨架。",
+    works: ["coltrane-giantsteps", "coltrane-lovesupreme", "coleman-lonelywoman"],
+    extraWorks: ["coltrane-favoritethings"],
+    yt: { q: "John Coltrane A Love Supreme Giant Steps 介紹" },
+    tasks: [
+      "聽〈Giant Steps〉。<b>不用分析和弦</b>，只比較一件事：鋼琴手 Tommy Flanagan 的獨奏，聽起來是不是比 Coltrane「卡」？當年錄音時，他也是第一次面對這樣的和弦進行。",
+      "聽《A Love Supreme》第一段〈Acknowledgement〉。注意那個<b>四個音的低音型</b>，以及最後樂手們<b>用人聲唸出「a love supreme」</b>——唸誦和那個低音型是什麼關係？聽完展開該曲下方的<b>「🔒 聽點對照」</b>。",
+      "聽 Ornette Coleman〈Lonely Woman〉。這首<b>沒有鋼琴</b>：鼓打得很快、低音提琴走得很慢、兩把管樂吹一段哀傷的旋律。<b>你覺得它是快還是慢？</b>",
+      "延伸：聽〈My Favorite Things〉。先聽該曲下方《真善美》的原曲，再聽 Coltrane 怎麼把一首兩分多鐘的歌，變成十幾分鐘的即興。"
+    ],
+    checks: [
+      "能說出〈Giant Steps〉與《A Love Supreme》代表的兩種不同方向",
+      "能說出自由爵士「拿掉了什麼」，並與古典課的荀貝格對照"
+    ]
+  },
+
+  {
+    n: 11, m: "j4", title: "拉丁與巴薩諾瓦", en: "Latin Jazz & Bossa Nova",
+    tw: [["gillespie-manteca"], ["gillespie-manteca", "getz-ipanema"], ["getz-ipanema"]],
+    banner: "爵士往旁邊打開的一扇門：<b>換一種節奏的骨架</b>。搖擺是「長—短」的流動，拉丁是幾個節奏型的咬合。",
+    concept: [
+      { tier: "史", t: "1947 年，Dizzy Gillespie 邀請古巴康加鼓手 <b>Chano Pozo</b> 加入大樂團，合寫〈Manteca〉——<b>非洲—古巴節奏</b>正式進入爵士，稱為 Afro-Cuban jazz。" },
+      { tier: "析", t: "拉丁音樂的節奏骨架叫 <b>clave</b>：一個 3＋2（或 2＋3）的不對稱節奏型，所有樂器都圍繞它排列。<b>搖擺是流動的，clave 是咬合的</b>——兩種完全不同的「律動」。" },
+      { tier: "史", t: "1950 年代末的巴西，João Gilberto 與 Antônio Carlos Jobim 發展出 <b>bossa nova</b>（葡萄牙文「新潮流」）：森巴的節奏放輕、放慢，配上低聲細語的唱法。1964 年的《Getz/Gilberto》讓它席捲全球。" }
+    ],
+    key: "<b>拍手測試：</b>跟著 clave 拍「拍、拍、拍——拍、拍」（3＋2）。拍得上去的，多半有拉丁節奏的骨架；拍不上去、卻很想在 2、4 拍拍手的，是搖擺。",
+    works: ["gillespie-manteca", "getz-ipanema"],
+    yt: { q: "Afro-Cuban jazz clave bossa nova 拉丁爵士 介紹" },
+    tasks: [
+      "聽〈Manteca〉的開頭：低音提琴與康加鼓先建立一個不斷重複的節奏型，管樂再一層一層疊上去。<b>它和單元 6 的 Ellington，差在哪裡？</b>",
+      "跟著 clave 拍手：「拍、拍、拍——拍、拍」。先在〈Manteca〉上試，再試〈The Girl from Ipanema〉。哪一首比較容易抓到？",
+      "聽〈The Girl from Ipanema〉。João Gilberto 先用葡萄牙文唱，Astrud Gilberto 接著用英文唱。<b>兩人的唱法有什麼共同點？</b>（提示：音量）"
+    ],
+    checks: [
+      "能說出搖擺節奏與拉丁節奏（clave）的差異",
+      "能辨識 bossa nova 的唱法與節奏特徵"
+    ]
+  },
+
+  {
+    n: 12, m: "j4", title: "融合，以及接下來", en: "Fusion & What Comes Next",
+    tw: [["hancock-chameleon"], ["weatherreport-birdland"], [], []],
+    banner: "最後一個單元做三件事：<b>聽爵士插上電之後的樣子、把十二個單元串起來、決定接下來往哪裡走。</b>",
+    concept: [
+      { tier: "史", t: "1969–70 年，Miles Davis 的《In a Silent Way》《Bitches Brew》把<b>電吉他、電鋼琴、搖滾節奏</b>帶進爵士，稱為<b>融合爵士</b>（fusion）。他的樂手們各自組團：Herbie Hancock 的 Head Hunters、Joe Zawinul 與 Wayne Shorter 的 Weather Report。" },
+      { tier: "析", t: "融合爵士常被老派樂迷批評為「不是爵士」，這個爭論從 1970 年代吵到今天，<b>本課程不作裁定</b>。值得注意的是，同樣的話在 1940 年代也被拿來罵比波普。" },
+      { tier: "析", t: "今天的爵士同時有好幾條路：延續傳統的、與嘻哈和 R&B 結合的（例如 Robert Glasper）、大編制靈性路線的（例如 Kamasi Washington）。<b>爵士從來不是一種固定的聲音，而是一種做音樂的方法</b>：一副骨架、一群人、當場說話。" }
+    ],
+    table: {
+      head: ["風格", "年代", "一句話"],
+      rows: [
+        ["紐奧良", "1910–20 年代", "三條線一起即興"],
+        ["搖擺／大樂團", "1930–40 年代", "全美國的舞曲"],
+        ["比波普", "1940 年代", "快到不能跳舞"],
+        ["酷派／調式", "1950 年代", "減法與留白"],
+        ["硬式比波普", "1950–60 年代", "把藍調與教會找回來"],
+        ["自由爵士", "1960 年代", "拿掉和弦"],
+        ["拉丁／巴西", "1940–60 年代", "換一種節奏骨架"],
+        ["融合", "1970 年代起", "插上電"]
+      ]
+    },
+    key: "<b>如果你只帶走一件事：</b>爵士的每一次演出都是當場的創作。同一首曲子，換一群人、換一個晚上，就是另一件作品——<b>所以爵士最好的聽法，永遠是同一首聽兩個版本，或去現場聽一次。</b>",
+    works: ["hancock-chameleon", "weatherreport-birdland"],
+    yt: { q: "jazz fusion Herbie Hancock Weather Report 融合爵士" },
+    tasks: [
+      "聽 Herbie Hancock〈Chameleon〉的開頭：那條低音<b>不是低音提琴，是合成器</b>。整首建立在一個不斷重複的低音型上——<b>這和單元 9〈Song for My Father〉、單元 11〈Manteca〉的重複低音型，是同一個思路嗎？</b>",
+      "聽 Weather Report〈Birdland〉。主旋律要等一陣子才完整出現——<b>在它出現之前，你聽到了幾段不同的音型？</b>",
+      "打開<b>★ 重聽區</b>，看看你這十二個單元收藏了哪些。<b>你偏向哪一個時期？</b>那就是你的起點。（重聽區跨課程共用，古典與台灣課的收藏也在裡面。）",
+      "找一場<b>現場</b>。爵士比任何一種音樂都更依賴現場：同一首曲子，今晚和明晚不會一樣。"
+    ],
+    checks: [
+      "能說出融合爵士帶進了哪些新的元素",
+      "重聽區已有內容，並能說出自己偏向哪一個時期"
+    ],
+    gaps: {
+      title: "這門課沒有涵蓋的東西",
+      items: [
+        "<b>拉格泰姆與跨步鋼琴</b>：Scott Joplin、James P. Johnson、Fats Waller、Art Tatum——爵士鋼琴的源頭",
+        "<b>吉普賽爵士</b>：Django Reinhardt 與 Stéphane Grappelli，歐洲第一個重要的爵士聲音",
+        "<b>Charles Mingus</b>：貝斯手、作曲家，把教會、藍調、Ellington 與政治全寫進大編制作品裡",
+        "<b>西岸爵士</b>：Chet Baker、Gerry Mulligan 等，與本課單元 8 的酷派同一脈絡",
+        "<b>風琴三重奏與靈魂爵士</b>：Jimmy Smith 的 Hammond 風琴",
+        "<b>歐洲與 ECM 唱片的爵士</b>：Keith Jarrett《The Köln Concert》等",
+        "<b>更多的歌手</b>：Sarah Vaughan、Nat King Cole、Frank Sinatra、Nina Simone……",
+        "<b>台灣與亞洲的爵士</b>：本課完全沒有碰，這是一個真實的缺口"
+      ]
+    },
+    live: "<b>強烈建議：去聽一次現場。</b>爵士的即興是當場發生的，錄音只是某一個晚上的紀錄。台灣各大城市都有固定排爵士演出的 live house 與酒吧，也有大型的戶外爵士音樂節（例如每年秋天的臺中爵士音樂節）。查詢時用「爵士 現場」加上城市名；演出資訊請以主辦單位公告為準。"
+  }
+  ];
+})();
+
+</script>
+<script>
+/* 爵士樂．參考頁面（資料驅動，由 app.js 的 pageHTML() 渲染）
+   appendix: true 的頁面排在側邊欄的「附錄」區。 */
+(function () {
+  var J = (window.COURSES = window.COURSES || {}).jazz;
+  var core = J.core;
+
+  J.pages = [
+  {
+    id: "p-start", icon: "十", title: "先聽這 10 首", en: "Start Here · The First Ten",
+    blocks: [
+      { p: "整門課有 12 個單元、30 多首曲目。<b>但你不需要按順序來。</b>下面這十首依「好入口」而非「歷史順序」排列——前三首幾乎人人都聽得進去，最後三首是這門課最難的地方。聽完這十首，爵士的主要地貌就大致完整了。" },
+      { banner: "<b>預估時間：約 70 分鐘。</b>一次聽完會累，建議分三次。每一首<b>至少聽兩遍</b>：第一遍只聽，第二遍照旁邊的提示只注意一件事。" },
+      { h3: "第一輪：三個最好的入口", tier: "選" },
+      { picks: [
+        { label: "1　Dave Brubeck〈Take Five〉", sub: "1959 · 5/4 拍。<b>旋律多數人一聽就認得</b>，先從這裡開始", q: "Dave Brubeck Quartet Take Five Time Out 1959", qa: "hires" },
+        { label: "2　Miles Davis〈So What〉", sub: "1959 ·《Kind of Blue》。低音提琴問、管樂答——<b>史上最暢銷的爵士專輯之一的第一首</b>", q: "Miles Davis So What Kind of Blue", qa: "hires" },
+        { label: "3　Stan Getz & João Gilberto〈The Girl from Ipanema〉", sub: "1963 · bossa nova。輕、慢、低聲細語", q: "Stan Getz Joao Gilberto Astrud Gilberto The Girl from Ipanema", qa: "hires" }
+      ] },
+      { note: "這三首刻意選得彼此不同：<b>一個奇數拍、一個調式、一個巴西節奏</b>。它們的共同點只有一個：都很好聽，而且都是當場即興出來的。" },
+      { folds: [
+        { t: "第二輪：往回走到源頭", sub: "第 4–7 首 · 聽完第一輪再點開", blocks: [
+          { picks: [
+            { label: "4　Art Blakey〈Moanin'〉", sub: "1958 · 教會式的一問一答，<b>你哼得出來的那種爵士</b>", q: "Art Blakey Jazz Messengers Moanin 1958 Blue Note", qa: "hires" },
+            { label: "5　Duke Ellington〈Take the 'A' Train〉", sub: "1941 · 搖擺大樂團。音質變舊了，請先接受這件事", q: "Duke Ellington Take the A Train 1941", qa: "historic" },
+            { label: "6　Louis Armstrong〈West End Blues〉", sub: "1928 · <b>開頭 15 秒的無伴奏小號</b>，爵士史最重要的錄音片段之一", q: "Louis Armstrong Hot Five West End Blues 1928", qa: "historic" },
+            { label: "7　Coleman Hawkins〈Body and Soul〉", sub: "1939 · 幾乎一開始就離開原曲旋律，整段都是即興", q: "Coleman Hawkins Body and Soul 1939", qa: "historic" }
+          ] }
+        ] },
+        { t: "第三輪：最難的三首", sub: "第 8–10 首", blocks: [
+          { picks: [
+            { label: "8　Charlie Parker〈Ko-Ko〉", sub: "1945 · 比波普。<b>跟不上是正常的</b>，先感受速度", q: "Charlie Parker Ko-Ko 1945 Savoy", qa: "historic" },
+            { label: "9　John Coltrane〈Acknowledgement〉", sub: "1964 ·《A Love Supreme》第一段。注意那個四個音的低音型", q: "John Coltrane A Love Supreme Part 1 Acknowledgement 1964", qa: "hires" },
+            { label: "10　Ornette Coleman〈Lonely Woman〉", sub: "1959 · 自由爵士。<b>旋律其實很好聽</b>，自由的是底下", q: "Ornette Coleman Lonely Woman Shape of Jazz to Come 1959", qa: "hires" }
+          ] }
+        ] }
+      ] },
+      { h3: "聽完之後" },
+      { p: "這十首走完，你大致碰過了這條線：<br><b>紐奧良 → 搖擺 → 比波普 → 調式 → 硬式比波普 → 自由 → 巴西</b><br>接下來從左側的<b>單元 1</b> 開始。前三個單元會給你三件工具（搖擺、骨架、誰在獨奏），之後再聽這十首，會聽到完全不一樣的東西。" }
+    ]
+  },
+
+  {
+    id: "p-listen", icon: "耳", title: "怎麼聽一首爵士樂", en: "How to Listen to a Jazz Record",
+    blocks: [
+      { p: "爵士最常讓人放棄的原因是「聽不出在幹嘛」。<b>下面九條是實際有用的聽法與找法</b>，點開看細節。" },
+      { banner: "<b>一句話版本：</b>先找主題，再問「現在輪到誰」。答得出這兩件事，就不會在一首爵士樂裡迷路。" },
+      { folds: [
+        { t: "一、先找主題", sub: "開頭與結尾", blocks: [
+          { p: "小編制爵士幾乎都是<b>主題 → 輪流獨奏 → 主題</b>。開頭那段大家一起奏的旋律就是主題（head）——<b>記住它，結尾它會再回來</b>，你就知道曲子要結束了。" } ] },
+        { t: "二、問「現在輪到誰」", sub: "最有用的一條", blocks: [
+          { p: "獨奏是一個人接一個人輪流的：小號、薩克斯風、鋼琴、有時貝斯和鼓。<b>每換一個人，音色就變一次</b>——不用認得樂手，只要聽出「換人了」就夠。〈So What〉的段落地圖（單元 3）是最好的練習。" } ] },
+        { t: "三、聽不懂獨奏時，改聽節奏組", blocks: [
+          { p: "獨奏太快、太複雜時，<b>把注意力移到底下</b>：低音提琴每拍一個音、鼓手的 ride 鈸一直在響。只要你還跟得上它們，就沒有迷路。這是單元 1 整個在練的事。" } ] },
+        { t: "四、數骨架", sub: "12 小節或 32 小節", blocks: [
+          { p: "大多數爵士曲子不是 <b>12 小節藍調</b>（單元 2），就是 <b>32 小節 AABA</b>（單元 3）。數不出小節沒關係，<b>先聽「轉彎」</b>：藍調在第 5、9 小節轉彎；AABA 在第 17 小節進入橋段。" } ] },
+        { t: "五、同一首聽兩個版本", sub: "爵士最好的學法", blocks: [
+          { p: "爵士的每一次演出都是重新即興，<b>所以比較版本比古典音樂更有收穫</b>。單元 3 的〈'Round Midnight〉、〈Body and Soul〉都附了不同年代、不同樂手的版本——連著聽，你會清楚聽到「同一副骨架、不同的人在說話」。" } ] },
+        { t: "六、聽專輯，不只聽單曲", blocks: [
+          { p: "1950 年代以後的爵士多半是<b>以專輯為單位</b>設計的：《Kind of Blue》《Time Out》《A Love Supreme》的曲序都是刻意安排的。<b>喜歡哪一首，就把那張專輯從頭聽完。</b>" } ] },
+        { t: "七、搜尋：演奏者＋曲名＋年份", sub: "KKBOX／YouTube 都適用", blocks: [
+          { p: "同一首曲子有上百個版本，<b>只搜曲名一定會找錯</b>。本課每個版本的搜尋字串都是「演奏者＋曲名＋年份或專輯」。自己找的時候也照這個格式，例如：<code>Miles Davis So What 1959</code>。" } ] },
+        { t: "八、舊錄音請多給一點耐心", blocks: [
+          { p: "1920–40 年代的錄音雜訊多、低音少，鼓幾乎錄不到。<b>請不要因此跳過</b>——這是爵士誕生的現場。聽的時候把注意力放在<b>前排的管樂器</b>上，耳朵很快就會習慣。" } ] },
+        { t: "九、現場錄音與錄音室錄音都要聽", blocks: [
+          { p: "現場錄音（例如 Ella Fitzgerald 的柏林現場、Miles Davis 的《Four & More》）通常更快、更自由，有觀眾的反應；錄音室錄音則更精緻。<b>同一位樂手兩種都聽，最能聽出他「當場」的那一面。</b>" } ] }
+      ] },
+      { note: "<b>聽不出細節也沒關係。</b>爵士樂手自己也是一聽再聽同一張唱片學起來的。這門課的設計就是：<b>少聽幾首，每首多聽幾遍</b>。" }
+    ]
+  },
+
+  {
+    id: "p-inst", icon: "器", title: "樂器辨識", en: "Instruments · Who Is Playing",
+    blocks: [
+      { p: "爵士的樂器不多，<b>難的是分辨同一家族的成員</b>——尤其是三種薩克斯風。下面分成兩組：站在前面吹旋律的，以及在後面撐起時間與和聲的節奏組。" },
+      { banner: "<b>圖是手繪線稿，不是照片。</b>小號、長號、單簧管、低音提琴直接沿用古典課的線稿——同一件樂器在兩門課裡長得一樣。圖中<b>填色的部分就是辨識關鍵</b>。" },
+      { instcards: true },
+      { h3: "最容易搞混的三組", tier: "選" },
+      { p: "這三組用文字說不清楚，直接看圖最快。" },
+      { instcompare: true },
+      { note: "<b>建議做法：</b>每認一件樂器，就找一段它當主角的錄音聽 2 分鐘。中音薩克斯風聽單元 8 的〈Take Five〉，次中音聽單元 3 的〈Body and Soul〉，加弱音器的小號聽單元 3 的〈'Round Midnight〉（Miles Davis 版）。" }
+    ]
+  },
+
+  {
+    id: "p-cross", icon: "橋", title: "與另外兩門課的對照", en: "Cross-Course Listening",
+    blocks: [
+      { p: "三門課放在同一個網站，理由在這一頁。<b>古典課教的四項聆聽工具（音色、織體、曲式、調性）在爵士裡全部用得上</b>，台灣課的「一曲多用」與「對唱」在這裡也找得到對應。下面七組最值得連著聽——兩首接著聽，中間不要停。" },
+      { folds: [
+        { t: "1　複音：巴赫 vs. 紐奧良爵士", sub: "最推薦從這組開始", blocks: [
+          { p: "古典課<b>第 2 週</b>：多條地位平等的旋律線同時進行。<b>紐奧良的集體即興是同一個概念</b>——差別只在巴赫是寫好的，King Oliver 的樂團是當場生出來的。台灣課單元 7 的 Pasibutbut 則是第三種解法：連旋律都沒有，只剩聲部之間的關係。" },
+          { picks: [
+            { label: "Bach《賦格的藝術》", sub: "古典課第 2 週", q: "Bach Art of Fugue Contrapunctus 1", qa: "hifi" },
+            { label: "King Oliver〈Dipper Mouth Blues〉", sub: "本課單元 4", q: "King Oliver Creole Jazz Band Dipper Mouth Blues 1923", qa: "historic" },
+            { label: "布農族〈Pasibutbut〉", sub: "台灣課單元 7", q: "布農族 Pasibutbut 祈禱小米豐收歌", qa: "historic" } ] } ] },
+        { t: "2　反覆的框架：帕薩卡利亞 vs. 藍調", blocks: [
+          { p: "Brahms 第 4 號末樂章（古典課<b>第 15 週</b>）把同一段 8 小節的主題反覆 30 多次，每一次在上面寫新的變奏。<b>藍調的 chorus 是一模一樣的原理</b>：同一個 12 小節的框架反覆，每一輪有人在上面即興。" },
+          { picks: [
+            { label: "Brahms 第 4 號交響曲 末樂章", sub: "古典課第 15 週", q: "Brahms Symphony 4 Kleiber", qa: "hires" },
+            { label: "Sonny Rollins〈Blue Seven〉", sub: "本課單元 2", q: "Sonny Rollins Blue Seven Saxophone Colossus 1956", qa: "hifi" } ] } ] },
+        { t: "3　舊骨架填新東西：七字調 vs. 比波普", blocks: [
+          { p: "歌仔戲的<b>七字調</b>（台灣課單元 4）是同一個曲調配上新的詞，一個曲調可以唱一輩子。比波普反過來：<b>同一組和弦配上新的旋律</b>——Charlie Parker 的〈Ko-Ko〉就是把〈Cherokee〉的和弦拿來重寫。方向相反，原理相同：<b>骨架是公共財，填進去的才是當下的創作。</b>" },
+          { picks: [
+            { label: "歌仔戲〈七字調〉", sub: "台灣課單元 4", q: "歌仔戲 七字調", qa: "hifi" },
+            { label: "Charlie Barnet〈Cherokee〉→ Charlie Parker〈Ko-Ko〉", sub: "本課單元 7（先聽原曲）", q: "Charlie Parker Ko-Ko 1945 Savoy", qa: "historic" } ] } ] },
+        { t: "4　配器：〈波麗露〉vs. Ellington", blocks: [
+          { p: "拉威爾〈波麗露〉（古典課<b>第 18 週</b>）旋律不變，靠換樂器推進整首曲子。<b>Duke Ellington 的寫法更進一步：他不是寫給「一把小號」，而是寫給「這一位小號手」</b>，每個團員的個人音色本身就是配器的材料。" },
+          { picks: [
+            { label: "Ravel《波麗露》", sub: "古典課第 18 週", q: "Ravel Bolero", qa: "hires" },
+            { label: "Duke Ellington〈Take the 'A' Train〉", sub: "本課單元 6", q: "Duke Ellington Take the A Train 1941", qa: "historic" } ] } ] },
+        { t: "5　懸浮的和聲：Debussy vs. Bill Evans", sub: "兩者的關聯屬【析】層", blocks: [
+          { p: "Bill Evans 深受 Debussy 與 Ravel 影響，這是樂評的通說。<b>〈Blue in Green〉那種模糊、沒有方向的和聲</b>，和古典課<b>第 18 週</b>《牧神的午後前奏曲》是同一個家族——都在拿掉「往哪裡去」的感覺，讓聲音懸在空中。" },
+          { picks: [
+            { label: "Debussy《牧神的午後前奏曲》", sub: "古典課第 18 週", q: "Debussy Prelude a l'apres-midi d'un faune", qa: "hires" },
+            { label: "Miles Davis〈Blue in Green〉", sub: "本課單元 8", q: "Miles Davis Blue in Green Kind of Blue", qa: "hires" } ] } ] },
+        { t: "6　拿掉一套系統：Schoenberg vs. Ornette Coleman", blocks: [
+          { p: "古典課<b>第 20 週</b>的 Schoenberg 拿掉了調性；Ornette Coleman（本課單元 10）拿掉了和弦。<b>兩者相隔 50 年，做的是同一件事，引起的反應也一樣兩極。</b>" },
+          { picks: [
+            { label: "Schoenberg《月光小丑》", sub: "古典課第 20 週", q: "Schoenberg Pierrot Lunaire", qa: "hires" },
+            { label: "Ornette Coleman〈Lonely Woman〉", sub: "本課單元 10", q: "Ornette Coleman Lonely Woman Shape of Jazz to Come 1959", qa: "hires" } ] } ] },
+        { t: "7　一問一答：客家山歌 vs. 硬式比波普", blocks: [
+          { p: "客家山歌（台灣課<b>單元 5</b>）原是隔著山谷的對唱：一個人唱一句，另一個人回一句。〈Moanin'〉（本課單元 9）的主題也是一問一答，來源是非裔美國人的教會——牧師說一句，會眾回一句。<b>兩個完全沒有關聯的傳統，長出了同一種形狀。</b>" },
+          { picks: [
+            { label: "客家〈老山歌〉", sub: "台灣課單元 5", q: "客家 老山歌", qa: "hifi" },
+            { label: "Art Blakey〈Moanin'〉", sub: "本課單元 9", q: "Art Blakey Jazz Messengers Moanin 1958 Blue Note", qa: "hires" } ] } ] }
+      ] },
+      { note: "<b>★ 重聽區跨課程共用。</b>三門課的收藏放在一起，你可以直接看出自己偏向哪一邊——那個比例本身就是資訊。" }
+    ]
+  },
+
+  {
+    id: "p-glossary", icon: "詞", title: "名詞速查", en: "Glossary", appendix: true,
+    blocks: [
+      { p: "這門課用到的爵士術語。很多詞在中文裡沒有固定的譯法，所以保留原文。" },
+      { table: { head: ["名詞", "意思"], rows: core.glossary.map(function (g) { return ["<b>" + g.t + "</b>", g.d]; }) } }
+    ]
+  },
+
+  {
+    id: "p-caveats", icon: "限", title: "限制與爭議", en: "Caveats & Disputes", appendix: true,
+    blocks: [
+      { p: "爵士史比古典音樂史年輕，但爭議不比較少——很多關於「誰先、誰發明、誰的功勞」的故事，至今仍在辯論。本課程的原則：<b>可查證的寫成史實，傳說寫明「據說」，爭議兩說並陳。</b>" },
+      { table: { head: ["項目", "說明"], rows: core.caveats.map(function (c) { return ["<b>" + c.t + "</b>", c.d]; }) } }
+    ]
+  }
+  ];
+})();
+
+</script>
+<script>
 (function () {
   "use strict";
   /* ---------------- 課程註冊 ----------------
-     兩門課共用同一套機制（版本清單、音質分級、雙平台連結、進度、★ 重聽區、
-     搜尋、鍵盤操作、摺疊、對照表）。放在同一個網站而非分成兩站，真正的理由
+     三門課共用同一套機制（版本清單、音質分級、雙平台連結、進度、★ 重聽區、
+     搜尋、鍵盤操作、摺疊、對照表）。放在同一個網站而非分成三站，真正的理由
      不是省工，而是內容會互相加值：古典課教的四項聆聽工具（音色／織體／曲式／
-     調性）正好就是聽台灣傳統音樂的工具，而 Pasibutbut、七字調、哭調又反過來
-     是那些概念最好的例子。分成兩站，這些連結就斷了。 */
+     調性）正好就是聽台灣傳統音樂與爵士的工具，而 Pasibutbut、七字調、藍調、
+     紐奧良的集體即興又反過來是那些概念最好的例子。分開，這些連結就斷了。
+     課程本身的文案（首頁介紹、在別門課首頁上的一句話）放在各課的 home 欄位，
+     這裡的程式不必知道總共有幾門課。 */
   var COURSES = window.COURSES = window.COURSES || {};
   // data-instruments.js 先載入並掛上 instruments / instCompare / pages，這裡補齊其餘欄位
   COURSES.classical = Object.assign(COURSES.classical || {}, {
     id: "classical", label: "古典音樂", short: "古", icon: "♪",
     unitWord: "週", brand: "古典音樂系統聆聽課程", brandSub: "24 週 · KKBOX 適配版",
+    tab: "古典音樂",
     core: window.CORE, works: window.WORKS, weeks: window.WEEKS,
     defaults: { platform: "kkbox", hiresFirst: true },
-    foot: "版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。"
+    foot: "版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。",
+    home: {
+      intro: "24 週、每週 15–90 分鐘可調整的自學路徑。每首曲目都附<b>經過挑選的著名版本</b>，並依 <b>Hi-Res &gt; Hi-Fi &gt; 歷史錄音</b> 排序，可直接連往 KKBOX 或 YouTube。",
+      stats: [["24", "週單元"], ["$works", "首曲目"], ["$versions", "個版本推薦"], ["$hires", "個 Hi-Res 優先版本"]],
+      guide: "<b>每一週怎麼用（三步驟）</b><br>" +
+        "1. 展開曲目 → <b>先讀「播放前先讀」那一格</b>，知道這次要聽什麼<br>" +
+        "2. 版本清單<b>選一個就好</b>（最上面那個是建議首選），點播放連結<br>" +
+        "3. 聽完回來勾掉任務。時間不夠就<b>只做每首的第一項「必做」</b>，然後前進到下一週——" +
+        "<b>課程的連續性比單週的完整性重要。</b>",
+      buttons: [["p-hires", "先開好 Hi-Res 音質設定"], ["p-method", "課程設計原則"], ["all", "顯示全部（一頁瀏覽／列印）"]],
+      pitch: "24 週，從巴洛克到當代。<b>這門課教的四項聆聽工具（音色／織體／曲式／調性）</b>，是另外兩門課的共同基礎。",
+      done: "接下來是第 24 週規劃的事：檢視 ★ 重聽區，統計哪個時期／作曲家佔比最高——" +
+        "<b>那就是你的品味起點</b>——然後選一位作曲家做下一輪 6 個月的深度探索。",
+      coreNote: "（15 分鐘最低標準）"
+    }
   });
-  var ORDER = ["classical", "taiwan"];
+  var ORDER = ["classical", "taiwan", "jazz"];
   function courseList() { return ORDER.filter(function (id) { return COURSES[id]; }); }
 
   // 目前作用中的課程。CORE / WORKS / WEEKS 隨之切換，其餘程式碼照舊使用它們。
@@ -4481,7 +5856,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if (!str) return "";
     return String(str).split("").map(function (c) { return '<span class="tier ' + c + '" title="' + esc(CORE.tiers[c] ? CORE.tiers[c].name + "：" + CORE.tiers[c].desc : "") + '">' + c + "</span>"; }).join("");
   }
-  var TAGNAME = { ref: "公認代表版", period: "古樂器", modern: "現代樂器", entry: "入門友善", narrated: "附旁白" };
+  var TAGNAME = { ref: "公認代表版", period: "古樂器", modern: "現代樂器", entry: "入門友善", narrated: "附旁白", live: "現場錄音" };
 
   /* ---------------- 版本排序 / 過濾 ---------------- */
   var QORDER = { hires: 0, hifi: 1, historic: 2 };
@@ -4972,11 +6347,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if (!next) {
       return '<div class="card thisweek"><div class="eyebrow">' + tot + " / " + tot + " " + u + "</div>" +
         "<h2>全部完成了</h2>" +
-        (COURSE.id === "classical"
-          ? "<p>接下來是第 24 週規劃的事：檢視 ★ 重聽區，統計哪個時期／作曲家佔比最高——" +
-            "<b>那就是你的品味起點</b>——然後選一位作曲家做下一輪 6 個月的深度探索。</p>"
-          : "<p>接下來是第 8 單元規劃的事：檢視 ★ 重聽區，看看你偏向器樂還是歌樂、漢人樂種還是原住民族——" +
-            "<b>那就是你的起點</b>。然後挑一個樂種深入，或去現場聽一次。</p>") +
+        (homeSpec().done ? "<p>" + homeSpec().done + "</p>" : "") +
         '<div class="rowbtns"><button class="iconbtn on" data-go="' + unitView(tot) + '">回到第 ' + tot + " " + u + "：" +
           esc(WEEKS[WEEKS.length - 1].title) + "</button>" +
         '<button class="iconbtn" id="favBtn2">★ 檢視重聽區</button></div></div>';
@@ -5004,7 +6375,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
               "<span>" + next.tasks[0] + "</span></label>" + askHTML(k0) + "</li></ul>")
         : "";
       h += '<div class="tw-work"><div class="tw-label">本' + COURSE.unitWord + '核心必聽' +
-        (COURSE.id === "classical" ? "（15 分鐘最低標準）" : "") + "</div>" +
+        (homeSpec().coreNote || "") + "</div>" +
         "<b>" + esc(w.title) + "</b>" +
         (top ? '<div class="tw-ver">' + esc(top.p) + "　" +
           '<span class="qbadge ' + top.qa + '">' + esc(CORE.quality[top.qa].label) + "</span></div>" : "") +
@@ -5018,49 +6389,54 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     return h + "</div>";
   }
 
+  // 各課的首頁文案。古典課寫在上面的課程註冊裡，台灣課與爵士課寫在各自的 core 資料檔
+  function homeSpec(c) {
+    c = c || COURSE;
+    return c.home || (c.core && c.core.home) || {};
+  }
+
   function homeHTML() {
-    var totalWorks = Object.keys(WORKS).length;
-    var totalVers = Object.keys(WORKS).reduce(function (a, k) { return a + (WORKS[k].versions || []).length; }, 0);
-    var u = COURSE.unitWord;
+    var H = homeSpec();
+    // stats 裡以 $ 開頭的是即時計算的數字，其餘照寫
+    var count = {
+      $works: Object.keys(WORKS).length,
+      $versions: Object.keys(WORKS).reduce(function (a, k) { return a + (WORKS[k].versions || []).length; }, 0),
+      $hires: Object.keys(WORKS).reduce(function (a, k) {
+        return a + (WORKS[k].versions || []).filter(function (v) { return v.qa === "hires"; }).length; }, 0)
+    };
     var h = thisWeekHTML();
     h += '<div class="card"><h2>' + esc(CORE.meta.title) + "</h2>" +
       '<div class="enttl">' + esc(CORE.meta.subtitle) + " · " + esc(CORE.meta.version) + "</div>";
-
-    if (COURSE.id === "classical") {
-      var hires = Object.keys(WORKS).reduce(function (a, k) {
-        return a + (WORKS[k].versions || []).filter(function (v) { return v.qa === "hires"; }).length; }, 0);
-      h += "<p>24 週、每週 15–90 分鐘可調整的自學路徑。每首曲目都附<b>經過挑選的著名版本</b>，並依 <b>Hi-Res &gt; Hi-Fi &gt; 歷史錄音</b> 排序，可直接連往 KKBOX 或 YouTube。</p>" +
-        '<div class="grid2" style="margin:16px 0">' +
-          stat("24", "週單元") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本推薦") + stat(String(hires), "個 Hi-Res 優先版本") +
-        "</div>" +
-        '<div class="banner"><b>每一週怎麼用（三步驟）</b><br>' +
-          "1. 展開曲目 → <b>先讀「播放前先讀」那一格</b>，知道這次要聽什麼<br>" +
-          "2. 版本清單<b>選一個就好</b>（最上面那個是建議首選），點播放連結<br>" +
-          "3. 聽完回來勾掉任務。時間不夠就<b>只做每首的第一項「必做」</b>，然後前進到下一週——" +
-          "<b>課程的連續性比單週的完整性重要。</b></div>" +
-        '<div class="rowbtns"><button class="iconbtn" data-go="p-hires">先開好 Hi-Res 音質設定</button>' +
-        '<button class="iconbtn" data-go="p-method">課程設計原則</button>' +
-        '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div>';
-      h += '<div class="banner" style="margin-top:14px"><b>另一門課：台灣傳統音樂</b>　8 個單元，從南管到原住民族歌謠。' +
-        "這門課教的四項聆聽工具（音色／織體／曲式／調性）在那邊直接用得上——" +
-        "<b>布農族 Pasibutbut 是複音織體最極端的例子，歌仔戲七字調就是主題與變奏。</b>" +
-        '<div class="rowbtns" style="margin-top:10px"><button class="iconbtn on" data-course="taiwan">◉ 切換到台灣傳統音樂</button></div></div>';
-    } else {
-      h += "<p>8 個單元，從南管到原住民族歌謠。<b>沒有固定進度</b>——一個單元想聽多久都可以。每首曲目附版本建議與備用搜尋字串，" +
-        "預設連往 <b>YouTube</b>（台灣傳統音樂在商業串流平台上收錄極不完整，YouTube 才是真正找得到東西的地方）。</p>" +
-        '<div class="grid2" style="margin:16px 0">' +
-          stat("8", "單元") + stat("7", "個樂種") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本建議") +
-        "</div>" +
-        '<div class="banner"><b>不知道從哪開始？</b>直接看<b>〈先聽這 10 首〉</b>。' +
-          "十首依衝擊力排序，約 90 分鐘，聽完主要地貌就大致完整了。" +
-          '<div class="rowbtns" style="margin-top:10px"><button class="iconbtn on" data-go="p-start">十　先聽這 10 首</button>' +
-          '<button class="iconbtn" data-go="p-cross">橋　與古典音樂課的對照</button>' +
-          '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div></div>' +
-        '<div class="note"><b>先說清楚一件事：找不到指定版本是常態，不是你的問題。</b>' +
-          "傳統音樂多為口傳，同一曲調在不同館閣、劇團、部落之間本就不同，商業平台的收錄也極不完整。" +
-          "每首曲目下方都準備了多個備用搜尋字串，找到哪個聽哪個。</div>";
+    if (H.intro) h += "<p>" + H.intro + "</p>";
+    if (H.stats) {
+      h += '<div class="grid2" style="margin:16px 0">' + H.stats.map(function (st) {
+        return stat(String(count[st[0]] !== undefined ? count[st[0]] : st[0]), st[1]);
+      }).join("") + "</div>";
     }
-    return h + deviceHelpHTML() + "</div>";
+    if (H.guide) h += '<div class="banner">' + H.guide + "</div>";
+    if (H.buttons) {
+      h += '<div class="rowbtns">' + H.buttons.map(function (b) {
+        return '<button class="iconbtn' + (b[2] ? " on" : "") + '" data-go="' + esc(b[0]) + '">' + esc(b[1]) + "</button>";
+      }).join("") + "</div>";
+    }
+    if (H.note) h += '<div class="note">' + H.note + "</div>";
+    return h + otherCoursesHTML() + deviceHelpHTML() + "</div>";
+  }
+
+  /* 其他課程。原本古典課首頁寫死一個「另一門課：台灣傳統音樂」橫幅，
+     第三門課加進來時就得在每門課的首頁各補一段——改成依課程清單自動產生，
+     每門課只提供自己的一句話（home.pitch）。 */
+  function otherCoursesHTML() {
+    var others = courseList().filter(function (id) { return id !== COURSE.id; });
+    if (!others.length) return "";
+    var num = ["", "一", "兩", "三", "四", "五"][others.length] || String(others.length);
+    return '<div class="others"><div class="devhelp-hd">' + (others.length > 1 ? "另外" + num + "門課" : "另一門課") + "</div>" +
+      others.map(function (id) {
+        var c = COURSES[id], H = homeSpec(c);
+        return '<div class="oc"><div class="oc-t"><span class="ci">' + c.icon + "</span><b>" + esc(c.label) + "</b></div>" +
+          (H.pitch ? '<div class="oc-p">' + H.pitch + "</div>" : "") +
+          '<button class="iconbtn" data-course="' + id + '">切換到' + esc(c.label) + " →</button></div>";
+      }).join("") + "</div>";
   }
   /* 「在這台裝置上」三顆按鈕：字級、加到主畫面、搬家。
      三件事都跟課程內容無關，卻決定了能不能順手用下去，所以集中放在首頁一處，
@@ -5175,7 +6551,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         var c = COURSES[id];
         return '<button class="cbtn' + (id === COURSE.id ? " on" : "") + '" data-course="' + id + '"' +
           (id === COURSE.id ? ' aria-current="true"' : "") + '><span class="ci">' + c.icon + "</span>" +
-          esc(c.label) + "</button>";
+          esc(c.tab || c.label) + "</button>";
       }).join("") + "</div>";
 
     h += '<button class="navitem" data-go="home"><span class="wn"><span>◎</span></span><span class="tx">課程總覽</span></button>';
@@ -5611,10 +6987,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 
   /* ---------------- 重聽區 ---------------- */
   /* ★ 重聽區跨課程共用——收藏是「這首打到我」，不該因為換課程就看不到。
-     兩門課的曲目分組顯示，各自標明課程。 */
+     各課的曲目分組顯示，各自標明課程。 */
   function favHTML() {
     var ids = Object.keys(S.fav).filter(function (k) { return S.fav[k] && findWork(k); });
-    if (!ids.length) return '<p class="hint">還沒有收藏。點任一曲目左邊的 ☆ 就會加進來。<br><br>建議用法：課程進行中凡是聽了有感覺的曲目立即收藏，最後統計哪個時期／樂種／作曲家佔比最高——那就是你的品味起點。<br><br><b>兩門課的收藏會放在一起</b>，所以你可以直接看出自己在古典音樂與台灣傳統音樂之間偏向哪一邊。</p>';
+    if (!ids.length) return '<p class="hint">還沒有收藏。點任一曲目左邊的 ☆ 就會加進來。<br><br>建議用法：課程進行中凡是聽了有感覺的曲目立即收藏，最後統計哪個時期／樂種／作曲家佔比最高——那就是你的品味起點。<br><br><b>所有課程的收藏會放在一起</b>，所以你可以直接看出自己在' + courseList().map(function (id) { return COURSES[id].label; }).join('、') + '之間偏向哪一邊。</p>';
     var h = '<div class="rowbtns"><button class="iconbtn" id="favCopy">複製全部搜尋字串（' + ids.length + " 首）</button>" +
       '<button class="iconbtn" id="favClear">清空</button></div>';
     courseList().forEach(function (cid) {
@@ -5830,7 +7206,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   /* 搬家連結：把進度壓進網址本身，另一台裝置打開就能合併進來。
      不經過任何伺服器——連結就是資料。格式刻意與儲存方式脫鉤，
      而且以「第幾週＋第幾項」為鍵，課程內容日後增刪也不會讓舊連結錯位。
-       { v:1, c:{ "":{d:[週…], t:[週,位元遮罩,…], k:[…]}, "taiwan":{…} }, f:[收藏…], l:{釘選} }
+       { v:1, c:{ "":{d:[週…], t:[週,位元遮罩,…], k:[…]}, "taiwan":{…}, "jazz":{…} }, g:"收藏雜湊串", l:{釘選}, a:{作答} }
      字級、主題、播放平台是「這台裝置」的偏好（手機和電腦本來就可能想要不同的字級），不搬。 */
   function packState() {
     var c = {};
@@ -5854,7 +7230,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         c[p][f] = flat;
       });
     });
-    var o = { v: 1, c: c, f: Object.keys(S.fav).filter(function (k) { return S.fav[k]; }) };
+    var o = { v: 1, c: c };
+    var favs = Object.keys(S.fav).filter(function (k) { return S.fav[k] && findWork(k); });
+    if (favs.length) o.g = favs.map(favHash).join("");
     if (Object.keys(S.links).length) o.l = S.links;
     var ans = {};
     Object.keys(S.answers).forEach(function (k) {
@@ -5879,7 +7257,18 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         }
       });
     });
+    // 舊版連結把收藏存成完整 id（f），新版存成 4 字元雜湊串（g）——兩種都讀
     (o.f || []).forEach(function (id) { if (typeof id === "string") out.fav[id] = true; });
+    if (typeof o.g === "string" && o.g) {
+      var byHash = {};
+      courseList().forEach(function (cid) {
+        Object.keys(COURSES[cid].works).forEach(function (id) { byHash[favHash(id)] = id; });
+      });
+      for (var gi = 0; gi + 4 <= o.g.length; gi += 4) {
+        var fid = byHash[o.g.slice(gi, gi + 4)];
+        if (fid) out.fav[fid] = true;
+      }
+    }
     Object.keys(o.l || {}).forEach(function (q) {
       if (/^https:\/\//.test(o.l[q])) out.links[q] = o.l[q];
     });
@@ -5887,6 +7276,15 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       if (ASK_KEY.test(k) && typeof o.a[k] === "string" && o.a[k].trim()) out.answers[k] = o.a[k].slice(0, 2000);
     });
     return out;
+  }
+  /* 收藏在搬家連結裡只放 4 個字元的雜湊，不放完整的曲目 id。三門課都收藏的話，
+     完整 id（像 coltrane-favoritethings）會讓連結長到 QR code 放不下；
+     接收端用自己的曲目清單反查回來。36^4 ≈ 168 萬種組合，一百多首曲目撞號的機率
+     可以忽略——回歸測試會把全部曲目收藏起來搬一次，確認一首都沒有對錯。 */
+  function favHash(id) {
+    var h = 2166136261;
+    for (var i = 0; i < id.length; i++) { h ^= id.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    return ("000" + (h % 1679616).toString(36)).slice(-4);
   }
   function encodeSync(o) {
     return btoa(unescape(encodeURIComponent(JSON.stringify(o))))

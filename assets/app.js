@@ -1,21 +1,38 @@
 (function () {
   "use strict";
   /* ---------------- 課程註冊 ----------------
-     兩門課共用同一套機制（版本清單、音質分級、雙平台連結、進度、★ 重聽區、
-     搜尋、鍵盤操作、摺疊、對照表）。放在同一個網站而非分成兩站，真正的理由
+     三門課共用同一套機制（版本清單、音質分級、雙平台連結、進度、★ 重聽區、
+     搜尋、鍵盤操作、摺疊、對照表）。放在同一個網站而非分成三站，真正的理由
      不是省工，而是內容會互相加值：古典課教的四項聆聽工具（音色／織體／曲式／
-     調性）正好就是聽台灣傳統音樂的工具，而 Pasibutbut、七字調、哭調又反過來
-     是那些概念最好的例子。分成兩站，這些連結就斷了。 */
+     調性）正好就是聽台灣傳統音樂與爵士的工具，而 Pasibutbut、七字調、藍調、
+     紐奧良的集體即興又反過來是那些概念最好的例子。分開，這些連結就斷了。
+     課程本身的文案（首頁介紹、在別門課首頁上的一句話）放在各課的 home 欄位，
+     這裡的程式不必知道總共有幾門課。 */
   var COURSES = window.COURSES = window.COURSES || {};
   // data-instruments.js 先載入並掛上 instruments / instCompare / pages，這裡補齊其餘欄位
   COURSES.classical = Object.assign(COURSES.classical || {}, {
     id: "classical", label: "古典音樂", short: "古", icon: "♪",
     unitWord: "週", brand: "古典音樂系統聆聽課程", brandSub: "24 週 · KKBOX 適配版",
+    tab: "古典音樂",
     core: window.CORE, works: window.WORKS, weeks: window.WEEKS,
     defaults: { platform: "kkbox", hiresFirst: true },
-    foot: "版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。"
+    foot: "版本推薦與音質標記屬編者判斷，實際曲庫與音質請以 KKBOX App 內顯示為準。",
+    home: {
+      intro: "24 週、每週 15–90 分鐘可調整的自學路徑。每首曲目都附<b>經過挑選的著名版本</b>，並依 <b>Hi-Res &gt; Hi-Fi &gt; 歷史錄音</b> 排序，可直接連往 KKBOX 或 YouTube。",
+      stats: [["24", "週單元"], ["$works", "首曲目"], ["$versions", "個版本推薦"], ["$hires", "個 Hi-Res 優先版本"]],
+      guide: "<b>每一週怎麼用（三步驟）</b><br>" +
+        "1. 展開曲目 → <b>先讀「播放前先讀」那一格</b>，知道這次要聽什麼<br>" +
+        "2. 版本清單<b>選一個就好</b>（最上面那個是建議首選），點播放連結<br>" +
+        "3. 聽完回來勾掉任務。時間不夠就<b>只做每首的第一項「必做」</b>，然後前進到下一週——" +
+        "<b>課程的連續性比單週的完整性重要。</b>",
+      buttons: [["p-hires", "先開好 Hi-Res 音質設定"], ["p-method", "課程設計原則"], ["all", "顯示全部（一頁瀏覽／列印）"]],
+      pitch: "24 週，從巴洛克到當代。<b>這門課教的四項聆聽工具（音色／織體／曲式／調性）</b>，是另外兩門課的共同基礎。",
+      done: "接下來是第 24 週規劃的事：檢視 ★ 重聽區，統計哪個時期／作曲家佔比最高——" +
+        "<b>那就是你的品味起點</b>——然後選一位作曲家做下一輪 6 個月的深度探索。",
+      coreNote: "（15 分鐘最低標準）"
+    }
   });
-  var ORDER = ["classical", "taiwan"];
+  var ORDER = ["classical", "taiwan", "jazz"];
   function courseList() { return ORDER.filter(function (id) { return COURSES[id]; }); }
 
   // 目前作用中的課程。CORE / WORKS / WEEKS 隨之切換，其餘程式碼照舊使用它們。
@@ -167,7 +184,7 @@
     if (!str) return "";
     return String(str).split("").map(function (c) { return '<span class="tier ' + c + '" title="' + esc(CORE.tiers[c] ? CORE.tiers[c].name + "：" + CORE.tiers[c].desc : "") + '">' + c + "</span>"; }).join("");
   }
-  var TAGNAME = { ref: "公認代表版", period: "古樂器", modern: "現代樂器", entry: "入門友善", narrated: "附旁白" };
+  var TAGNAME = { ref: "公認代表版", period: "古樂器", modern: "現代樂器", entry: "入門友善", narrated: "附旁白", live: "現場錄音" };
 
   /* ---------------- 版本排序 / 過濾 ---------------- */
   var QORDER = { hires: 0, hifi: 1, historic: 2 };
@@ -658,11 +675,7 @@
     if (!next) {
       return '<div class="card thisweek"><div class="eyebrow">' + tot + " / " + tot + " " + u + "</div>" +
         "<h2>全部完成了</h2>" +
-        (COURSE.id === "classical"
-          ? "<p>接下來是第 24 週規劃的事：檢視 ★ 重聽區，統計哪個時期／作曲家佔比最高——" +
-            "<b>那就是你的品味起點</b>——然後選一位作曲家做下一輪 6 個月的深度探索。</p>"
-          : "<p>接下來是第 8 單元規劃的事：檢視 ★ 重聽區，看看你偏向器樂還是歌樂、漢人樂種還是原住民族——" +
-            "<b>那就是你的起點</b>。然後挑一個樂種深入，或去現場聽一次。</p>") +
+        (homeSpec().done ? "<p>" + homeSpec().done + "</p>" : "") +
         '<div class="rowbtns"><button class="iconbtn on" data-go="' + unitView(tot) + '">回到第 ' + tot + " " + u + "：" +
           esc(WEEKS[WEEKS.length - 1].title) + "</button>" +
         '<button class="iconbtn" id="favBtn2">★ 檢視重聽區</button></div></div>';
@@ -690,7 +703,7 @@
               "<span>" + next.tasks[0] + "</span></label>" + askHTML(k0) + "</li></ul>")
         : "";
       h += '<div class="tw-work"><div class="tw-label">本' + COURSE.unitWord + '核心必聽' +
-        (COURSE.id === "classical" ? "（15 分鐘最低標準）" : "") + "</div>" +
+        (homeSpec().coreNote || "") + "</div>" +
         "<b>" + esc(w.title) + "</b>" +
         (top ? '<div class="tw-ver">' + esc(top.p) + "　" +
           '<span class="qbadge ' + top.qa + '">' + esc(CORE.quality[top.qa].label) + "</span></div>" : "") +
@@ -704,49 +717,54 @@
     return h + "</div>";
   }
 
+  // 各課的首頁文案。古典課寫在上面的課程註冊裡，台灣課與爵士課寫在各自的 core 資料檔
+  function homeSpec(c) {
+    c = c || COURSE;
+    return c.home || (c.core && c.core.home) || {};
+  }
+
   function homeHTML() {
-    var totalWorks = Object.keys(WORKS).length;
-    var totalVers = Object.keys(WORKS).reduce(function (a, k) { return a + (WORKS[k].versions || []).length; }, 0);
-    var u = COURSE.unitWord;
+    var H = homeSpec();
+    // stats 裡以 $ 開頭的是即時計算的數字，其餘照寫
+    var count = {
+      $works: Object.keys(WORKS).length,
+      $versions: Object.keys(WORKS).reduce(function (a, k) { return a + (WORKS[k].versions || []).length; }, 0),
+      $hires: Object.keys(WORKS).reduce(function (a, k) {
+        return a + (WORKS[k].versions || []).filter(function (v) { return v.qa === "hires"; }).length; }, 0)
+    };
     var h = thisWeekHTML();
     h += '<div class="card"><h2>' + esc(CORE.meta.title) + "</h2>" +
       '<div class="enttl">' + esc(CORE.meta.subtitle) + " · " + esc(CORE.meta.version) + "</div>";
-
-    if (COURSE.id === "classical") {
-      var hires = Object.keys(WORKS).reduce(function (a, k) {
-        return a + (WORKS[k].versions || []).filter(function (v) { return v.qa === "hires"; }).length; }, 0);
-      h += "<p>24 週、每週 15–90 分鐘可調整的自學路徑。每首曲目都附<b>經過挑選的著名版本</b>，並依 <b>Hi-Res &gt; Hi-Fi &gt; 歷史錄音</b> 排序，可直接連往 KKBOX 或 YouTube。</p>" +
-        '<div class="grid2" style="margin:16px 0">' +
-          stat("24", "週單元") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本推薦") + stat(String(hires), "個 Hi-Res 優先版本") +
-        "</div>" +
-        '<div class="banner"><b>每一週怎麼用（三步驟）</b><br>' +
-          "1. 展開曲目 → <b>先讀「播放前先讀」那一格</b>，知道這次要聽什麼<br>" +
-          "2. 版本清單<b>選一個就好</b>（最上面那個是建議首選），點播放連結<br>" +
-          "3. 聽完回來勾掉任務。時間不夠就<b>只做每首的第一項「必做」</b>，然後前進到下一週——" +
-          "<b>課程的連續性比單週的完整性重要。</b></div>" +
-        '<div class="rowbtns"><button class="iconbtn" data-go="p-hires">先開好 Hi-Res 音質設定</button>' +
-        '<button class="iconbtn" data-go="p-method">課程設計原則</button>' +
-        '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div>';
-      h += '<div class="banner" style="margin-top:14px"><b>另一門課：台灣傳統音樂</b>　8 個單元，從南管到原住民族歌謠。' +
-        "這門課教的四項聆聽工具（音色／織體／曲式／調性）在那邊直接用得上——" +
-        "<b>布農族 Pasibutbut 是複音織體最極端的例子，歌仔戲七字調就是主題與變奏。</b>" +
-        '<div class="rowbtns" style="margin-top:10px"><button class="iconbtn on" data-course="taiwan">◉ 切換到台灣傳統音樂</button></div></div>';
-    } else {
-      h += "<p>8 個單元，從南管到原住民族歌謠。<b>沒有固定進度</b>——一個單元想聽多久都可以。每首曲目附版本建議與備用搜尋字串，" +
-        "預設連往 <b>YouTube</b>（台灣傳統音樂在商業串流平台上收錄極不完整，YouTube 才是真正找得到東西的地方）。</p>" +
-        '<div class="grid2" style="margin:16px 0">' +
-          stat("8", "單元") + stat("7", "個樂種") + stat(String(totalWorks), "首曲目") + stat(String(totalVers), "個版本建議") +
-        "</div>" +
-        '<div class="banner"><b>不知道從哪開始？</b>直接看<b>〈先聽這 10 首〉</b>。' +
-          "十首依衝擊力排序，約 90 分鐘，聽完主要地貌就大致完整了。" +
-          '<div class="rowbtns" style="margin-top:10px"><button class="iconbtn on" data-go="p-start">十　先聽這 10 首</button>' +
-          '<button class="iconbtn" data-go="p-cross">橋　與古典音樂課的對照</button>' +
-          '<button class="iconbtn" data-go="all">顯示全部（一頁瀏覽／列印）</button></div></div>' +
-        '<div class="note"><b>先說清楚一件事：找不到指定版本是常態，不是你的問題。</b>' +
-          "傳統音樂多為口傳，同一曲調在不同館閣、劇團、部落之間本就不同，商業平台的收錄也極不完整。" +
-          "每首曲目下方都準備了多個備用搜尋字串，找到哪個聽哪個。</div>";
+    if (H.intro) h += "<p>" + H.intro + "</p>";
+    if (H.stats) {
+      h += '<div class="grid2" style="margin:16px 0">' + H.stats.map(function (st) {
+        return stat(String(count[st[0]] !== undefined ? count[st[0]] : st[0]), st[1]);
+      }).join("") + "</div>";
     }
-    return h + deviceHelpHTML() + "</div>";
+    if (H.guide) h += '<div class="banner">' + H.guide + "</div>";
+    if (H.buttons) {
+      h += '<div class="rowbtns">' + H.buttons.map(function (b) {
+        return '<button class="iconbtn' + (b[2] ? " on" : "") + '" data-go="' + esc(b[0]) + '">' + esc(b[1]) + "</button>";
+      }).join("") + "</div>";
+    }
+    if (H.note) h += '<div class="note">' + H.note + "</div>";
+    return h + otherCoursesHTML() + deviceHelpHTML() + "</div>";
+  }
+
+  /* 其他課程。原本古典課首頁寫死一個「另一門課：台灣傳統音樂」橫幅，
+     第三門課加進來時就得在每門課的首頁各補一段——改成依課程清單自動產生，
+     每門課只提供自己的一句話（home.pitch）。 */
+  function otherCoursesHTML() {
+    var others = courseList().filter(function (id) { return id !== COURSE.id; });
+    if (!others.length) return "";
+    var num = ["", "一", "兩", "三", "四", "五"][others.length] || String(others.length);
+    return '<div class="others"><div class="devhelp-hd">' + (others.length > 1 ? "另外" + num + "門課" : "另一門課") + "</div>" +
+      others.map(function (id) {
+        var c = COURSES[id], H = homeSpec(c);
+        return '<div class="oc"><div class="oc-t"><span class="ci">' + c.icon + "</span><b>" + esc(c.label) + "</b></div>" +
+          (H.pitch ? '<div class="oc-p">' + H.pitch + "</div>" : "") +
+          '<button class="iconbtn" data-course="' + id + '">切換到' + esc(c.label) + " →</button></div>";
+      }).join("") + "</div>";
   }
   /* 「在這台裝置上」三顆按鈕：字級、加到主畫面、搬家。
      三件事都跟課程內容無關，卻決定了能不能順手用下去，所以集中放在首頁一處，
@@ -861,7 +879,7 @@
         var c = COURSES[id];
         return '<button class="cbtn' + (id === COURSE.id ? " on" : "") + '" data-course="' + id + '"' +
           (id === COURSE.id ? ' aria-current="true"' : "") + '><span class="ci">' + c.icon + "</span>" +
-          esc(c.label) + "</button>";
+          esc(c.tab || c.label) + "</button>";
       }).join("") + "</div>";
 
     h += '<button class="navitem" data-go="home"><span class="wn"><span>◎</span></span><span class="tx">課程總覽</span></button>';
@@ -1297,10 +1315,10 @@
 
   /* ---------------- 重聽區 ---------------- */
   /* ★ 重聽區跨課程共用——收藏是「這首打到我」，不該因為換課程就看不到。
-     兩門課的曲目分組顯示，各自標明課程。 */
+     各課的曲目分組顯示，各自標明課程。 */
   function favHTML() {
     var ids = Object.keys(S.fav).filter(function (k) { return S.fav[k] && findWork(k); });
-    if (!ids.length) return '<p class="hint">還沒有收藏。點任一曲目左邊的 ☆ 就會加進來。<br><br>建議用法：課程進行中凡是聽了有感覺的曲目立即收藏，最後統計哪個時期／樂種／作曲家佔比最高——那就是你的品味起點。<br><br><b>兩門課的收藏會放在一起</b>，所以你可以直接看出自己在古典音樂與台灣傳統音樂之間偏向哪一邊。</p>';
+    if (!ids.length) return '<p class="hint">還沒有收藏。點任一曲目左邊的 ☆ 就會加進來。<br><br>建議用法：課程進行中凡是聽了有感覺的曲目立即收藏，最後統計哪個時期／樂種／作曲家佔比最高——那就是你的品味起點。<br><br><b>所有課程的收藏會放在一起</b>，所以你可以直接看出自己在' + courseList().map(function (id) { return COURSES[id].label; }).join('、') + '之間偏向哪一邊。</p>';
     var h = '<div class="rowbtns"><button class="iconbtn" id="favCopy">複製全部搜尋字串（' + ids.length + " 首）</button>" +
       '<button class="iconbtn" id="favClear">清空</button></div>';
     courseList().forEach(function (cid) {
@@ -1516,7 +1534,7 @@
   /* 搬家連結：把進度壓進網址本身，另一台裝置打開就能合併進來。
      不經過任何伺服器——連結就是資料。格式刻意與儲存方式脫鉤，
      而且以「第幾週＋第幾項」為鍵，課程內容日後增刪也不會讓舊連結錯位。
-       { v:1, c:{ "":{d:[週…], t:[週,位元遮罩,…], k:[…]}, "taiwan":{…} }, f:[收藏…], l:{釘選} }
+       { v:1, c:{ "":{d:[週…], t:[週,位元遮罩,…], k:[…]}, "taiwan":{…}, "jazz":{…} }, g:"收藏雜湊串", l:{釘選}, a:{作答} }
      字級、主題、播放平台是「這台裝置」的偏好（手機和電腦本來就可能想要不同的字級），不搬。 */
   function packState() {
     var c = {};
@@ -1540,7 +1558,9 @@
         c[p][f] = flat;
       });
     });
-    var o = { v: 1, c: c, f: Object.keys(S.fav).filter(function (k) { return S.fav[k]; }) };
+    var o = { v: 1, c: c };
+    var favs = Object.keys(S.fav).filter(function (k) { return S.fav[k] && findWork(k); });
+    if (favs.length) o.g = favs.map(favHash).join("");
     if (Object.keys(S.links).length) o.l = S.links;
     var ans = {};
     Object.keys(S.answers).forEach(function (k) {
@@ -1565,7 +1585,18 @@
         }
       });
     });
+    // 舊版連結把收藏存成完整 id（f），新版存成 4 字元雜湊串（g）——兩種都讀
     (o.f || []).forEach(function (id) { if (typeof id === "string") out.fav[id] = true; });
+    if (typeof o.g === "string" && o.g) {
+      var byHash = {};
+      courseList().forEach(function (cid) {
+        Object.keys(COURSES[cid].works).forEach(function (id) { byHash[favHash(id)] = id; });
+      });
+      for (var gi = 0; gi + 4 <= o.g.length; gi += 4) {
+        var fid = byHash[o.g.slice(gi, gi + 4)];
+        if (fid) out.fav[fid] = true;
+      }
+    }
     Object.keys(o.l || {}).forEach(function (q) {
       if (/^https:\/\//.test(o.l[q])) out.links[q] = o.l[q];
     });
@@ -1573,6 +1604,15 @@
       if (ASK_KEY.test(k) && typeof o.a[k] === "string" && o.a[k].trim()) out.answers[k] = o.a[k].slice(0, 2000);
     });
     return out;
+  }
+  /* 收藏在搬家連結裡只放 4 個字元的雜湊，不放完整的曲目 id。三門課都收藏的話，
+     完整 id（像 coltrane-favoritethings）會讓連結長到 QR code 放不下；
+     接收端用自己的曲目清單反查回來。36^4 ≈ 168 萬種組合，一百多首曲目撞號的機率
+     可以忽略——回歸測試會把全部曲目收藏起來搬一次，確認一首都沒有對錯。 */
+  function favHash(id) {
+    var h = 2166136261;
+    for (var i = 0; i < id.length; i++) { h ^= id.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    return ("000" + (h % 1679616).toString(36)).slice(-4);
   }
   function encodeSync(o) {
     return btoa(unescape(encodeURIComponent(JSON.stringify(o))))

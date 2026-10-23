@@ -8,7 +8,7 @@
    PRECACHE 是第一次開啟時就先存好的檔案，確保「裝好之後馬上斷網」也能用。
    index.html 裡新增任何 <script>／<link> 都要加進來——
    tests/regression.mjs 會檢查兩邊有沒有對上。 */
-var CACHE = "lc-v2";
+var CACHE = "lc-v3";
 var PRECACHE = [
   "./",
   "index.html",
@@ -26,6 +26,11 @@ var PRECACHE = [
   "assets/tw/data-tw-works.js",
   "assets/tw/data-tw-units.js",
   "assets/tw/data-tw-pages.js",
+  "assets/jazz/data-jazz-core.js",
+  "assets/jazz/data-jazz-instruments.js",
+  "assets/jazz/data-jazz-works.js",
+  "assets/jazz/data-jazz-units.js",
+  "assets/jazz/data-jazz-pages.js",
   "assets/vendor/qrcode.min.js",
   "assets/app.js",
   "assets/icons/icon.svg",

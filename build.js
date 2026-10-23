@@ -93,14 +93,68 @@ let html = read("index.html");
     }
   }
 
+  // 爵士課：原則同台灣課。另外檢查每個版本的搜尋字串含有演奏者名字裡的某個字——
+  // 爵士的同一首曲子有上百個版本，搜尋字串沒有演奏者，就會搜到別人的錄音。
+  {
+    const jz = { window: { COURSES: {} } };
+    for (const f of ["data-jazz-core.js", "data-jazz-works.js", "data-jazz-units.js", "data-jazz-pages.js"]) {
+      new Function("window", read("assets/jazz/" + f))(jz.window);
+    }
+    const J = jz.window.COURSES.jazz;
+    if (!J || !J.works || !J.weeks || !J.pages) {
+      console.error("爵士樂課程資料不完整");
+      process.exit(1);
+    }
+    const tokens = (p) => (p.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().match(/[a-z]{4,}/g) || [])
+      .filter((t) => !["with", "orchestra", "quintet", "quartet", "trio", "band", "live"].includes(t));
+    for (const [id, w] of Object.entries(J.works)) {
+      const seen = new Set();
+      if (!w.versions || !w.versions.length) problems.push(`jazz/${id}：沒有任何版本`);
+      for (const v of w.versions || []) {
+        if (!v.q) { problems.push(`jazz/${id} / ${v.p}：缺搜尋字串`); continue; }
+        const q = v.q.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const tk = tokens(v.p);
+        if (tk.length && !tk.some((t) => q.includes(t)))
+          problems.push(`jazz/${id} / ${v.p}：搜尋字串沒有演奏者名字 → "${v.q}"`);
+        if (seen.has(v.q)) problems.push(`jazz/${id}：兩個版本的搜尋字串相同 → "${v.q}"`);
+        seen.add(v.q);
+      }
+    }
+    for (const u of J.weeks) {
+      for (const id of [].concat(u.works || [], u.extraWorks || [])) {
+        if (!J.works[id]) problems.push(`jazz/單元 ${u.n}：引用了不存在的曲目 "${id}"`);
+      }
+      if ((u.tw || []).length !== (u.tasks || []).length)
+        problems.push(`jazz/單元 ${u.n}：tw 長度 ${(u.tw || []).length} 與 tasks 長度 ${(u.tasks || []).length} 不符`);
+      for (const ids of u.tw || []) for (const id of ids) {
+        if (!J.works[id]) problems.push(`jazz/單元 ${u.n}：tw 指向不存在的曲目 "${id}"`);
+      }
+    }
+    for (const m of J.core.modules) for (const n of m.weeks) {
+      if (!J.weeks.some((u) => u.n === n)) problems.push(`jazz/${m.label}：列了不存在的單元 ${n}`);
+    }
+
+    // ★ 重聽區跨課程共用，以曲目 id 查找——三門課之間 id 重複，就會顯示成別門課的曲子
+    const tw = { window: { COURSES: {} } };
+    new Function("window", read("assets/tw/data-tw-core.js") + "\n" + read("assets/tw/data-tw-works.js"))(tw.window);
+    const owner = {};
+    for (const [cid, works] of [["classical", sandbox.window.WORKS], ["taiwan", tw.window.COURSES.taiwan.works], ["jazz", J.works]]) {
+      for (const id of Object.keys(works)) {
+        if (owner[id]) problems.push(`曲目 id "${id}" 同時出現在 ${owner[id]} 與 ${cid}——重聽區會分不清`);
+        owner[id] = cid;
+      }
+    }
+  }
+
   // 作答欄（data-asks.js）以「週次:任務序號」掛在任務底下。任務在中間被插入或刪掉時
   // 編號會位移，作答欄就會默默掛到別的任務上——所以每一筆都帶一小段任務原文，這裡逐一比對。
   {
     const box = { window: { COURSES: {} } };
     new Function("window", read("assets/data-weeks.js"))(box.window);
     new Function("window", read("assets/tw/data-tw-core.js") + "\n" + read("assets/tw/data-tw-units.js"))(box.window);
+    new Function("window", read("assets/jazz/data-jazz-core.js") + "\n" + read("assets/jazz/data-jazz-units.js"))(box.window);
     new Function("window", read("assets/data-asks.js"))(box.window);
-    const weeksOf = { classical: box.window.WEEKS, taiwan: (box.window.COURSES.taiwan || {}).weeks };
+    const weeksOf = { classical: box.window.WEEKS, taiwan: (box.window.COURSES.taiwan || {}).weeks, jazz: (box.window.COURSES.jazz || {}).weeks };
     const strip = (s) => String(s).replace(/<[^>]+>/g, "");
     for (const [cid, asks] of Object.entries(box.window.ASKS || {})) {
       const weeks = weeksOf[cid];

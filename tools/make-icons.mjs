@@ -60,8 +60,8 @@ await page.setContent(`
 <div class="ic">${svg}</div>
 <div>
   <h1>聆聽課程</h1>
-  <div class="sub">古典音樂 24 週<br>台灣傳統音樂 8 單元</div>
-  <div class="meta">99 首曲目 · 371 個版本推薦<br>KKBOX／YouTube 一鍵開啟</div>
+  <div class="sub">古典音樂 24 週<br>台灣傳統音樂 8 單元<br>爵士樂 12 單元</div>
+  <div class="meta">133 首曲目 · 424 個版本推薦<br>KKBOX／YouTube 一鍵開啟</div>
 </div>`);
 await page.evaluate(() => document.fonts.ready);
 await page.waitForTimeout(400);
